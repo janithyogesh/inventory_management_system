@@ -13,6 +13,7 @@ import javafx.scene.Parent;
 import javafx.scene.Scene;
 import javafx.scene.chart.AreaChart;
 import javafx.scene.chart.BarChart;
+import javafx.scene.chart.XYChart;
 import javafx.scene.control.*;
 import javafx.scene.control.cell.PropertyValueFactory;
 import javafx.scene.image.Image;
@@ -36,8 +37,12 @@ import net.sf.jasperreports.view.JasperViewer;
 import java.io.File;
 import java.net.URL;
 import java.sql.*;
+import java.text.DecimalFormat;
 import java.util.*;
 import java.util.Date;
+import java.text.SimpleDateFormat;
+import java.sql.SQLException;
+
 
 import static inventory.database.connectDb;
 
@@ -62,9 +67,9 @@ public class dashboardController implements Initializable {
     @FXML
     private AnchorPane chain_form, home_availableStock, home_form, home_numberSales, home_totalIncome, main_form, sales_form;
     @FXML
-    private AreaChart<?, ?> home_incomeChart;
+    private AreaChart<String, Number> home_incomeChart;
     @FXML
-    private BarChart<?, ?> home_salesChart;
+    private BarChart<String, Number> home_salesChart;
     @FXML
     private TextField sales_amount, sales_id, sales_price, sales_return;
     @FXML
@@ -77,6 +82,8 @@ public class dashboardController implements Initializable {
     private TableView<salesData> sales_tableView;
     @FXML
     private Button sales_payBtn, sales_receiptBtn, sales_soldBtn, sales_addBtn, sales_removeBtn;
+    @FXML
+    private Label home_sales,home_income,home_stock;
 
     private Connection connect;
     private PreparedStatement prepare;
@@ -105,6 +112,183 @@ public class dashboardController implements Initializable {
 
         // Add listener to sales_amount to update sales_balance when it changes
         sales_amount.textProperty().addListener((observable, oldValue, newValue) -> updateSalesBalance());
+
+        // Display today's total sales count, total payable amount, and total stock count
+        displayTodaySales();
+        displayTodayIncome();
+        displayTotalStock();
+
+        displayIncomeChart();
+        displaySalesChart();
+    }
+
+    private void displayTodaySales() {
+        int totalSalesToday = countTodaySales();
+        home_sales.setText(String.valueOf(totalSalesToday));
+    }
+
+    private int countTodaySales() {
+        int totalSales = 0;
+
+        // Get current date
+        SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd");
+        String currentDate = sdf.format(new Date());
+
+        String query = "SELECT COUNT(*) AS total_sales FROM sales WHERE DATE(date) = ?";
+
+        connect = connectDb();
+        try (PreparedStatement pstmt = connect.prepareStatement(query)) {
+            // Set the current date parameter
+            pstmt.setString(1, currentDate);
+
+            // Execute the query and get the result
+            result = pstmt.executeQuery();
+            if (result.next()) {
+                totalSales = result.getInt("total_sales");
+            }
+
+        } catch (SQLException e) {
+            e.printStackTrace();
+        } finally {
+            try {
+                if (result != null) result.close();
+                if (prepare != null) prepare.close();
+                if (connect != null) connect.close();
+            } catch (SQLException e) {
+                e.printStackTrace();
+            }
+        }
+
+        return totalSales;
+    }
+
+    private void displayTodayIncome() {
+        double totalIncomeToday = countTodayIncome();
+        DecimalFormat formatter = new DecimalFormat("#,###.00");
+        home_income.setText("Rs. " + formatter.format(totalIncomeToday));
+    }
+
+
+    private double countTodayIncome() {
+        double totalIncome = 0.0;
+
+        // Get current date
+        SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd");
+        String currentDate = sdf.format(new Date());
+
+        String query = "SELECT SUM(payable) AS total_income FROM sales_receipt WHERE DATE(date) = ?";
+
+        connect = connectDb();
+        try (PreparedStatement pstmt = connect.prepareStatement(query)) {
+            // Set the current date parameter
+            pstmt.setString(1, currentDate);
+
+            // Execute the query and get the result
+            result = pstmt.executeQuery();
+            if (result.next()) {
+                totalIncome = result.getDouble("total_income");
+            }
+
+        } catch (SQLException e) {
+            e.printStackTrace();
+        } finally {
+            try {
+                if (result != null) result.close();
+                if (prepare != null) prepare.close();
+                if (connect != null) connect.close();
+            } catch (SQLException e) {
+                e.printStackTrace();
+            }
+        }
+
+        return totalIncome;
+    }
+
+    private void displayTotalStock() {
+        int totalStock = countTotalStock();
+        home_stock.setText(String.valueOf(totalStock));
+    }
+
+    private int countTotalStock() {
+        int totalStock = 0;
+
+        String query = "SELECT COUNT(*) AS total_stock FROM chain_details";
+
+        connect = connectDb();
+        try (PreparedStatement pstmt = connect.prepareStatement(query)) {
+            // Execute the query and get the result
+            result = pstmt.executeQuery();
+            if (result.next()) {
+                totalStock = result.getInt("total_stock");
+            }
+
+        } catch (SQLException e) {
+            e.printStackTrace();
+        } finally {
+            try {
+                if (result != null) result.close();
+                if (prepare != null) prepare.close();
+                if (connect != null) connect.close();
+            } catch (SQLException e) {
+                e.printStackTrace();
+            }
+        }
+
+        return totalStock;
+    }
+
+    private void displayIncomeChart() {
+        XYChart.Series<String, Number> series = new XYChart.Series<>();
+        series.setName("Income");
+
+        String query = "SELECT DATE(date) as date, SUM(payable) as total_income FROM sales_receipt GROUP BY DATE(date)";
+        connect = connectDb();
+        try (PreparedStatement pstmt = connect.prepareStatement(query)) {
+            result = pstmt.executeQuery();
+            while (result.next()) {
+                String date = result.getString("date");
+                double income = result.getDouble("total_income");
+                series.getData().add(new XYChart.Data<>(date, income));
+            }
+            home_incomeChart.getData().add(series);
+        } catch (SQLException e) {
+            e.printStackTrace();
+        } finally {
+            try {
+                if (result != null) result.close();
+                if (prepare != null) prepare.close();
+                if (connect != null) connect.close();
+            } catch (SQLException e) {
+                e.printStackTrace();
+            }
+        }
+    }
+
+    private void displaySalesChart() {
+        XYChart.Series<String, Number> series = new XYChart.Series<>();
+        series.setName("Sales");
+
+        String query = "SELECT DATE(date) as date, COUNT(*) as total_sales FROM sales GROUP BY DATE(date)";
+        connect = connectDb();
+        try (PreparedStatement pstmt = connect.prepareStatement(query)) {
+            result = pstmt.executeQuery();
+            while (result.next()) {
+                String date = result.getString("date");
+                int sales = result.getInt("total_sales");
+                series.getData().add(new XYChart.Data<>(date, sales));
+            }
+            home_salesChart.getData().add(series);
+        } catch (SQLException e) {
+            e.printStackTrace();
+        } finally {
+            try {
+                if (result != null) result.close();
+                if (prepare != null) prepare.close();
+                if (connect != null) connect.close();
+            } catch (SQLException e) {
+                e.printStackTrace();
+            }
+        }
     }
 
     @FXML

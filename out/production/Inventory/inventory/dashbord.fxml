@@ -161,45 +161,45 @@
                                                 <String fx:value="shadow" />
                                             </styleClass>
                                             <children>
-                                                <AnchorPane fx:id="home_numberSales" layoutX="14.0" layoutY="13.0" prefHeight="106.0" prefWidth="200.0" styleClass="card" stylesheets="@dashboardDesign.css">
+                                                <AnchorPane fx:id="home_numberSales" layoutX="14.0" layoutY="13.0" prefHeight="106.0" prefWidth="253.0" styleClass="card" stylesheets="@dashboardDesign.css">
                                                     <children>
                                                         <FontAwesomeIcon fill="WHITE" glyphName="USERS" layoutX="14.0" layoutY="61.0" size="4em" />
-                                                        <Label layoutX="65.0" layoutY="72.0" text="Number of Sales" textFill="WHITE">
+                                                        <Label layoutX="127.0" layoutY="72.0" text="Number of Sales" textFill="WHITE">
                                                             <font>
                                                                 <Font name="Tahoma" size="15.0" />
                                                             </font>
                                                         </Label>
-                                                        <Label alignment="CENTER" layoutX="100.0" layoutY="17.0" prefHeight="22.0" prefWidth="97.0" text="0" textFill="WHITE">
+                                                        <Label fx:id="home_sales" alignment="CENTER" layoutX="142.0" layoutY="20.0" prefHeight="22.0" prefWidth="97.0" text="0" textFill="WHITE">
                                                             <font>
                                                                 <Font name="Berlin Sans FB" size="20.0" />
                                                             </font>
                                                         </Label>
                                                     </children>
                                                 </AnchorPane>
-                                                <AnchorPane fx:id="home_totalIncome" layoutX="230.0" layoutY="13.0" prefHeight="106.0" prefWidth="200.0" styleClass="card" stylesheets="@dashboardDesign.css">
+                                                <AnchorPane fx:id="home_totalIncome" layoutX="279.0" layoutY="13.0" prefHeight="106.0" prefWidth="253.0" styleClass="card" stylesheets="@dashboardDesign.css">
                                                     <children>
                                                         <FontAwesomeIcon fill="WHITE" glyphName="MONEY" layoutX="15.0" layoutY="61.0" size="4em" />
-                                                        <Label layoutX="88.0" layoutY="72.0" text="Total Income" textFill="WHITE">
+                                                        <Label layoutX="150.0" layoutY="72.0" text="Total Income" textFill="WHITE">
                                                             <font>
                                                                 <Font name="Tahoma" size="15.0" />
                                                             </font>
                                                         </Label>
-                                                        <Label alignment="CENTER" layoutX="100.0" layoutY="20.0" prefHeight="22.0" prefWidth="97.0" text="Rs.0.00" textFill="WHITE">
+                                                        <Label fx:id="home_income" alignment="CENTER" layoutX="100.0" layoutY="20.0" prefHeight="22.0" prefWidth="138.0" text="Rs.0.00" textFill="WHITE">
                                                             <font>
                                                                 <Font name="Berlin Sans FB" size="20.0" />
                                                             </font>
                                                         </Label>
                                                     </children>
                                                 </AnchorPane>
-                                                <AnchorPane fx:id="home_availableStock" layoutX="445.0" layoutY="13.0" prefHeight="106.0" prefWidth="200.0" styleClass="card" stylesheets="@dashboardDesign.css">
+                                                <AnchorPane fx:id="home_availableStock" layoutX="544.0" layoutY="13.0" prefHeight="106.0" prefWidth="253.0" styleClass="card" stylesheets="@dashboardDesign.css">
                                                     <children>
                                                         <FontAwesomeIcon fill="WHITE" glyphName="CUBE" layoutX="8.0" layoutY="61.0" size="4em" />
-                                                        <Label layoutX="59.0" layoutY="72.0" text="Available Stock" textFill="WHITE">
+                                                        <Label layoutX="140.0" layoutY="72.0" text="Available Stock" textFill="WHITE">
                                                             <font>
                                                                 <Font name="Tahoma" size="15.0" />
                                                             </font>
                                                         </Label>
-                                                        <Label alignment="CENTER" layoutX="94.0" layoutY="17.0" prefHeight="22.0" prefWidth="97.0" text="0" textFill="WHITE">
+                                                        <Label fx:id="home_stock" alignment="CENTER" layoutX="142.0" layoutY="20.0" prefHeight="22.0" prefWidth="97.0" text="0" textFill="WHITE">
                                                             <font>
                                                                 <Font name="Berlin Sans FB" size="20.0" />
                                                             </font>
