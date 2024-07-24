@@ -1,0 +1,135 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!-- Created with Jaspersoft Studio version 7.0.0.final using JasperReports Library version 7.0.0-b478feaa9aab4375eba71de77b4ca138ad2f62aa -->
+<jasperReport name="bill" language="java" pageWidth="595" pageHeight="842" columnWidth="555" leftMargin="20" rightMargin="20" topMargin="20" bottomMargin="20" uuid="ad5b580e-4fba-4dcc-a89b-cb342c619670">
+    <parameter name="inventoryP" class="java.lang.Integer"/>
+    <query>
+        <![CDATA[
+        SELECT s.customer_id, s.product_id, s.category, s.weight, s.net_weight, s.length, s.karat, s.gold_rate, s.price, s.return_value, s.date,
+               sr.total, sr.exchange, sr.payable, sr.amount, sr.balance, sr.date AS receipt_date, sr.time
+        FROM sales s
+        INNER JOIN sales_receipt sr ON s.customer_id = sr.customer_id
+        WHERE s.customer_id = $P{inventoryP}
+        ]]>
+    </query>
+    <field name="customer_id" class="java.lang.Integer"/>
+    <field name="product_id" class="java.lang.String"/>
+    <field name="category" class="java.lang.String"/>
+    <field name="weight" class="java.lang.String"/>
+    <field name="net_weight" class="java.lang.Integer"/>
+    <field name="length" class="java.lang.String"/>
+    <field name="karat" class="java.lang.String"/>
+    <field name="gold_rate" class="java.lang.Double"/>
+    <field name="price" class="java.lang.Double"/>
+    <field name="return_value" class="java.lang.Double"/>
+    <field name="date" class="java.sql.Date"/>
+    <field name="total" class="java.lang.Double"/>
+    <field name="exchange" class="java.lang.Double"/>
+    <field name="payable" class="java.lang.Double"/>
+    <field name="amount" class="java.lang.Double"/>
+    <field name="balance" class="java.lang.Double"/>
+    <field name="receipt_date" class="java.sql.Date"/>
+    <field name="time" class="java.sql.Timestamp"/>
+    <background>
+        <band height="20"/>
+    </background>
+    <title>
+        <band height="50">
+            <staticText>
+                <reportElement x="0" y="0" width="555" height="50"/>
+                <textElement textAlignment="Center" verticalAlignment="Middle"/>
+                <text><![CDATA[Customer Receipt]]></text>
+            </staticText>
+        </band>
+    </title>
+    <pageHeader>
+        <band height="20"/>
+    </pageHeader>
+    <columnHeader>
+        <band height="20"/>
+    </columnHeader>
+    <detail>
+        <band height="500">
+            <textField>
+                <reportElement x="0" y="0" width="100" height="20"/>
+                <textFieldExpression><![CDATA[$F{customer_id}]]></textFieldExpression>
+            </textField>
+            <textField>
+                <reportElement x="0" y="20" width="100" height="20"/>
+                <textFieldExpression><![CDATA[$F{product_id}]]></textFieldExpression>
+            </textField>
+            <textField>
+                <reportElement x="0" y="40" width="100" height="20"/>
+                <textFieldExpression><![CDATA[$F{category}]]></textFieldExpression>
+            </textField>
+            <textField>
+                <reportElement x="0" y="60" width="100" height="20"/>
+                <textFieldExpression><![CDATA[$F{weight}]]></textFieldExpression>
+            </textField>
+            <textField>
+                <reportElement x="0" y="80" width="100" height="20"/>
+                <textFieldExpression><![CDATA[$F{net_weight}]]></textFieldExpression>
+            </textField>
+            <textField>
+                <reportElement x="0" y="100" width="100" height="20"/>
+                <textFieldExpression><![CDATA[$F{length}]]></textFieldExpression>
+            </textField>
+            <textField>
+                <reportElement x="0" y="120" width="100" height="20"/>
+                <textFieldExpression><![CDATA[$F{karat}]]></textFieldExpression>
+            </textField>
+            <textField>
+                <reportElement x="0" y="140" width="100" height="20"/>
+                <textFieldExpression><![CDATA[$F{gold_rate}]]></textFieldExpression>
+            </textField>
+            <textField>
+                <reportElement x="0" y="160" width="100" height="20"/>
+                <textFieldExpression><![CDATA[$F{price}]]></textFieldExpression>
+            </textField>
+            <textField>
+                <reportElement x="0" y="180" width="100" height="20"/>
+                <textFieldExpression><![CDATA[$F{return_value}]]></textFieldExpression>
+            </textField>
+            <textField>
+                <reportElement x="0" y="200" width="100" height="20"/>
+                <textFieldExpression><![CDATA[$F{date}]]></textFieldExpression>
+            </textField>
+            <textField>
+                <reportElement x="0" y="220" width="100" height="20"/>
+                <textFieldExpression><![CDATA[$F{total}]]></textFieldExpression>
+            </textField>
+            <textField>
+                <reportElement x="0" y="240" width="100" height="20"/>
+                <textFieldExpression><![CDATA[$F{exchange}]]></textFieldExpression>
+            </textField>
+            <textField>
+                <reportElement x="0" y="260" width="100" height="20"/>
+                <textFieldExpression><![CDATA[$F{payable}]]></textFieldExpression>
+            </textField>
+            <textField>
+                <reportElement x="0" y="280" width="100" height="20"/>
+                <textFieldExpression><![CDATA[$F{amount}]]></textFieldExpression>
+            </textField>
+            <textField>
+                <reportElement x="0" y="300" width="100" height="20"/>
+                <textFieldExpression><![CDATA[$F{balance}]]></textFieldExpression>
+            </textField>
+            <textField>
+                <reportElement x="0" y="320" width="100" height="20"/>
+                <textFieldExpression><![CDATA[$F{receipt_date}]]></textFieldExpression>
+            </textField>
+            <textField>
+                <reportElement x="0" y="340" width="100" height="20"/>
+                <textFieldExpression><![CDATA[$F{time}]]></textFieldExpression>
+            </textField>
+        </band>
+    </detail>
+    <columnFooter>
+        <band height="20"/>
+    </columnFooter>
+    <pageFooter>
+        <band height="20"/>
+    </pageFooter>
+    <summary>
+        <band height="20"/>
+    </summary>
+</jasperReport>

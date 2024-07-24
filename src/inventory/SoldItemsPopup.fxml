@@ -1,0 +1,29 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.geometry.Insets?>
+<?import javafx.scene.control.TableColumn?>
+<?import javafx.scene.control.TableView?>
+<?import javafx.scene.layout.VBox?>
+
+<VBox prefHeight="555.0" prefWidth="900.0" xmlns="http://javafx.com/javafx/22" xmlns:fx="http://javafx.com/fxml/1" fx:controller="inventory.SoldItemsPopupController">
+    <children>
+        <TableView fx:id="soldItemsTableView" prefHeight="534.0" prefWidth="791.0">
+            <columns>
+                <TableColumn fx:id="soldItems_col_customerID" text="Customer ID" />
+                <TableColumn fx:id="soldItems_col_productID" text="Product ID" />
+                <TableColumn fx:id="soldItems_col_category" text="Category" />
+                <TableColumn fx:id="soldItems_col_weight" text="Weight" />
+                <TableColumn fx:id="soldItems_col_netWeight" text="Net Weight" />
+                <TableColumn fx:id="soldItems_col_length" text="Length" />
+                <TableColumn fx:id="soldItems_col_karat" text="Karat" />
+                <TableColumn fx:id="soldItems_col_goldRate" text="Gold Rate" />
+                <TableColumn fx:id="soldItems_col_price" text="Price" />
+                <TableColumn fx:id="soldItems_col_returnValue" text="Return Value" />
+                <TableColumn fx:id="soldItems_col_date" text="Date" />
+            </columns>
+        </TableView>
+    </children>
+    <padding>
+        <Insets bottom="10" left="10" right="10" top="10" />
+    </padding>
+</VBox>

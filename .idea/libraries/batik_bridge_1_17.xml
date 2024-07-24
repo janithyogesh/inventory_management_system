@@ -1,0 +1,39 @@
+<component name="libraryTable">
+  <library name="batik-bridge-1.17">
+    <CLASSES>
+      <root url="jar://$PROJECT_DIR$/../../Basic/jasper_jar/batik-bridge-1.17.jar!/" />
+      <root url="jar://$PROJECT_DIR$/../../Basic/jasper_jar/batik-awt-util-1.17.jar!/" />
+      <root url="jar://$PROJECT_DIR$/../../Basic/jasper_jar/commons-collections-3.2.2.jar!/" />
+      <root url="jar://$PROJECT_DIR$/../../Basic/jasper_jar/batik-i18n-1.17.jar!/" />
+      <root url="jar://$PROJECT_DIR$/../../Basic/jasper_jar/batik-script-1.17.jar!/" />
+      <root url="jar://$PROJECT_DIR$/../../Basic/jasper_jar/batik-xml-1.17.jar!/" />
+      <root url="jar://$PROJECT_DIR$/../../Basic/jasper_jar/batik-dom-1.17.jar!/" />
+      <root url="jar://$PROJECT_DIR$/../../Basic/jasper_jar/batik-gvt-1.17.jar!/" />
+      <root url="jar://$PROJECT_DIR$/../../Basic/jasper_jar/batik-anim-1.17.jar!/" />
+      <root url="jar://$PROJECT_DIR$/../../Basic/jasper_jar/batik-parser-1.17.jar!/" />
+      <root url="jar://$PROJECT_DIR$/../../Basic/jasper_jar/batik-ext-1.17.jar!/" />
+      <root url="jar://$PROJECT_DIR$/../../Basic/jasper_jar/batik-util-1.17.jar!/" />
+      <root url="jar://$PROJECT_DIR$/../../Basic/jasper_jar/batik-css-1.17.jar!/" />
+      <root url="jar://$PROJECT_DIR$/../../Basic/jasper_jar/commons-beanutils-1.9.4.jar!/" />
+      <root url="jar://$PROJECT_DIR$/../../Basic/jasper_jar/batik-constants-1.17.jar!/" />
+      <root url="jar://$PROJECT_DIR$/../../Basic/jasper_jar/batik-svg-dom-1.17.jar!/" />
+      <root url="jar://$PROJECT_DIR$/../../Basic/jasper_jar/commons-collections4-4.4.jar!/" />
+      <root url="jar://$PROJECT_DIR$/../../Basic/jasper_jar/commons-io-2.11.0.jar!/" />
+      <root url="jar://$PROJECT_DIR$/../../Basic/jasper_jar/xmlgraphics-commons-2.9.jar!/" />
+      <root url="jar://$PROJECT_DIR$/../../Basic/jasper_jar/xml-apis-ext-1.3.04.jar!/" />
+      <root url="jar://$PROJECT_DIR$/../../Basic/jasper_jar/woodstox-core-6.6.2.jar!/" />
+      <root url="jar://$PROJECT_DIR$/../../Basic/jasper_jar/stax2-api-4.2.2.jar!/" />
+      <root url="jar://$PROJECT_DIR$/../../Basic/jasper_jar/jasperreports-7.0.0.jar!/" />
+      <root url="jar://$PROJECT_DIR$/../../Basic/jasper_jar/jackson-dataformat-xml-2.17.1.jar!/" />
+      <root url="jar://$PROJECT_DIR$/../../Basic/jasper_jar/jackson-databind-2.17.1.jar!/" />
+      <root url="jar://$PROJECT_DIR$/../../Basic/jasper_jar/jackson-core-2.17.1.jar!/" />
+      <root url="jar://$PROJECT_DIR$/../../Basic/jasper_jar/jackson-annotations-2.17.1.jar!/" />
+      <root url="jar://$PROJECT_DIR$/../../Basic/jasper_jar/commons-logging-1.3.0.jar!/" />
+      <root url="file://$PROJECT_DIR$" />
+    </CLASSES>
+    <JAVADOC />
+    <SOURCES>
+      <root url="file://$PROJECT_DIR$/src" />
+    </SOURCES>
+  </library>
+</component>
