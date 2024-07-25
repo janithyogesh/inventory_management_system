@@ -63,9 +63,9 @@ public class dashboardController implements Initializable {
     @FXML
     private TableView<chainData> addChain_tableView;
     @FXML
-    private Button chainBtn, close, homeBtn, logout, minimize, salesBtn;
+    private Button chainBtn, close, homeBtn, logout, minimize, salesBtn, brBtn, riBtn, eaBtn, peBtn, suBtn, paBtn, neBtn, baBtn;
     @FXML
-    private AnchorPane chain_form, home_availableStock, home_form, home_numberSales, home_totalIncome, main_form, sales_form;
+    private AnchorPane chain_form, home_availableStock, home_form, home_numberSales, home_totalIncome, main_form, sales_form, br_form, ri_form, ea_form, pe_form, su_form, pa_form, ne_form, ba_form;
     @FXML
     private AreaChart<String, Number> home_incomeChart;
     @FXML
@@ -783,13 +783,13 @@ public class dashboardController implements Initializable {
                 alert.setHeaderText(null);
                 alert.setContentText("Please fill all blank fields");
                 alert.showAndWait();
-            } else if (!isProductIdValid(addChain_id.getText())) {
+            } else if (!isChainIdValid(addChain_id.getText())) {
                 alert = new Alert(Alert.AlertType.ERROR);
                 alert.setTitle("Error Message");
                 alert.setHeaderText(null);
                 alert.setContentText("Product ID format is incorrect. It should start with 'C' followed by 4 digits.");
                 alert.showAndWait();
-            } else if (isProductIdExist(addChain_id.getText())) {
+            } else if (isChainIdExist(addChain_id.getText())) {
                 alert = new Alert(Alert.AlertType.ERROR);
                 alert.setTitle("Error Message");
                 alert.setHeaderText(null);
@@ -922,7 +922,7 @@ public class dashboardController implements Initializable {
         }
 
         // Check if the Product ID exists
-        if (!isProductIdExist(addChain_id.getText())) {
+        if (!isChainIdExist(addChain_id.getText())) {
             Alert alert = new Alert(Alert.AlertType.ERROR);
             alert.setTitle("Error Message");
             alert.setHeaderText(null);
@@ -1256,21 +1256,58 @@ public class dashboardController implements Initializable {
     public void switchForm(ActionEvent event) {
         if (event.getSource() == homeBtn) {
             home_form.setVisible(true);
-            chain_form.setVisible(false);
             sales_form.setVisible(false);
+            chain_form.setVisible(false);
+            br_form.setVisible(false);
+            ri_form.setVisible(false);
+            ea_form.setVisible(false);
+            pe_form.setVisible(false);
+            su_form.setVisible(false);
+            pa_form.setVisible(false);
+            ne_form.setVisible(false);
+            ba_form.setVisible(false);
+
 
             homeBtn.setStyle("-fx-background-color:linear-gradient(to bottom ,#004cc5, #011b4a);");
-            chainBtn.setStyle("-fx-background-color:transparent");
             salesBtn.setStyle("-fx-background-color:transparent");
+            chainBtn.setStyle("-fx-background-color:transparent");
+            brBtn.setStyle("-fx-background-color:transparent");
+            riBtn.setStyle("-fx-background-color:transparent");
+            eaBtn.setStyle("-fx-background-color:transparent");
+            peBtn.setStyle("-fx-background-color:transparent");
+            suBtn.setStyle("-fx-background-color:transparent");
+            paBtn.setStyle("-fx-background-color:transparent");
+            neBtn.setStyle("-fx-background-color:transparent");
+            baBtn.setStyle("-fx-background-color:transparent");
+
+            displayTodaySales();
+            displayTodayIncome();
+            displayTotalStock();
 
         } else if (event.getSource() == chainBtn) {
             home_form.setVisible(false);
-            chain_form.setVisible(true);
             sales_form.setVisible(false);
+            chain_form.setVisible(true);
+            br_form.setVisible(false);
+            ri_form.setVisible(false);
+            ea_form.setVisible(false);
+            pe_form.setVisible(false);
+            su_form.setVisible(false);
+            pa_form.setVisible(false);
+            ne_form.setVisible(false);
+            ba_form.setVisible(false);
 
             homeBtn.setStyle("-fx-background-color:transparent");
-            chainBtn.setStyle("-fx-background-color:linear-gradient(to bottom ,#004cc5, #011b4a);");
             salesBtn.setStyle("-fx-background-color:transparent");
+            chainBtn.setStyle("-fx-background-color:linear-gradient(to bottom ,#004cc5, #011b4a);");
+            brBtn.setStyle("-fx-background-color:transparent");
+            riBtn.setStyle("-fx-background-color:transparent");
+            eaBtn.setStyle("-fx-background-color:transparent");
+            peBtn.setStyle("-fx-background-color:transparent");
+            suBtn.setStyle("-fx-background-color:transparent");
+            paBtn.setStyle("-fx-background-color:transparent");
+            neBtn.setStyle("-fx-background-color:transparent");
+            baBtn.setStyle("-fx-background-color:transparent");
 
             addChainShowListData();
             addChainListCategory();
@@ -1280,14 +1317,239 @@ public class dashboardController implements Initializable {
             addChainListStatus();
             addChainSearch();
 
-        } else if (event.getSource() == salesBtn) {
+        } else if (event.getSource() == brBtn) {
             home_form.setVisible(false);
+            sales_form.setVisible(false);
             chain_form.setVisible(false);
-            sales_form.setVisible(true);
+            br_form.setVisible(true);
+            ri_form.setVisible(false);
+            ea_form.setVisible(false);
+            pe_form.setVisible(false);
+            su_form.setVisible(false);
+            pa_form.setVisible(false);
+            ne_form.setVisible(false);
+            ba_form.setVisible(false);
+
 
             homeBtn.setStyle("-fx-background-color:transparent");
+            salesBtn.setStyle("-fx-background-color:transparent");
             chainBtn.setStyle("-fx-background-color:transparent");
+            brBtn.setStyle("-fx-background-color:linear-gradient(to bottom ,#004cc5, #011b4a);");
+            riBtn.setStyle("-fx-background-color:transparent");
+            eaBtn.setStyle("-fx-background-color:transparent");
+            peBtn.setStyle("-fx-background-color:transparent");
+            suBtn.setStyle("-fx-background-color:transparent");
+            paBtn.setStyle("-fx-background-color:transparent");
+            neBtn.setStyle("-fx-background-color:transparent");
+            baBtn.setStyle("-fx-background-color:transparent");
+
+        } else if (event.getSource() == riBtn) {
+            home_form.setVisible(false);
+            sales_form.setVisible(false);
+            chain_form.setVisible(false);
+            br_form.setVisible(false);
+            ri_form.setVisible(true);
+            ea_form.setVisible(false);
+            pe_form.setVisible(false);
+            su_form.setVisible(false);
+            pa_form.setVisible(false);
+            ne_form.setVisible(false);
+            ba_form.setVisible(false);
+
+
+            homeBtn.setStyle("-fx-background-color:transparent");
+            salesBtn.setStyle("-fx-background-color:transparent");
+            chainBtn.setStyle("-fx-background-color:transparent");
+            brBtn.setStyle("-fx-background-color:transparent");
+            riBtn.setStyle("-fx-background-color:linear-gradient(to bottom ,#004cc5, #011b4a);");
+            eaBtn.setStyle("-fx-background-color:transparent");
+            peBtn.setStyle("-fx-background-color:transparent");
+            suBtn.setStyle("-fx-background-color:transparent");
+            paBtn.setStyle("-fx-background-color:transparent");
+            neBtn.setStyle("-fx-background-color:transparent");
+            baBtn.setStyle("-fx-background-color:transparent");
+
+        } else if (event.getSource() == eaBtn) {
+            home_form.setVisible(false);
+            sales_form.setVisible(false);
+            chain_form.setVisible(false);
+            br_form.setVisible(false);
+            ri_form.setVisible(false);
+            ea_form.setVisible(true);
+            pe_form.setVisible(false);
+            su_form.setVisible(false);
+            pa_form.setVisible(false);
+            ne_form.setVisible(false);
+            ba_form.setVisible(false);
+
+
+            homeBtn.setStyle("-fx-background-color:transparent");
+            salesBtn.setStyle("-fx-background-color:transparent");
+            chainBtn.setStyle("-fx-background-color:transparent");
+            brBtn.setStyle("-fx-background-color:transparent");
+            riBtn.setStyle("-fx-background-color:transparent");
+            eaBtn.setStyle("-fx-background-color:linear-gradient(to bottom ,#004cc5, #011b4a);");
+            peBtn.setStyle("-fx-background-color:transparent");
+            suBtn.setStyle("-fx-background-color:transparent");
+            paBtn.setStyle("-fx-background-color:transparent");
+            neBtn.setStyle("-fx-background-color:transparent");
+            baBtn.setStyle("-fx-background-color:transparent");
+
+        } else if (event.getSource() == peBtn) {
+            home_form.setVisible(false);
+            sales_form.setVisible(false);
+            chain_form.setVisible(false);
+            br_form.setVisible(false);
+            ri_form.setVisible(false);
+            ea_form.setVisible(false);
+            pe_form.setVisible(true);
+            su_form.setVisible(false);
+            pa_form.setVisible(false);
+            ne_form.setVisible(false);
+            ba_form.setVisible(false);
+
+
+            homeBtn.setStyle("-fx-background-color:transparent");
+            salesBtn.setStyle("-fx-background-color:transparent");
+            chainBtn.setStyle("-fx-background-color:transparent");
+            brBtn.setStyle("-fx-background-color:transparent");
+            riBtn.setStyle("-fx-background-color:transparent");
+            eaBtn.setStyle("-fx-background-color:transparent");
+            peBtn.setStyle("-fx-background-color:linear-gradient(to bottom ,#004cc5, #011b4a);");
+            suBtn.setStyle("-fx-background-color:transparent");
+            paBtn.setStyle("-fx-background-color:transparent");
+            neBtn.setStyle("-fx-background-color:transparent");
+            baBtn.setStyle("-fx-background-color:transparent");
+
+        } else if (event.getSource() == suBtn) {
+            home_form.setVisible(false);
+            sales_form.setVisible(false);
+            chain_form.setVisible(false);
+            br_form.setVisible(false);
+            ri_form.setVisible(false);
+            ea_form.setVisible(false);
+            pe_form.setVisible(false);
+            su_form.setVisible(true);
+            pa_form.setVisible(false);
+            ne_form.setVisible(false);
+            ba_form.setVisible(false);
+
+
+            homeBtn.setStyle("-fx-background-color:transparent");
+            salesBtn.setStyle("-fx-background-color:transparent");
+            chainBtn.setStyle("-fx-background-color:transparent");
+            brBtn.setStyle("-fx-background-color:transparent");
+            riBtn.setStyle("-fx-background-color:transparent");
+            eaBtn.setStyle("-fx-background-color:transparent");
+            peBtn.setStyle("-fx-background-color:transparent");
+            suBtn.setStyle("-fx-background-color:linear-gradient(to bottom ,#004cc5, #011b4a);");
+            paBtn.setStyle("-fx-background-color:transparent");
+            neBtn.setStyle("-fx-background-color:transparent");
+            baBtn.setStyle("-fx-background-color:transparent");
+
+        } else if (event.getSource() == paBtn) {
+            home_form.setVisible(false);
+            sales_form.setVisible(false);
+            chain_form.setVisible(false);
+            br_form.setVisible(false);
+            ri_form.setVisible(false);
+            ea_form.setVisible(false);
+            pe_form.setVisible(false);
+            su_form.setVisible(false);
+            pa_form.setVisible(true);
+            ne_form.setVisible(false);
+            ba_form.setVisible(false);
+
+
+            homeBtn.setStyle("-fx-background-color:transparent");
+            salesBtn.setStyle("-fx-background-color:transparent");
+            chainBtn.setStyle("-fx-background-color:transparent");
+            brBtn.setStyle("-fx-background-color:transparent");
+            riBtn.setStyle("-fx-background-color:transparent");
+            eaBtn.setStyle("-fx-background-color:transparent");
+            peBtn.setStyle("-fx-background-color:transparent");
+            suBtn.setStyle("-fx-background-color:transparent");
+            paBtn.setStyle("-fx-background-color:linear-gradient(to bottom ,#004cc5, #011b4a);");
+            neBtn.setStyle("-fx-background-color:transparent");
+            baBtn.setStyle("-fx-background-color:transparent");
+
+        } else if (event.getSource() == neBtn) {
+            home_form.setVisible(false);
+            sales_form.setVisible(false);
+            chain_form.setVisible(false);
+            br_form.setVisible(false);
+            ri_form.setVisible(false);
+            ea_form.setVisible(false);
+            pe_form.setVisible(false);
+            su_form.setVisible(false);
+            pa_form.setVisible(false);
+            ne_form.setVisible(true);
+            ba_form.setVisible(false);
+
+
+            homeBtn.setStyle("-fx-background-color:transparent");
+            salesBtn.setStyle("-fx-background-color:transparent");
+            chainBtn.setStyle("-fx-background-color:transparent");
+            brBtn.setStyle("-fx-background-color:transparent");
+            riBtn.setStyle("-fx-background-color:transparent");
+            eaBtn.setStyle("-fx-background-color:transparent");
+            peBtn.setStyle("-fx-background-color:transparent");
+            suBtn.setStyle("-fx-background-color:transparent");
+            paBtn.setStyle("-fx-background-color:transparent");
+            neBtn.setStyle("-fx-background-color:linear-gradient(to bottom ,#004cc5, #011b4a);");
+            baBtn.setStyle("-fx-background-color:transparent");
+
+        } else if (event.getSource() == baBtn) {
+            home_form.setVisible(false);
+            sales_form.setVisible(false);
+            chain_form.setVisible(false);
+            br_form.setVisible(false);
+            ri_form.setVisible(false);
+            ea_form.setVisible(false);
+            pe_form.setVisible(false);
+            su_form.setVisible(false);
+            pa_form.setVisible(false);
+            ne_form.setVisible(false);
+            ba_form.setVisible(true);
+
+
+            homeBtn.setStyle("-fx-background-color:transparent");
+            salesBtn.setStyle("-fx-background-color:transparent");
+            chainBtn.setStyle("-fx-background-color:transparent");
+            brBtn.setStyle("-fx-background-color:transparent");
+            riBtn.setStyle("-fx-background-color:transparent");
+            eaBtn.setStyle("-fx-background-color:transparent");
+            peBtn.setStyle("-fx-background-color:transparent");
+            suBtn.setStyle("-fx-background-color:transparent");
+            paBtn.setStyle("-fx-background-color:transparent");
+            neBtn.setStyle("-fx-background-color:transparent");
+            baBtn.setStyle("-fx-background-color:linear-gradient(to bottom ,#004cc5, #011b4a);");
+
+        } else if (event.getSource() == salesBtn) {
+            home_form.setVisible(false);
+            sales_form.setVisible(true);
+            chain_form.setVisible(false);
+            br_form.setVisible(false);
+            ri_form.setVisible(false);
+            ea_form.setVisible(false);
+            pe_form.setVisible(false);
+            su_form.setVisible(false);
+            pa_form.setVisible(false);
+            ne_form.setVisible(false);
+            ba_form.setVisible(false);
+
+
+            homeBtn.setStyle("-fx-background-color:transparent");
             salesBtn.setStyle("-fx-background-color:linear-gradient(to bottom ,#004cc5, #011b4a);");
+            chainBtn.setStyle("-fx-background-color:transparent");
+            brBtn.setStyle("-fx-background-color:transparent");
+            riBtn.setStyle("-fx-background-color:transparent");
+            eaBtn.setStyle("-fx-background-color:transparent");
+            peBtn.setStyle("-fx-background-color:transparent");
+            suBtn.setStyle("-fx-background-color:transparent");
+            paBtn.setStyle("-fx-background-color:transparent");
+            neBtn.setStyle("-fx-background-color:transparent");
+            baBtn.setStyle("-fx-background-color:transparent");
 
             salesShowListData();
         }
@@ -1377,7 +1639,7 @@ public class dashboardController implements Initializable {
         };
     }
 
-    private boolean isProductIdExist(String productId) {
+    private boolean isChainIdExist(String productId) {
         String sql = "SELECT COUNT(*) FROM chain_details WHERE product_id = ?";
         connect = connectDb();
         try {
@@ -1394,7 +1656,7 @@ public class dashboardController implements Initializable {
         return false;
     }
 
-    private boolean isProductIdValid(String productId) {
+    private boolean isChainIdValid(String productId) {
         // Check if productId starts with 'C' and has exactly 4 digits
         return productId.matches("^C\\d{4}$");
     }

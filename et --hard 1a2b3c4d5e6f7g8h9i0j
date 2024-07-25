@@ -1,0 +1,11 @@
+[33mcommit a60cbf98321b95710679d0fea6a3ef284268cd3c[m[33m ([m[1;36mHEAD[m[33m -> [m[1;32mmaster[m[33m, [m[1;31morigin/master[m[33m)[m
+Author: Janith Yogesh Rathuge <e20453@eng.pdn.ac.lk>
+Date:   Wed Jul 24 12:50:29 2024 +0530
+
+    Update dashboardController to display total sales, total income, total stock, and chart data
+
+[33mcommit b5d617add16db9fd187db3474659c4280c1b529a[m
+Author: Janith Yogesh Rathuge <e20453@eng.pdn.ac.lk>
+Date:   Wed Jul 24 11:58:37 2024 +0530
+
+    Initial commit
