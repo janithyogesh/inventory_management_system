@@ -51,17 +51,31 @@ public class dashboardController implements Initializable {
     @FXML
     private Button addChain_addBtn, addChain_deleteBtn, addChain_importBtn, addChain_resetBtn, addChain_updateBtn;
     @FXML
+    private Button addBr_addBtn, addBr_deleteBtn, addBr_importBtn, addBr_resetBtn, addBr_updateBtn;
+    @FXML
     private ComboBox<String> addChain_category, addChain_karat, addChain_length, addChain_status, addChain_weight;
+    @FXML
+    private ComboBox<String> addBr_category, addBr_karat, addBr_length, addBr_status, addBr_weight;
     @FXML
     private TableColumn<chainData, String> addChain_col_category, addChain_col_karat, addChain_col_length, addChain_col_productID, addChain_col_status, addChain_col_supplier, addChain_col_weight;
     @FXML
     private TableColumn<chainData, Double> addChain_col_goldRate, addChain_col_netWeight;
     @FXML
+    private TableColumn<braceletData, String> addBr_col_category, addBr_col_karat, addBr_col_length, addBr_col_productID, addBr_col_status, addBr_col_supplier, addBr_col_weight;
+    @FXML
+    private TableColumn<braceletData, Double> addBr_col_goldRate, addBr_col_netWeight;
+    @FXML
     private TextField addChain_id, addChain_netWeight, addChain_rate, addChain_search, addChain_supplier;
+    @FXML
+    private TextField addBr_id, addBr_netWeight, addBr_rate, addBr_search, addBr_supplier;
     @FXML
     private ImageView addChain_img;
     @FXML
+    private ImageView addBr_img;
+    @FXML
     private TableView<chainData> addChain_tableView;
+    @FXML
+    private TableView<braceletData> addBr_tableView;
     @FXML
     private Button chainBtn, close, homeBtn, logout, minimize, salesBtn, brBtn, riBtn, eaBtn, peBtn, suBtn, paBtn, neBtn, baBtn;
     @FXML
@@ -89,10 +103,12 @@ public class dashboardController implements Initializable {
     private PreparedStatement prepare;
     private Statement statement;
     private ResultSet result;
-    private Image image;
+    private Image chainImage;
+    private Image brImage;
 
     // Declare customerid as a class-level variable
     private int customerid;
+
 
     @Override
     public void initialize(URL url, ResourceBundle resourceBundle) {
@@ -100,6 +116,7 @@ public class dashboardController implements Initializable {
         defaultNav();
         // Initialize data and views
         addChainShowListData();
+        addBraceletShowListData();
         salesShowListData();
 
         addChainListCategory();
@@ -107,8 +124,14 @@ public class dashboardController implements Initializable {
         addChainListLength();
         addChainListKarat();
         addChainListStatus();
+        addBrListCategory();
+        addBrListWeight();
+        addBrListLength();
+        addBrListKarat();
+        addBrListStatus();
 
         addChainSearch();
+        addBraceletSearch();
 
         // Add listener to sales_amount to update sales_balance when it changes
         sales_amount.textProperty().addListener((observable, oldValue, newValue) -> updateSalesBalance());
@@ -353,42 +376,20 @@ public class dashboardController implements Initializable {
         double price = Double.parseDouble(priceStr);
         double returnValue = Double.parseDouble(returnValueStr);
 
+        // Determine if the product is a chain or a bracelet
         chainData chainDetails = getChainDetails(productId);
-        if (chainDetails == null) {
+        braceletData braceletDetails = getBraceletDetails(productId);
+
+        if (chainDetails == null && braceletDetails == null) {
             showAlert(Alert.AlertType.ERROR, "Error Message", "Product ID not found");
             return;
         }
 
-        double minPrice = chainDetails.getGold_rate() * chainDetails.getNet_weight() / 8;
-        if (price < minPrice) {
-            showAlert(Alert.AlertType.ERROR, "Error Message", "Sales price must be greater than " + minPrice);
-            return;
+        if (chainDetails != null) {
+            handleChainData(chainDetails, price, returnValue);
+        } else if (braceletDetails != null) {
+            handleBraceletData(braceletDetails, price, returnValue);
         }
-
-        if (returnValue > price) {
-            showAlert(Alert.AlertType.ERROR, "Error Message", "Invalid Exchange Value!");
-            return;
-        }
-
-        customerId();  // Ensure customer ID is set
-
-        salesData newSalesData = new salesData(
-                customerid,
-                chainDetails.getProductId(),
-                chainDetails.getCategory(),
-                chainDetails.getWeight(),
-                chainDetails.getNet_weight(),
-                chainDetails.getLength(),
-                chainDetails.getKarat(),
-                chainDetails.getGold_rate(),
-                price,
-                returnValue,
-                new java.sql.Date(new Date().getTime())
-        );
-
-        sales_tableView.getItems().add(newSalesData);
-        clearSalesInputFields();
-        updateSalesTotal();
     }
 
     private boolean hasDuplicateProductIDs() {
@@ -487,7 +488,7 @@ public class dashboardController implements Initializable {
 
             // Remove sold items from chain_details table
             for (salesData sale : salesDataList) {
-                removeChainDetails(sale.getProduct_id());
+                removeProductDetails(sale.getProduct_id());
             }
 
             // Insert into sales_receipt table
@@ -521,17 +522,26 @@ public class dashboardController implements Initializable {
         }
     }
 
-    private void removeChainDetails(String productId) {
-        String sql = "DELETE FROM chain_details WHERE product_id = ?";
+    private void removeProductDetails(String productId) {
+        String deleteChainSql = "DELETE FROM chain_details WHERE product_id = ?";
+        String deleteBraceletSql = "DELETE FROM bracelet_details WHERE product_id = ?";
         connect = connectDb();
         try {
-            prepare = connect.prepareStatement(sql);
+            // Delete chain details
+            prepare = connect.prepareStatement(deleteChainSql);
             prepare.setString(1, productId);
             prepare.executeUpdate();
+
+            // Delete bracelet details
+            prepare = connect.prepareStatement(deleteBraceletSql);
+            prepare.setString(1, productId);
+            prepare.executeUpdate();
+
         } catch (Exception e) {
             e.printStackTrace();
         }
     }
+
 
     private boolean isProductIdInSalesTable(String productId) {
         String sql = "SELECT COUNT(*) FROM sales WHERE product_id = ?";
@@ -1002,8 +1012,8 @@ public class dashboardController implements Initializable {
 
         if (file != null) {
             getData.path = file.getAbsolutePath();
-            image = new Image(file.toURI().toString(), 90, 100, false, true);
-            addChain_img.setImage(image);
+            chainImage = new Image(file.toURI().toString(), 90, 100, false, true);
+            addChain_img.setImage(chainImage);
         }
     }
 
@@ -1179,13 +1189,583 @@ public class dashboardController implements Initializable {
 
         if (chD.getImage() != null && !chD.getImage().isEmpty()) {
             String uri = "file:" + chD.getImage();
-            image = new Image(uri, 90, 100, false, true);
-            addChain_img.setImage(image);
+            chainImage = new Image(uri, 90, 100, false, true);
+            addChain_img.setImage(chainImage);
             getData.path = chD.getImage();
         } else {
             addChain_img.setImage(null);
         }
     }
+
+    private boolean isChainIdExist(String productId) {
+        String sql = "SELECT COUNT(*) FROM chain_details WHERE product_id = ?";
+        connect = connectDb();
+        try {
+            prepare = connect.prepareStatement(sql);
+            prepare.setString(1, productId);
+            result = prepare.executeQuery();
+            if (result.next()) {
+                int count = result.getInt(1);
+                return count > 0;
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        return false;
+    }
+
+    private boolean isChainIdValid(String productId) {
+        // Check if productId starts with 'C' and has exactly 4 digits
+        return productId.matches("^C\\d{4}$");
+    }
+
+    // Method to handle chain data
+    private void handleChainData(chainData chainDetails, double price, double returnValue) {
+        double minPrice = chainDetails.getGold_rate() * chainDetails.getNet_weight() / 8;
+        if (price < minPrice) {
+            showAlert(Alert.AlertType.ERROR, "Error Message", "Sales price must be greater than " + minPrice);
+            return;
+        }
+
+        if (returnValue > price) {
+            showAlert(Alert.AlertType.ERROR, "Error Message", "Invalid Exchange Value!");
+            return;
+        }
+
+        customerId();  // Ensure customer ID is set
+
+        salesData newSalesData = new salesData(
+                customerid,
+                chainDetails.getProductId(),
+                chainDetails.getCategory(),
+                chainDetails.getWeight(),
+                chainDetails.getNet_weight(),
+                chainDetails.getLength(),
+                chainDetails.getKarat(),
+                chainDetails.getGold_rate(),
+                price,
+                returnValue,
+                new java.sql.Date(new Date().getTime())
+        );
+
+        sales_tableView.getItems().add(newSalesData);
+        clearSalesInputFields();
+        updateSalesTotal();
+    }
+
+    // **************************************Bracelets****************************************
+
+    // Method to get chain details from the database
+    private braceletData getBraceletDetails(String productId) {
+        String sql = "SELECT * FROM bracelet_details WHERE product_id = ?";
+        connect = connectDb();
+        braceletData braceletDetails = null;
+        try {
+            prepare = connect.prepareStatement(sql);
+            prepare.setString(1, productId);
+            result = prepare.executeQuery();
+            if (result.next()) {
+                braceletDetails = new braceletData(
+                        result.getString("product_id"),
+                        result.getString("category"),
+                        result.getString("weight"),
+                        result.getDouble("net_weight"),
+                        result.getString("length"),
+                        result.getString("karat"),
+                        result.getDouble("gold_rate"),
+                        result.getString("supplier"),
+                        result.getString("status"),
+                        result.getString("image"),
+                        result.getDate("date"));
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        return braceletDetails;
+    }
+
+    public void addBraceletAdd() {
+        String sql = "INSERT INTO bracelet_details (product_id, category, weight, net_weight, length, karat, gold_rate, supplier, status, image, date) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)";
+
+        connect = connectDb();
+        try {
+            Alert alert;
+
+            if (addBr_id.getText().isEmpty()
+                    || addBr_category.getSelectionModel().getSelectedItem() == null
+                    || addBr_weight.getSelectionModel().getSelectedItem() == null
+                    || addBr_netWeight.getText().isEmpty()
+                    || addBr_length.getSelectionModel().getSelectedItem() == null
+                    || addBr_karat.getSelectionModel().getSelectedItem() == null
+                    || addBr_rate.getText().isEmpty()
+                    || addBr_supplier.getText().isEmpty()
+                    || addBr_status.getSelectionModel().getSelectedItem() == null) {
+                alert = new Alert(Alert.AlertType.ERROR);
+                alert.setTitle("Error Message");
+                alert.setHeaderText(null);
+                alert.setContentText("Please fill all blank fields");
+                alert.showAndWait();
+            } else if (!isBraceletIdValid(addBr_id.getText())) {
+                alert = new Alert(Alert.AlertType.ERROR);
+                alert.setTitle("Error Message");
+                alert.setHeaderText(null);
+                alert.setContentText("Product ID format is incorrect. It should start with 'B' followed by 4 digits.");
+                alert.showAndWait();
+            } else if (isBraceletIdExist(addBr_id.getText())) {
+                alert = new Alert(Alert.AlertType.ERROR);
+                alert.setTitle("Error Message");
+                alert.setHeaderText(null);
+                alert.setContentText("Product ID already exists. Please use a unique Product ID.");
+                alert.showAndWait();
+            } else {
+                prepare = connect.prepareStatement(sql);
+                String productId = addBr_id.getText();
+                prepare.setString(1, productId);
+                prepare.setString(2, addBr_category.getSelectionModel().getSelectedItem());
+                prepare.setString(3, addBr_weight.getSelectionModel().getSelectedItem());
+                prepare.setString(4, addBr_netWeight.getText());
+                prepare.setString(5, addBr_length.getSelectionModel().getSelectedItem());
+                prepare.setString(6, addBr_karat.getSelectionModel().getSelectedItem());
+                prepare.setString(7, addBr_rate.getText());
+                prepare.setString(8, addBr_supplier.getText());
+                prepare.setString(9, addBr_status.getSelectionModel().getSelectedItem());
+
+                String uri = getData.path;
+                if (uri != null && !uri.isEmpty()) {
+                    uri = uri.replace("\\", "\\\\");
+                    prepare.setString(10, uri);
+                } else {
+                    prepare.setString(10, null);
+                }
+
+                Date date = new Date();
+                java.sql.Date sqldate = new java.sql.Date(date.getTime());
+
+                prepare.setString(11, String.valueOf(sqldate));
+
+                prepare.executeUpdate();
+
+                addBraceletShowListData();
+                addBraceletReset();
+
+                // Show success message
+                alert = new Alert(Alert.AlertType.INFORMATION);
+                alert.setTitle("Success");
+                alert.setHeaderText(null);
+                alert.setContentText(productId + " entered successfully!");
+                alert.showAndWait();
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+    }
+
+    public void addBraceletUpdate() {
+        // Check if the status is selected
+        if (addBr_status.getSelectionModel().getSelectedItem() == null) {
+            Alert alert = new Alert(Alert.AlertType.ERROR);
+            alert.setTitle("Error Message");
+            alert.setHeaderText(null);
+            alert.setContentText("Please select the new status");
+            alert.showAndWait();
+            return;
+        }
+
+        // Ensure the Product ID field is filled
+        if (addBr_id.getText().isEmpty()) {
+            Alert alert = new Alert(Alert.AlertType.ERROR);
+            alert.setTitle("Error Message");
+            alert.setHeaderText(null);
+            alert.setContentText("Product ID is required to update status");
+            alert.showAndWait();
+            return;
+        }
+
+        // Prompt for confirmation
+        Alert confirmationAlert = new Alert(Alert.AlertType.CONFIRMATION);
+        confirmationAlert.setTitle("Confirmation Message");
+        confirmationAlert.setHeaderText(null);
+        confirmationAlert.setContentText("Are you sure you want to UPDATE the status for Product_ID: " + addBr_id.getText() + "?");
+
+        Optional<ButtonType> confirmationResult = confirmationAlert.showAndWait();
+        if (confirmationResult.isPresent() && confirmationResult.get().equals(ButtonType.OK)) {
+            // Verify passcode
+            if (!verifyPasscode()) {
+                Alert alert = new Alert(Alert.AlertType.ERROR);
+                alert.setTitle("Error Message");
+                alert.setHeaderText(null);
+                alert.setContentText("Invalid passcode. Update canceled.");
+                alert.showAndWait();
+                return;
+            }
+
+            // Prepare the SQL query to update only the status field
+            String sql = "UPDATE bracelet_details SET status = ? WHERE product_id = ?";
+
+            connect = connectDb();
+            try {
+                prepare = connect.prepareStatement(sql);
+                prepare.setString(1, addBr_status.getSelectionModel().getSelectedItem());
+                prepare.setString(2, addBr_id.getText());
+
+                int rowsUpdated = prepare.executeUpdate();
+
+                if (rowsUpdated > 0) {
+                    addBraceletShowListData();
+                    addBraceletReset();
+
+                    Alert alert = new Alert(Alert.AlertType.INFORMATION);
+                    alert.setTitle("Information Message");
+                    alert.setHeaderText(null);
+                    alert.setContentText("Status updated successfully!");
+                    alert.showAndWait();
+                } else {
+                    Alert alert = new Alert(Alert.AlertType.ERROR);
+                    alert.setTitle("Error Message");
+                    alert.setHeaderText(null);
+                    alert.setContentText("Failed to update status. Please check the Product ID.");
+                    alert.showAndWait();
+                }
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
+        }
+    }
+
+    public void addBraceletDelete() {
+        // Ensure the Product ID field is filled
+        if (addBr_id.getText().isEmpty()) {
+            Alert alert = new Alert(Alert.AlertType.ERROR);
+            alert.setTitle("Error Message");
+            alert.setHeaderText(null);
+            alert.setContentText("Please fill all blank fields");
+            alert.showAndWait();
+            return;
+        }
+
+        // Check if the Product ID exists
+        if (!isBraceletIdExist(addBr_id.getText())) {
+            Alert alert = new Alert(Alert.AlertType.ERROR);
+            alert.setTitle("Error Message");
+            alert.setHeaderText(null);
+            alert.setContentText("Product ID not found. Deletion canceled.");
+            alert.showAndWait();
+            return;
+        }
+
+        // Prompt for confirmation
+        Alert confirmationAlert = new Alert(Alert.AlertType.CONFIRMATION);
+        confirmationAlert.setTitle("Confirmation Message");
+        confirmationAlert.setHeaderText(null);
+        confirmationAlert.setContentText("Are you sure you want to DELETE Product_ID: " + addBr_id.getText() + "?");
+
+        Optional<ButtonType> confirmationResult = confirmationAlert.showAndWait();
+        if (confirmationResult.isPresent() && confirmationResult.get().equals(ButtonType.OK)) {
+            // Verify passcode
+            if (!verifyPasscode()) {
+                Alert passcodeAlert = new Alert(Alert.AlertType.ERROR);
+                passcodeAlert.setTitle("Error Message");
+                passcodeAlert.setHeaderText(null);
+                passcodeAlert.setContentText("Invalid passcode. Deletion canceled.");
+                passcodeAlert.showAndWait();
+                return;
+            }
+
+            // Proceed with deletion
+            String sql = "DELETE FROM bracelet_details WHERE product_id = ?";
+            connect = connectDb();
+            try {
+                prepare = connect.prepareStatement(sql);
+                prepare.setString(1, addBr_id.getText());
+
+                int rowsDeleted = prepare.executeUpdate();
+                if (rowsDeleted > 0) {
+                    addBraceletShowListData();
+                    addBraceletReset();
+
+                    Alert alert = new Alert(Alert.AlertType.INFORMATION);
+                    alert.setTitle("Information Message");
+                    alert.setHeaderText(null);
+                    alert.setContentText("Data deleted successfully!");
+                    alert.showAndWait();
+                } else {
+                    Alert alert = new Alert(Alert.AlertType.ERROR);
+                    alert.setTitle("Error Message");
+                    alert.setHeaderText(null);
+                    alert.setContentText("Failed to delete data. Please try again.");
+                    alert.showAndWait();
+                }
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
+        }
+    }
+
+    public void addBraceletReset() {
+        addBr_id.setText("");
+        addBr_category.getSelectionModel().clearSelection();
+        addBr_weight.getSelectionModel().clearSelection();
+        addBr_netWeight.setText("");
+        addBr_length.getSelectionModel().clearSelection();
+        addBr_karat.getSelectionModel().clearSelection();
+        addBr_rate.setText("");
+        addBr_supplier.setText("");
+        addBr_status.getSelectionModel().clearSelection();
+        addBr_img.setImage(null);
+        getData.path = "";
+    }
+
+    public void addBrImportImage() {
+        FileChooser open = new FileChooser();
+        open.setTitle("Open Image File");
+        open.getExtensionFilters().add(new FileChooser.ExtensionFilter("Image File", "*jpg", "*png"));
+
+        File file = open.showOpenDialog(main_form.getScene().getWindow());
+
+        if (file != null) {
+            getData.path = file.getAbsolutePath();
+            brImage = new Image(file.toURI().toString(), 90, 100, false, true);
+            addBr_img.setImage(brImage);
+        }
+    }
+
+    private String[] listBrCategory = {"Price","Lazer"};
+
+    public void addBrListCategory() {
+        List<String> listC = new ArrayList<>();
+
+        for(String data:listBrCategory){
+            listC.add(data);
+        }
+        ObservableList<String> listData = FXCollections.observableArrayList(listBrCategory);
+        addBr_category.setItems(listData);
+    }
+
+    private String[] listBrWeight = {"40g", "32g"};
+
+    public void addBrListWeight() {
+        List<String> listW = new ArrayList<>();
+
+        for(String data:listBrWeight){
+            listW.add(data);
+        }
+        ObservableList<String> listData = FXCollections.observableArrayList(listBrWeight);
+        addBr_weight.setItems(listData);
+    }
+
+    private String[] listBrLength = {"24 in", "22 in"};
+
+    public void addBrListLength() {
+        List<String> listL = new ArrayList<>();
+
+        for(String data:listBrLength){
+            listL.add(data);
+        }
+        ObservableList<String> listData = FXCollections.observableArrayList(listBrLength);
+        addBr_length.setItems(listData);
+    }
+
+    //private String[] listKarat = {"24K", "23K", "22K", "21K", "20K", "19K", "18K"};
+
+    public void addBrListKarat() {
+        List<String> listK = new ArrayList<>();
+
+        for(String data:listKarat){
+            listK.add(data);
+        }
+        ObservableList<String> listData = FXCollections.observableArrayList(listKarat);
+        addBr_karat.setItems(listData);
+    }
+
+    //private String[] listStatus = {"Stock", "Showroom"};
+
+    public void addBrListStatus() {
+        List<String> listS = new ArrayList<>();
+
+        for(String data:listStatus){
+            listS.add(data);
+        }
+        ObservableList<String> listData = FXCollections.observableArrayList(listStatus);
+        addBr_status.setItems(listData);
+    }
+
+    public void addBraceletSearch() {
+        FilteredList<braceletData> filter = new FilteredList<>(addBraceletList, e -> true);
+
+        addBr_search.textProperty().addListener((Observable, oldValue, newValue) -> {
+            filter.setPredicate(predicateBrData -> {
+                if (newValue == null || newValue.isEmpty()) {
+                    return true;
+                }
+                String searchKey = newValue.toLowerCase();
+
+                if (predicateBrData.getProductId().toString().contains(searchKey)) {
+                    return true;
+                } else if (predicateBrData.getCategory().toLowerCase().contains(searchKey)) {
+                    return true;
+                } else if (predicateBrData.getWeight().toLowerCase().contains(searchKey)) {
+                    return true;
+                } else if (predicateBrData.getNet_weight().toString().contains(searchKey)) {
+                    return true;
+                } else if (predicateBrData.getLength().toLowerCase().contains(searchKey)) {
+                    return true;
+                } else if (predicateBrData.getKarat().toLowerCase().contains(searchKey)) {
+                    return true;
+                } else if (predicateBrData.getGold_rate().toString().contains(searchKey)) {
+                    return true;
+                } else if (predicateBrData.getSupplier().toString().contains(searchKey)) {
+                    return true;
+                } else if (predicateBrData.getStatus().toLowerCase().contains(searchKey)) {
+                    return true;
+                } else {
+                    return false;
+                }
+            });
+        });
+
+        SortedList<braceletData> sortList = new SortedList<>(filter);
+        sortList.comparatorProperty().bind(addBr_tableView.comparatorProperty());
+        addBr_tableView.setItems(sortList);
+    }
+
+    public ObservableList<braceletData> addBraceletListData() {
+        ObservableList<braceletData> braceletList = FXCollections.observableArrayList();
+
+        String sql = "SELECT * FROM bracelet_details";
+        connect = connectDb();
+        try {
+            prepare = connect.prepareStatement(sql);
+            result = prepare.executeQuery();
+            braceletData brD;
+
+            while (result.next()) {
+                brD = new braceletData(result.getString("product_id"),
+                        result.getString("category"),
+                        result.getString("weight"),
+                        result.getDouble("net_weight"),
+                        result.getString("length"),
+                        result.getString("karat"),
+                        result.getDouble("gold_rate"),
+                        result.getString("supplier"),
+                        result.getString("status"),
+                        result.getString("image"),
+                        result.getDate("date"));
+
+                braceletList.add(brD);
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        return braceletList;
+    }
+
+    private ObservableList<braceletData> addBraceletList;
+
+    public void addBraceletShowListData() {
+        addBraceletList = addBraceletListData();
+
+        addBr_col_productID.setCellValueFactory(new PropertyValueFactory<>("productId"));
+        addBr_col_category.setCellValueFactory(new PropertyValueFactory<>("category"));
+        addBr_col_weight.setCellValueFactory(new PropertyValueFactory<>("weight"));
+        addBr_col_netWeight.setCellValueFactory(new PropertyValueFactory<>("net_weight"));
+        addBr_col_length.setCellValueFactory(new PropertyValueFactory<>("length"));
+        addBr_col_karat.setCellValueFactory(new PropertyValueFactory<>("karat"));
+        addBr_col_goldRate.setCellValueFactory(new PropertyValueFactory<>("gold_rate"));
+        addBr_col_supplier.setCellValueFactory(new PropertyValueFactory<>("supplier"));
+        addBr_col_status.setCellValueFactory(new PropertyValueFactory<>("status"));
+
+        // Set custom cell factories to format double values to two decimal places
+        addBr_col_netWeight.setCellFactory(getDoubleCellFactory());
+        addBr_col_goldRate.setCellFactory(getDoubleCellFactory());
+
+        addBr_tableView.setItems(addBraceletList);
+    }
+
+    public void addBraceletSelect() {
+        braceletData brD = addBr_tableView.getSelectionModel().getSelectedItem();
+        int num = addBr_tableView.getSelectionModel().getSelectedIndex();
+
+        if ((num - 1) < -1) {
+            return;
+        }
+
+        addBr_id.setText(String.valueOf(brD.getProductId()));
+        setComboBoxValue(addBr_category, brD.getCategory());
+        setComboBoxValue(addBr_weight, brD.getWeight());
+        addBr_netWeight.setText(String.valueOf(brD.getNet_weight()));
+        setComboBoxValue(addBr_length, brD.getLength());
+        setComboBoxValue(addBr_karat, brD.getKarat());
+        addBr_rate.setText(String.valueOf(brD.getGold_rate()));
+        addBr_supplier.setText(String.valueOf(brD.getSupplier()));
+        setComboBoxValue(addBr_status, brD.getStatus());
+
+        if (brD.getImage() != null && !brD.getImage().isEmpty()) {
+            String uri = "file:" + brD.getImage();
+            brImage = new Image(uri, 90, 100, false, true);
+            addBr_img.setImage(brImage);
+            getData.path = brD.getImage();
+        } else {
+            addBr_img.setImage(null);
+        }
+    }
+
+    private boolean isBraceletIdExist(String productId) {
+        String sql = "SELECT COUNT(*) FROM bracelet_details WHERE product_id = ?";
+        connect = connectDb();
+        try {
+            prepare = connect.prepareStatement(sql);
+            prepare.setString(1, productId);
+            result = prepare.executeQuery();
+            if (result.next()) {
+                int count = result.getInt(1);
+                return count > 0;
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        return false;
+    }
+
+    private boolean isBraceletIdValid(String productId) {
+        // Check if productId starts with 'C' and has exactly 4 digits
+        return productId.matches("^B\\d{4}$");
+    }
+
+    // Method to handle bracelet data
+    private void handleBraceletData(braceletData braceletDetails, double price, double returnValue) {
+        double minPrice = braceletDetails.getGold_rate() * braceletDetails.getNet_weight() / 8;
+        if (price < minPrice) {
+            showAlert(Alert.AlertType.ERROR, "Error Message", "Sales price must be greater than " + minPrice);
+            return;
+        }
+
+        if (returnValue > price) {
+            showAlert(Alert.AlertType.ERROR, "Error Message", "Invalid Exchange Value!");
+            return;
+        }
+
+        customerId();  // Ensure customer ID is set
+
+        salesData newSalesData = new salesData(
+                customerid,
+                braceletDetails.getProductId(),
+                braceletDetails.getCategory(),
+                braceletDetails.getWeight(),
+                braceletDetails.getNet_weight(),
+                braceletDetails.getLength(),
+                braceletDetails.getKarat(),
+                braceletDetails.getGold_rate(),
+                price,
+                returnValue,
+                new java.sql.Date(new Date().getTime())
+        );
+
+        sales_tableView.getItems().add(newSalesData);
+        clearSalesInputFields();
+        updateSalesTotal();
+    }
+
+    // ****************************************************************
 
     private void setComboBoxValue(ComboBox<String> comboBox, String value) {
         Platform.runLater(() -> {
@@ -1342,6 +1922,14 @@ public class dashboardController implements Initializable {
             paBtn.setStyle("-fx-background-color:transparent");
             neBtn.setStyle("-fx-background-color:transparent");
             baBtn.setStyle("-fx-background-color:transparent");
+
+            addBraceletShowListData();
+            addBrListCategory();
+            addBrListWeight();
+            addBrListLength();
+            addBrListKarat();
+            addBrListStatus();
+            addBraceletSearch();
 
         } else if (event.getSource() == riBtn) {
             home_form.setVisible(false);
@@ -1639,27 +2227,7 @@ public class dashboardController implements Initializable {
         };
     }
 
-    private boolean isChainIdExist(String productId) {
-        String sql = "SELECT COUNT(*) FROM chain_details WHERE product_id = ?";
-        connect = connectDb();
-        try {
-            prepare = connect.prepareStatement(sql);
-            prepare.setString(1, productId);
-            result = prepare.executeQuery();
-            if (result.next()) {
-                int count = result.getInt(1);
-                return count > 0;
-            }
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
-        return false;
-    }
 
-    private boolean isChainIdValid(String productId) {
-        // Check if productId starts with 'C' and has exactly 4 digits
-        return productId.matches("^C\\d{4}$");
-    }
 
     private boolean verifyPasscode() {
         Dialog<String> dialog = new Dialog<>();

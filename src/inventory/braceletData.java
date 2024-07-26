@@ -3,7 +3,7 @@ package inventory;
 import java.sql.Date;
 
 
-public class chainData {
+public class braceletData {
     private String productId;
     private String category;
     private String weight;
@@ -17,7 +17,7 @@ public class chainData {
     private Date date;
 
 
-    public chainData(String productId, String category, String weight, Double net_weight, String length, String karat, Double gold_rate, String supplier, String status, String image, Date date) {
+    public braceletData(String productId, String category, String weight, Double net_weight, String length, String karat, Double gold_rate, String supplier, String status, String image, Date date) {
         //this.product_id = product_id;
         this.productId = productId;
         this.category = category;

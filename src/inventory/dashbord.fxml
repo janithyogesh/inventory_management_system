@@ -453,7 +453,7 @@
                                        </styleClass>
                                        <children>
                                           <ImageView fx:id="addBr_img" fitHeight="100.0" fitWidth="90.0" layoutX="1.0" pickOnBounds="true" preserveRatio="true" />
-                                          <Button fx:id="addBr_importBtn" layoutX="1.0" layoutY="97.0" mnemonicParsing="false" onAction="#addChainImportImage" prefHeight="20.0" prefWidth="90.0" styleClass="import-btn" stylesheets="@dashboardDesign.css" text="Import" />
+                                          <Button fx:id="addBr_importBtn" layoutX="1.0" layoutY="97.0" mnemonicParsing="false" onAction="#addBrImportImage" prefHeight="20.0" prefWidth="90.0" styleClass="import-btn" stylesheets="@dashboardDesign.css" text="Import" />
                                        </children>
                                     </AnchorPane>
                                     <Label layoutX="11.0" layoutY="167.0" text="Bracelet ID:">
@@ -467,53 +467,53 @@
                                           <Font name="Tahoma" size="14.0" />
                                        </font>
                                     </Label>
-                                    <ComboBox fx:id="addChain_category1" layoutX="95.0" layoutY="198.0" onAction="#addChainListCategory" prefHeight="25.0" prefWidth="110.0" promptText="Choose" styleClass="textfield" stylesheets="@dashboardDesign.css" />
+                                    <ComboBox fx:id="addBr_category" layoutX="95.0" layoutY="198.0" onAction="#addChainListCategory" prefHeight="25.0" prefWidth="110.0" promptText="Choose" styleClass="textfield" stylesheets="@dashboardDesign.css" />
                                     <Label layoutX="11.0" layoutY="234.0" text="Weight:">
                                        <font>
                                           <Font name="Tahoma" size="14.0" />
                                        </font>
                                     </Label>
-                                    <ComboBox fx:id="addChain_weight1" layoutX="95.0" layoutY="231.0" onAction="#addChainListWeight" prefHeight="25.0" prefWidth="110.0" promptText="Choose" styleClass="textfield" stylesheets="@dashboardDesign.css" />
+                                    <ComboBox fx:id="addBr_weight" layoutX="95.0" layoutY="231.0" onAction="#addChainListWeight" prefHeight="25.0" prefWidth="110.0" promptText="Choose" styleClass="textfield" stylesheets="@dashboardDesign.css" />
                                     <Label layoutX="11.0" layoutY="299.0" text="Length:">
                                        <font>
                                           <Font name="Tahoma" size="14.0" />
                                        </font>
                                     </Label>
-                                    <ComboBox fx:id="addChain_length1" layoutX="95.0" layoutY="296.0" onAction="#addChainListLength" prefHeight="25.0" prefWidth="110.0" promptText="Choose" styleClass="textfield" stylesheets="@dashboardDesign.css" />
+                                    <ComboBox fx:id="addBr_length" layoutX="95.0" layoutY="296.0" onAction="#addChainListLength" prefHeight="25.0" prefWidth="110.0" promptText="Choose" styleClass="textfield" stylesheets="@dashboardDesign.css" />
                                     <Label layoutX="11.0" layoutY="266.0" text="Net Weight:">
                                        <font>
                                           <Font name="Tahoma" size="14.0" />
                                        </font>
                                     </Label>
-                                    <TextField fx:id="addChain_netWeight1" layoutX="95.0" layoutY="263.0" prefHeight="25.0" prefWidth="110.0" styleClass="textfield" stylesheets="@dashboardDesign.css" />
+                                    <TextField fx:id="addBr_netWeight" layoutX="95.0" layoutY="263.0" prefHeight="25.0" prefWidth="110.0" styleClass="textfield" stylesheets="@dashboardDesign.css" />
                                     <Label layoutX="11.0" layoutY="331.0" text="Karat:">
                                        <font>
                                           <Font name="Tahoma" size="14.0" />
                                        </font>
                                     </Label>
-                                    <ComboBox fx:id="addChain_karat1" layoutX="95.0" layoutY="328.0" onAction="#addChainListKarat" prefHeight="25.0" prefWidth="110.0" promptText="Choose" styleClass="textfield" stylesheets="@dashboardDesign.css" />
+                                    <ComboBox fx:id="addBr_karat" layoutX="95.0" layoutY="328.0" onAction="#addChainListKarat" prefHeight="25.0" prefWidth="110.0" promptText="Choose" styleClass="textfield" stylesheets="@dashboardDesign.css" />
                                     <Label layoutX="11.0" layoutY="363.0" text="Gold Rate:">
                                        <font>
                                           <Font name="Tahoma" size="14.0" />
                                        </font>
                                     </Label>
-                                    <TextField fx:id="addChain_rate1" layoutX="96.0" layoutY="360.0" prefHeight="25.0" prefWidth="110.0" styleClass="textfield" stylesheets="@dashboardDesign.css" />
+                                    <TextField fx:id="addBr_rate" layoutX="96.0" layoutY="360.0" prefHeight="25.0" prefWidth="110.0" styleClass="textfield" stylesheets="@dashboardDesign.css" />
                                     <Label layoutX="11.0" layoutY="394.0" text="Supplier:">
                                        <font>
                                           <Font name="Tahoma" size="14.0" />
                                        </font>
                                     </Label>
-                                    <TextField fx:id="addChain_supplier1" layoutX="96.0" layoutY="391.0" prefHeight="25.0" prefWidth="110.0" styleClass="textfield" stylesheets="@dashboardDesign.css" />
-                                    <Button fx:id="addChain_addBtn1" layoutX="13.0" layoutY="496.0" mnemonicParsing="false" onAction="#addChainAdd" prefWidth="90.0" styleClass="add-btn" stylesheets="@dashboardDesign.css" text="Add" />
-                                    <Button fx:id="addChain_updateBtn1" layoutX="110.0" layoutY="496.0" mnemonicParsing="false" onAction="#addChainUpdate" prefWidth="90.0" styleClass="update-btn" stylesheets="@dashboardDesign.css" text="Update" />
-                                    <Button fx:id="addChain_resetBtn1" layoutX="13.0" layoutY="537.0" mnemonicParsing="false" onAction="#addChainReset" prefWidth="90.0" styleClass="reset-btn" stylesheets="@dashboardDesign.css" text="Reset" />
-                                    <Button fx:id="addChain_deleteBtn1" layoutX="110.0" layoutY="537.0" mnemonicParsing="false" onAction="#addChainDelete" prefWidth="90.0" styleClass="delete-btn" stylesheets="@dashboardDesign.css" text="Delete" />
+                                    <TextField fx:id="addBr_supplier" layoutX="96.0" layoutY="391.0" prefHeight="25.0" prefWidth="110.0" styleClass="textfield" stylesheets="@dashboardDesign.css" />
+                                    <Button fx:id="addBr_addBtn" layoutX="13.0" layoutY="496.0" mnemonicParsing="false" onAction="#addBraceletAdd" prefWidth="90.0" styleClass="add-btn" stylesheets="@dashboardDesign.css" text="Add" />
+                                    <Button fx:id="addBr_updateBtn" layoutX="110.0" layoutY="496.0" mnemonicParsing="false" onAction="#addBraceletUpdate" prefWidth="90.0" styleClass="update-btn" stylesheets="@dashboardDesign.css" text="Update" />
+                                    <Button fx:id="addBr_resetBtn" layoutX="13.0" layoutY="537.0" mnemonicParsing="false" onAction="#addBraceletReset" prefWidth="90.0" styleClass="reset-btn" stylesheets="@dashboardDesign.css" text="Reset" />
+                                    <Button fx:id="addBr_deleteBtn" layoutX="110.0" layoutY="537.0" mnemonicParsing="false" onAction="#addBraceletDelete" prefWidth="90.0" styleClass="delete-btn" stylesheets="@dashboardDesign.css" text="Delete" />
                                     <Label layoutX="11.0" layoutY="425.0" text="Status:">
                                        <font>
                                           <Font name="Tahoma" size="14.0" />
                                        </font>
                                     </Label>
-                                    <ComboBox fx:id="addChain_status1" layoutX="96.0" layoutY="422.0" onAction="#addChainListStatus" prefHeight="25.0" prefWidth="110.0" promptText="Choose" styleClass="textfield" stylesheets="@dashboardDesign.css" />
+                                    <ComboBox fx:id="addBr_status" layoutX="96.0" layoutY="422.0" onAction="#addChainListStatus" prefHeight="25.0" prefWidth="110.0" promptText="Choose" styleClass="textfield" stylesheets="@dashboardDesign.css" />
                                  </children>
                               </AnchorPane>
                               <AnchorPane layoutX="234.0" layoutY="6.0" prefHeight="591.0" prefWidth="738.0" stylesheets="@dashboardDesign.css">
@@ -522,20 +522,20 @@
                                     <String fx:value="white-gb" />
                                  </styleClass>
                                  <children>
-                                    <TableView fx:id="addChain_tableView1" layoutX="14.0" layoutY="70.0" onMouseClicked="#addChainSelect" prefHeight="508.0" prefWidth="711.0">
+                                    <TableView fx:id="addBr_tableView" layoutX="14.0" layoutY="70.0" onMouseClicked="#addBraceletSelect" prefHeight="508.0" prefWidth="711.0">
                                        <columns>
-                                          <TableColumn fx:id="addChain_col_productID1" prefWidth="75.0" text="Product ID" />
-                                          <TableColumn fx:id="addChain_col_category1" prefWidth="102.39990234375" text="Category" />
-                                          <TableColumn fx:id="addChain_col_weight1" prefWidth="68.79998779296875" text="Weight" />
-                                          <TableColumn fx:id="addChain_col_netWeight1" prefWidth="79.20001220703125" text="Net Weight" />
-                                          <TableColumn fx:id="addChain_col_length1" prefWidth="61.60003662109375" text="Length" />
-                                          <TableColumn fx:id="addChain_col_karat1" prefWidth="65.5999755859375" text="Karat" />
-                                          <TableColumn fx:id="addChain_col_goldRate1" prefWidth="108.00006103515625" text="Gold Rate" />
-                                          <TableColumn fx:id="addChain_col_supplier1" prefWidth="68.0" text="Supplier" />
-                                          <TableColumn fx:id="addChain_col_status1" prefWidth="84.0" text="Status" />
+                                          <TableColumn fx:id="addBr_col_productID" prefWidth="75.0" text="Product ID" />
+                                          <TableColumn fx:id="addBr_col_category" prefWidth="102.39990234375" text="Category" />
+                                          <TableColumn fx:id="addBr_col_weight" prefWidth="68.79998779296875" text="Weight" />
+                                          <TableColumn fx:id="addBr_col_netWeight" prefWidth="79.20001220703125" text="Net Weight" />
+                                          <TableColumn fx:id="addBr_col_length" prefWidth="61.60003662109375" text="Length" />
+                                          <TableColumn fx:id="addBr_col_karat" prefWidth="65.5999755859375" text="Karat" />
+                                          <TableColumn fx:id="addBr_col_goldRate" prefWidth="108.00006103515625" text="Gold Rate" />
+                                          <TableColumn fx:id="addBr_col_supplier" prefWidth="68.0" text="Supplier" />
+                                          <TableColumn fx:id="addBr_col_status" prefWidth="84.0" text="Status" />
                                        </columns>
                                     </TableView>
-                                    <TextField fx:id="addChain_search1" layoutX="14.0" layoutY="28.0" onAction="#addChainSearch" prefHeight="35.0" prefWidth="232.0" promptText="Search" styleClass="search" stylesheets="@dashboardDesign.css" />
+                                    <TextField fx:id="addBr_search" layoutX="14.0" layoutY="28.0" onAction="#addBraceletSearch" prefHeight="35.0" prefWidth="232.0" promptText="Search" styleClass="search" stylesheets="@dashboardDesign.css" />
                                     <FontAwesomeIcon fill="#818181" glyphName="SEARCH" layoutX="216.0" layoutY="52.0" size="1.5em" />
                                  </children>
                               </AnchorPane>
