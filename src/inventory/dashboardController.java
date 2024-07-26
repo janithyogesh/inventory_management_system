@@ -52,10 +52,12 @@ public class dashboardController implements Initializable {
     private Button addChain_addBtn, addChain_deleteBtn, addChain_importBtn, addChain_resetBtn, addChain_updateBtn;
     @FXML
     private Button addBr_addBtn, addBr_deleteBtn, addBr_importBtn, addBr_resetBtn, addBr_updateBtn;
+
     @FXML
     private ComboBox<String> addChain_category, addChain_karat, addChain_length, addChain_status, addChain_weight;
     @FXML
     private ComboBox<String> addBr_category, addBr_karat, addBr_length, addBr_status, addBr_weight;
+
     @FXML
     private TableColumn<chainData, String> addChain_col_category, addChain_col_karat, addChain_col_length, addChain_col_productID, addChain_col_status, addChain_col_supplier, addChain_col_weight;
     @FXML
@@ -64,18 +66,24 @@ public class dashboardController implements Initializable {
     private TableColumn<braceletData, String> addBr_col_category, addBr_col_karat, addBr_col_length, addBr_col_productID, addBr_col_status, addBr_col_supplier, addBr_col_weight;
     @FXML
     private TableColumn<braceletData, Double> addBr_col_goldRate, addBr_col_netWeight;
+
     @FXML
     private TextField addChain_id, addChain_netWeight, addChain_rate, addChain_search, addChain_supplier;
     @FXML
     private TextField addBr_id, addBr_netWeight, addBr_rate, addBr_search, addBr_supplier;
+
     @FXML
     private ImageView addChain_img;
     @FXML
     private ImageView addBr_img;
+
     @FXML
     private TableView<chainData> addChain_tableView;
     @FXML
     private TableView<braceletData> addBr_tableView;
+
+    //*****************************************DO NOT DO CHANGES********************************************************
+
     @FXML
     private Button chainBtn, close, homeBtn, logout, minimize, salesBtn, brBtn, riBtn, eaBtn, peBtn, suBtn, paBtn, neBtn, baBtn;
     @FXML
@@ -103,6 +111,8 @@ public class dashboardController implements Initializable {
     private PreparedStatement prepare;
     private Statement statement;
     private ResultSet result;
+
+    //***************************
     private Image chainImage;
     private Image brImage;
 
@@ -114,24 +124,7 @@ public class dashboardController implements Initializable {
     public void initialize(URL url, ResourceBundle resourceBundle) {
         displayUsername();
         defaultNav();
-        // Initialize data and views
-        addChainShowListData();
-        addBraceletShowListData();
         salesShowListData();
-
-        addChainListCategory();
-        addChainListWeight();
-        addChainListLength();
-        addChainListKarat();
-        addChainListStatus();
-        addBrListCategory();
-        addBrListWeight();
-        addBrListLength();
-        addBrListKarat();
-        addBrListStatus();
-
-        addChainSearch();
-        addBraceletSearch();
 
         // Add listener to sales_amount to update sales_balance when it changes
         sales_amount.textProperty().addListener((observable, oldValue, newValue) -> updateSalesBalance());
@@ -140,10 +133,28 @@ public class dashboardController implements Initializable {
         displayTodaySales();
         displayTodayIncome();
         displayTotalStock();
-
         displayIncomeChart();
         displaySalesChart();
+
+        //********************************
+        addChainShowListData();
+        addChainListCategory();
+        addChainListWeight();
+        addChainListLength();
+        addChainListKarat();
+        addChainListStatus();
+        addChainSearch();
+
+        addBraceletShowListData();
+        addBrListCategory();
+        addBrListWeight();
+        addBrListLength();
+        addBrListKarat();
+        addBrListStatus();
+        addBraceletSearch();
     }
+
+    //********************************HOME PAGE REALTED*****************************************************************
 
     private void displayTodaySales() {
         int totalSalesToday = countTodaySales();
@@ -314,6 +325,8 @@ public class dashboardController implements Initializable {
         }
     }
 
+    //************************************SALES TABLE DISPLAY***********************************************************
+
     @FXML
     private void handleSoldItemsButtonClick(ActionEvent event) {
         try {
@@ -325,6 +338,7 @@ public class dashboardController implements Initializable {
 
             Stage stage = new Stage();
             stage.setScene(new Scene(root));
+            stage.setTitle("Sold Items");
             stage.initModality(Modality.APPLICATION_MODAL);
             stage.showAndWait();
         } catch (Exception e) {
@@ -361,6 +375,8 @@ public class dashboardController implements Initializable {
         return salesDataList;
     }
 
+    //************************************NEW SALES*********************************************************************
+
     // Method to add products to the sales table
     @FXML
     private void handleAddButtonClick() {
@@ -376,6 +392,8 @@ public class dashboardController implements Initializable {
         double price = Double.parseDouble(priceStr);
         double returnValue = Double.parseDouble(returnValueStr);
 
+        //******************CHANGE THIS WITH PAGES************************************************
+
         // Determine if the product is a chain or a bracelet
         chainData chainDetails = getChainDetails(productId);
         braceletData braceletDetails = getBraceletDetails(productId);
@@ -390,6 +408,8 @@ public class dashboardController implements Initializable {
         } else if (braceletDetails != null) {
             handleBraceletData(braceletDetails, price, returnValue);
         }
+
+        //****************************************************************************************
     }
 
     private boolean hasDuplicateProductIDs() {
@@ -522,6 +542,8 @@ public class dashboardController implements Initializable {
         }
     }
 
+    //*******************************REMOVING DATA AFTER THE PAYMENT****************************************************
+
     private void removeProductDetails(String productId) {
         String deleteChainSql = "DELETE FROM chain_details WHERE product_id = ?";
         String deleteBraceletSql = "DELETE FROM bracelet_details WHERE product_id = ?";
@@ -541,6 +563,8 @@ public class dashboardController implements Initializable {
             e.printStackTrace();
         }
     }
+
+    //******************************************************************************************************************
 
 
     private boolean isProductIdInSalesTable(String productId) {
@@ -723,6 +747,45 @@ public class dashboardController implements Initializable {
         }
     }
 
+
+
+    // Method to manage customer ID
+    public void customerId() {
+        String customId = "SELECT MAX(customer_id) AS max_id FROM sales";
+
+        connect = connectDb();
+
+        try {
+            prepare = connect.prepareStatement(customId);
+            result = prepare.executeQuery();
+
+            if (result.next()) {
+                customerid = result.getInt("max_id") + 1;
+            } else {
+                customerid = 1;
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+    }
+
+    private boolean isProductIdExistInSales(String productId) {
+        String checkSql = "SELECT COUNT(*) FROM sales WHERE product_id = ?";
+        try {
+            prepare = connect.prepareStatement(checkSql);
+            prepare.setString(1, productId);
+            result = prepare.executeQuery();
+            if (result.next()) {
+                return result.getInt(1) > 0;
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        return false;
+    }
+
+    //*************************************************CHAIN RELATED****************************************************
+
     // Method to get chain details from the database
     private chainData getChainDetails(String productId) {
         String sql = "SELECT * FROM chain_details WHERE product_id = ?";
@@ -750,26 +813,6 @@ public class dashboardController implements Initializable {
             e.printStackTrace();
         }
         return chainDetails;
-    }
-
-    // Method to manage customer ID
-    public void customerId() {
-        String customId = "SELECT MAX(customer_id) AS max_id FROM sales";
-
-        connect = connectDb();
-
-        try {
-            prepare = connect.prepareStatement(customId);
-            result = prepare.executeQuery();
-
-            if (result.next()) {
-                customerid = result.getInt("max_id") + 1;
-            } else {
-                customerid = 1;
-            }
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
     }
 
     public void addChainAdd() {
@@ -804,6 +847,12 @@ public class dashboardController implements Initializable {
                 alert.setTitle("Error Message");
                 alert.setHeaderText(null);
                 alert.setContentText("Product ID already exists. Please use a unique Product ID.");
+                alert.showAndWait();
+            } else if (isProductIdExistInSales(addChain_id.getText())) {
+                alert = new Alert(Alert.AlertType.ERROR);
+                alert.setTitle("Error Message");
+                alert.setHeaderText(null);
+                alert.setContentText("Product ID already exists in sales table. Please use a unique Product ID.");
                 alert.showAndWait();
             } else {
                 prepare = connect.prepareStatement(sql);
@@ -1222,9 +1271,28 @@ public class dashboardController implements Initializable {
     // Method to handle chain data
     private void handleChainData(chainData chainDetails, double price, double returnValue) {
         double minPrice = chainDetails.getGold_rate() * chainDetails.getNet_weight() / 8;
+
         if (price < minPrice) {
-            showAlert(Alert.AlertType.ERROR, "Error Message", "Sales price must be greater than " + minPrice);
-            return;
+            // Show alert with OK and Continue Anyway options
+            Alert alert = new Alert(Alert.AlertType.CONFIRMATION);
+            alert.setTitle("Error Message");
+            alert.setHeaderText(null);
+            alert.setContentText("Sales price must be greater than " + minPrice);
+
+            ButtonType okButton = new ButtonType("OK", ButtonBar.ButtonData.OK_DONE);
+            ButtonType continueButton = new ButtonType("Continue Anyway", ButtonBar.ButtonData.OTHER);
+            alert.getButtonTypes().setAll(okButton, continueButton);
+
+            Optional<ButtonType> result = alert.showAndWait();
+            if (result.isPresent() && result.get() == continueButton) {
+                boolean passcodeVerified = verifyPasscode();
+                if (!passcodeVerified) {
+                    showAlert(Alert.AlertType.ERROR, "Error Message", "Invalid passcode");
+                    return;
+                }
+            } else {
+                return;
+            }
         }
 
         if (returnValue > price) {
@@ -1253,7 +1321,7 @@ public class dashboardController implements Initializable {
         updateSalesTotal();
     }
 
-    // **************************************Bracelets****************************************
+    // **************************************BRACELET RELATED***********************************************************
 
     // Method to get chain details from the database
     private braceletData getBraceletDetails(String productId) {
@@ -1316,6 +1384,12 @@ public class dashboardController implements Initializable {
                 alert.setTitle("Error Message");
                 alert.setHeaderText(null);
                 alert.setContentText("Product ID already exists. Please use a unique Product ID.");
+                alert.showAndWait();
+            } else if (isProductIdExistInSales(addBr_id.getText())) {
+                alert = new Alert(Alert.AlertType.ERROR);
+                alert.setTitle("Error Message");
+                alert.setHeaderText(null);
+                alert.setContentText("Product ID already exists in sales table. Please use a unique Product ID.");
                 alert.showAndWait();
             } else {
                 prepare = connect.prepareStatement(sql);
@@ -1734,9 +1808,28 @@ public class dashboardController implements Initializable {
     // Method to handle bracelet data
     private void handleBraceletData(braceletData braceletDetails, double price, double returnValue) {
         double minPrice = braceletDetails.getGold_rate() * braceletDetails.getNet_weight() / 8;
+
         if (price < minPrice) {
-            showAlert(Alert.AlertType.ERROR, "Error Message", "Sales price must be greater than " + minPrice);
-            return;
+            // Show alert with OK and Continue Anyway options
+            Alert alert = new Alert(Alert.AlertType.CONFIRMATION);
+            alert.setTitle("Error Message");
+            alert.setHeaderText(null);
+            alert.setContentText("Sales price must be greater than " + minPrice);
+
+            ButtonType okButton = new ButtonType("OK", ButtonBar.ButtonData.OK_DONE);
+            ButtonType continueButton = new ButtonType("Continue Anyway", ButtonBar.ButtonData.OTHER);
+            alert.getButtonTypes().setAll(okButton, continueButton);
+
+            Optional<ButtonType> result = alert.showAndWait();
+            if (result.isPresent() && result.get() == continueButton) {
+                boolean passcodeVerified = verifyPasscode();
+                if (!passcodeVerified) {
+                    showAlert(Alert.AlertType.ERROR, "Error Message", "Invalid passcode");
+                    return;
+                }
+            } else {
+                return;
+            }
         }
 
         if (returnValue > price) {
@@ -1765,7 +1858,7 @@ public class dashboardController implements Initializable {
         updateSalesTotal();
     }
 
-    // ****************************************************************
+    // *****************************************************************************************************************
 
     private void setComboBoxValue(ComboBox<String> comboBox, String value) {
         Platform.runLater(() -> {
