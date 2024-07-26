@@ -1,0 +1,31 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.geometry.Insets?>
+<?import javafx.scene.control.Button?>
+<?import javafx.scene.control.Label?>
+<?import javafx.scene.control.ListView?>
+<?import javafx.scene.control.TextField?>
+<?import javafx.scene.layout.HBox?>
+<?import javafx.scene.layout.VBox?>
+<?import javafx.scene.text.Font?>
+
+<VBox prefHeight="390.0" prefWidth="301.0" spacing="10" xmlns="http://javafx.com/javafx/22" xmlns:fx="http://javafx.com/fxml/1" fx:controller="inventory.StockChangeController">
+    <padding>
+        <Insets bottom="10" left="10" right="10" top="10" />
+    </padding>
+    <Label prefHeight="23.0" prefWidth="198.0" text="Change Product Status" textAlignment="CENTER">
+      <font>
+         <Font name="Tahoma" size="18.0" />
+      </font></Label>
+    <HBox spacing="10" stylesheets="@dashboardDesign.css">
+        <TextField fx:id="productIdField" promptText="Enter Product ID" styleClass="search" />
+        <Button onAction="#handleAddProductId" prefHeight="26.0" prefWidth="94.0" styleClass="add-btn" stylesheets="@dashboardDesign.css" text="Add" />
+    </HBox>
+    <ListView fx:id="productIdListView" prefHeight="200" styleClass="table-view" stylesheets="@dashboardDesign.css" />
+    <HBox spacing="10">
+        <Button onAction="#handleRemoveSelectedProductId" prefHeight="26.0" prefWidth="134.0" styleClass="reset-btn" stylesheets="@dashboardDesign.css" text="Remove Selected" />
+        <Button onAction="#handleClearAllProductIds" prefHeight="26.0" prefWidth="134.0" styleClass="delete-btn" stylesheets="@dashboardDesign.css" text="Clear All" />
+    </HBox>
+    <Button onAction="#handleUpdateStatus" prefHeight="26.0" prefWidth="278.0" styleClass="update-btn" stylesheets="@dashboardDesign.css" text="Update Status to Showroom" />
+    <Label fx:id="statusLabel" text="" />
+</VBox>

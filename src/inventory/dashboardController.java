@@ -103,7 +103,7 @@ public class dashboardController implements Initializable {
     @FXML
     private TableView<salesData> sales_tableView;
     @FXML
-    private Button sales_payBtn, sales_receiptBtn, sales_soldBtn, sales_addBtn, sales_removeBtn;
+    private Button sales_payBtn, sales_receiptBtn, sales_soldBtn, sales_addBtn, sales_removeBtn, sales_stockBtn;
     @FXML
     private Label home_sales,home_income,home_stock;
 
@@ -782,6 +782,22 @@ public class dashboardController implements Initializable {
             e.printStackTrace();
         }
         return false;
+    }
+
+    @FXML
+    private void handleSalesStockButtonClick(ActionEvent event) {
+        try {
+            FXMLLoader loader = new FXMLLoader(getClass().getResource("StockChange.fxml"));
+            Parent root = loader.load();
+
+            Stage stage = new Stage();
+            stage.setScene(new Scene(root));
+            stage.setTitle("Stock Changing");
+            stage.initModality(Modality.APPLICATION_MODAL);
+            stage.showAndWait();
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
     }
 
     //*************************************************CHAIN RELATED****************************************************
