@@ -73,11 +73,7 @@ public class SoldItemsPopupController implements Initializable {
                     return true;
                 } else if (salesData.getCategory().toLowerCase().contains(lowerCaseFilter)) {
                     return true;
-                } else if (salesData.getWeight().toLowerCase().contains(lowerCaseFilter)) {
-                    return true;
                 } else if (String.valueOf(salesData.getNet_weight()).contains(lowerCaseFilter)) {
-                    return true;
-                } else if (salesData.getLength().toLowerCase().contains(lowerCaseFilter)) {
                     return true;
                 } else if (salesData.getKarat().toLowerCase().contains(lowerCaseFilter)) {
                     return true;

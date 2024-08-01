@@ -52,11 +52,15 @@ public class dashboardController implements Initializable {
     private Button addChain_addBtn, addChain_deleteBtn, addChain_importBtn, addChain_resetBtn, addChain_updateBtn;
     @FXML
     private Button addBr_addBtn, addBr_deleteBtn, addBr_importBtn, addBr_resetBtn, addBr_updateBtn;
+    @FXML
+    private Button addRi_addBtn, addRi_deleteBtn, addRi_importBtn, addRi_resetBtn, addRi_updateBtn;
 
     @FXML
     private ComboBox<String> addChain_category, addChain_karat, addChain_length, addChain_status, addChain_weight;
     @FXML
     private ComboBox<String> addBr_category, addBr_karat, addBr_length, addBr_status, addBr_weight;
+    @FXML
+    private ComboBox<String> addRi_category, addRi_karat, addRi_status;
 
     @FXML
     private TableColumn<chainData, String> addChain_col_category, addChain_col_karat, addChain_col_length, addChain_col_productID, addChain_col_status, addChain_col_supplier, addChain_col_weight;
@@ -66,21 +70,31 @@ public class dashboardController implements Initializable {
     private TableColumn<braceletData, String> addBr_col_category, addBr_col_karat, addBr_col_length, addBr_col_productID, addBr_col_status, addBr_col_supplier, addBr_col_weight;
     @FXML
     private TableColumn<braceletData, Double> addBr_col_goldRate, addBr_col_netWeight;
+    @FXML
+    private TableColumn<ringData, String> addRi_col_category, addRi_col_karat, addRi_col_length, addRi_col_productID, addRi_col_status, addRi_col_supplier, addRi_col_weight;
+    @FXML
+    private TableColumn<ringData, Double> addRi_col_goldRate, addRi_col_netWeight;
 
     @FXML
     private TextField addChain_id, addChain_netWeight, addChain_rate, addChain_search, addChain_supplier;
     @FXML
     private TextField addBr_id, addBr_netWeight, addBr_rate, addBr_search, addBr_supplier;
+    @FXML
+    private TextField addRi_id, addRi_netWeight, addRi_rate, addRi_search, addRi_supplier;
 
     @FXML
     private ImageView addChain_img;
     @FXML
     private ImageView addBr_img;
+    @FXML
+    private ImageView addRi_img;
 
     @FXML
     private TableView<chainData> addChain_tableView;
     @FXML
     private TableView<braceletData> addBr_tableView;
+    @FXML
+    private TableView<ringData> addRi_tableView;
 
     //*****************************************DO NOT DO CHANGES********************************************************
 
@@ -115,6 +129,7 @@ public class dashboardController implements Initializable {
     //***************************
     private Image chainImage;
     private Image brImage;
+    private Image riImage;
 
     // Declare customerid as a class-level variable
     private int customerid;
@@ -152,6 +167,12 @@ public class dashboardController implements Initializable {
         addBrListKarat();
         addBrListStatus();
         addBraceletSearch();
+
+        addRingShowListData();
+        addRiListCategory();
+        addRiListKarat();
+        addRiListStatus();
+        addRingSearch();
     }
 
     //********************************HOME PAGE REALTED*****************************************************************
@@ -381,6 +402,20 @@ public class dashboardController implements Initializable {
     @FXML
     private void handleAddButtonClick() {
         String productId = sales_id.getText();
+
+        //******************CHANGE THIS WITH PAGES************************************************
+
+        chainData chainDetails = getChainDetails(productId);
+        braceletData braceletDetails = getBraceletDetails(productId);
+        ringData ringDetails = getRingDetails(productId);
+
+        if (chainDetails == null && braceletDetails == null && ringDetails == null) {
+            showAlert(Alert.AlertType.ERROR, "Error Message", "Product ID not found");
+            return;
+        }
+
+        //****************************************************************************************
+
         String priceStr = sales_price.getText();
         String returnValueStr = sales_return.getText();
 
@@ -392,24 +427,14 @@ public class dashboardController implements Initializable {
         double price = Double.parseDouble(priceStr);
         double returnValue = Double.parseDouble(returnValueStr);
 
-        //******************CHANGE THIS WITH PAGES************************************************
-
-        // Determine if the product is a chain or a bracelet
-        chainData chainDetails = getChainDetails(productId);
-        braceletData braceletDetails = getBraceletDetails(productId);
-
-        if (chainDetails == null && braceletDetails == null) {
-            showAlert(Alert.AlertType.ERROR, "Error Message", "Product ID not found");
-            return;
-        }
-
+        //****************************************Change this also******************************************************
         if (chainDetails != null) {
             handleChainData(chainDetails, price, returnValue);
         } else if (braceletDetails != null) {
             handleBraceletData(braceletDetails, price, returnValue);
+        } else if (ringDetails != null) {
+            handleRingData(ringDetails, price, returnValue);
         }
-
-        //****************************************************************************************
     }
 
     private boolean hasDuplicateProductIDs() {
@@ -547,6 +572,7 @@ public class dashboardController implements Initializable {
     private void removeProductDetails(String productId) {
         String deleteChainSql = "DELETE FROM chain_details WHERE product_id = ?";
         String deleteBraceletSql = "DELETE FROM bracelet_details WHERE product_id = ?";
+        String deleteRingSql = "DELETE FROM ring_details WHERE product_id = ?";
         connect = connectDb();
         try {
             // Delete chain details
@@ -556,6 +582,11 @@ public class dashboardController implements Initializable {
 
             // Delete bracelet details
             prepare = connect.prepareStatement(deleteBraceletSql);
+            prepare.setString(1, productId);
+            prepare.executeUpdate();
+
+            // Delete ring details
+            prepare = connect.prepareStatement(deleteRingSql);
             prepare.setString(1, productId);
             prepare.executeUpdate();
 
@@ -800,7 +831,15 @@ public class dashboardController implements Initializable {
         }
     }
 
+    private String[] listKarat = {"24K", "23K", "22K", "21K", "20K", "19K", "18K"};
+    private String[] listStatus = {"Stock", "Showroom"};
     //*************************************************CHAIN RELATED****************************************************
+
+    private String[] listCategory = {"Box Chain", "Double Box", "Dragon Box", "Bismark Chain", "KDM Chain", "Double Albert", "Albert Chain", "Lotus Chain", "Lazer Chain", "Link Chain", "Rope Chain", "Sapna Chain", "Ball Chain", "Diamond Chain", "Lee Chain", "SP Chain", "18K Chain"};
+    private String[] listWeight = {"40g", "32g", "24g", "20g", "16g", "14g", "12g", "10g", "8g", "6g", "5g", "4.5g", "4g", "3.5g", "3g", "2.5g", "2g", "1.5g", "1g"};
+    private String[] listLength = {"24 in", "22 in", "20 in", "18 in", "16 in", "14 in"};
+
+
 
     // Method to get chain details from the database
     private chainData getChainDetails(String productId) {
@@ -1082,8 +1121,6 @@ public class dashboardController implements Initializable {
         }
     }
 
-    private String[] listCategory = {"Box Chain", "Double Box", "Dragon Box", "Bismark Chain", "KDM Chain", "Double Albert", "Albert Chain", "Lotus Chain", "Lazer Chain", "Link Chain", "Rope Chain", "Sapna Chain", "Ball Chain", "Diamond Chain", "Lee Chain", "SP Chain", "18K Chain"};
-
     public void addChainListCategory() {
         List<String> listC = new ArrayList<>();
 
@@ -1093,8 +1130,6 @@ public class dashboardController implements Initializable {
         ObservableList<String> listData = FXCollections.observableArrayList(listCategory);
         addChain_category.setItems(listData);
     }
-
-    private String[] listWeight = {"40g", "32g", "24g", "20g", "16g", "14g", "12g", "10g", "8g", "6g", "5g", "4.5g", "4g", "3.5g", "3g", "2.5g", "2g", "1.5g", "1g"};
 
     public void addChainListWeight() {
         List<String> listW = new ArrayList<>();
@@ -1106,8 +1141,6 @@ public class dashboardController implements Initializable {
         addChain_weight.setItems(listData);
     }
 
-    private String[] listLength = {"24 in", "22 in", "20 in", "18 in", "16 in", "14 in"};
-
     public void addChainListLength() {
         List<String> listL = new ArrayList<>();
 
@@ -1118,8 +1151,6 @@ public class dashboardController implements Initializable {
         addChain_length.setItems(listData);
     }
 
-    private String[] listKarat = {"24K", "23K", "22K", "21K", "20K", "19K", "18K"};
-
     public void addChainListKarat() {
         List<String> listK = new ArrayList<>();
 
@@ -1129,8 +1160,6 @@ public class dashboardController implements Initializable {
         ObservableList<String> listData = FXCollections.observableArrayList(listKarat);
         addChain_karat.setItems(listData);
     }
-
-    private String[] listStatus = {"Stock", "Showroom"};
 
     public void addChainListStatus() {
         List<String> listS = new ArrayList<>();
@@ -1243,14 +1272,6 @@ public class dashboardController implements Initializable {
         }
 
         addChain_id.setText(String.valueOf(chD.getProductId()));
-        setComboBoxValue(addChain_category, chD.getCategory());
-        setComboBoxValue(addChain_weight, chD.getWeight());
-        addChain_netWeight.setText(String.valueOf(chD.getNet_weight()));
-        setComboBoxValue(addChain_length, chD.getLength());
-        setComboBoxValue(addChain_karat, chD.getKarat());
-        addChain_rate.setText(String.valueOf(chD.getGold_rate()));
-        addChain_supplier.setText(String.valueOf(chD.getSupplier()));
-        setComboBoxValue(addChain_status, chD.getStatus());
 
         if (chD.getImage() != null && !chD.getImage().isEmpty()) {
             String uri = "file:" + chD.getImage();
@@ -1338,6 +1359,10 @@ public class dashboardController implements Initializable {
     }
 
     // **************************************BRACELET RELATED***********************************************************
+
+    private String[] listBrCategory = {"Price","Lazer"};
+    private String[] listBrWeight = {"40g", "32g"};
+    private String[] listBrLength = {"24 in", "22 in"};
 
     // Method to get chain details from the database
     private braceletData getBraceletDetails(String productId) {
@@ -1619,8 +1644,6 @@ public class dashboardController implements Initializable {
         }
     }
 
-    private String[] listBrCategory = {"Price","Lazer"};
-
     public void addBrListCategory() {
         List<String> listC = new ArrayList<>();
 
@@ -1630,8 +1653,6 @@ public class dashboardController implements Initializable {
         ObservableList<String> listData = FXCollections.observableArrayList(listBrCategory);
         addBr_category.setItems(listData);
     }
-
-    private String[] listBrWeight = {"40g", "32g"};
 
     public void addBrListWeight() {
         List<String> listW = new ArrayList<>();
@@ -1643,8 +1664,6 @@ public class dashboardController implements Initializable {
         addBr_weight.setItems(listData);
     }
 
-    private String[] listBrLength = {"24 in", "22 in"};
-
     public void addBrListLength() {
         List<String> listL = new ArrayList<>();
 
@@ -1655,8 +1674,6 @@ public class dashboardController implements Initializable {
         addBr_length.setItems(listData);
     }
 
-    //private String[] listKarat = {"24K", "23K", "22K", "21K", "20K", "19K", "18K"};
-
     public void addBrListKarat() {
         List<String> listK = new ArrayList<>();
 
@@ -1666,8 +1683,6 @@ public class dashboardController implements Initializable {
         ObservableList<String> listData = FXCollections.observableArrayList(listKarat);
         addBr_karat.setItems(listData);
     }
-
-    //private String[] listStatus = {"Stock", "Showroom"};
 
     public void addBrListStatus() {
         List<String> listS = new ArrayList<>();
@@ -1780,14 +1795,6 @@ public class dashboardController implements Initializable {
         }
 
         addBr_id.setText(String.valueOf(brD.getProductId()));
-        setComboBoxValue(addBr_category, brD.getCategory());
-        setComboBoxValue(addBr_weight, brD.getWeight());
-        addBr_netWeight.setText(String.valueOf(brD.getNet_weight()));
-        setComboBoxValue(addBr_length, brD.getLength());
-        setComboBoxValue(addBr_karat, brD.getKarat());
-        addBr_rate.setText(String.valueOf(brD.getGold_rate()));
-        addBr_supplier.setText(String.valueOf(brD.getSupplier()));
-        setComboBoxValue(addBr_status, brD.getStatus());
 
         if (brD.getImage() != null && !brD.getImage().isEmpty()) {
             String uri = "file:" + brD.getImage();
@@ -1874,7 +1881,502 @@ public class dashboardController implements Initializable {
         updateSalesTotal();
     }
 
-    // *****************************************************************************************************************
+    // **************************************RING RELATED***********************************************************
+
+    private String[] listRiCategory = {"Stone Ring","Wedding Ring"};
+
+    // Method to get ring details from the database
+    private ringData getRingDetails(String productId) {
+        String sql = "SELECT * FROM ring_details WHERE product_id = ?";
+        connect = connectDb();
+        ringData ringDetails = null;
+        try {
+            prepare = connect.prepareStatement(sql);
+            prepare.setString(1, productId);
+            result = prepare.executeQuery();
+            if (result.next()) {
+                ringDetails = new ringData(
+                        result.getString("product_id"),
+                        result.getString("category"),
+                        result.getString("weight"),
+                        result.getDouble("net_weight"),
+                        result.getString("length"),
+                        result.getString("karat"),
+                        result.getDouble("gold_rate"),
+                        result.getString("supplier"),
+                        result.getString("status"),
+                        result.getString("image"),
+                        result.getDate("date"));
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        return ringDetails;
+    }
+
+    public void addRingAdd() {
+        String sql = "INSERT INTO ring_details (product_id, category, net_weight, karat, gold_rate, supplier, status, image, date) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?)";
+
+        connect = connectDb();
+        try {
+            Alert alert;
+
+            if (addRi_id.getText().isEmpty()
+                    || addRi_category.getSelectionModel().getSelectedItem() == null
+                    || addRi_netWeight.getText().isEmpty()
+                    || addRi_karat.getSelectionModel().getSelectedItem() == null
+                    || addRi_rate.getText().isEmpty()
+                    || addRi_supplier.getText().isEmpty()
+                    || addRi_status.getSelectionModel().getSelectedItem() == null) {
+                alert = new Alert(Alert.AlertType.ERROR);
+                alert.setTitle("Error Message");
+                alert.setHeaderText(null);
+                alert.setContentText("Please fill all blank fields");
+                alert.showAndWait();
+            } else if (!isRingIdValid(addRi_id.getText())) {
+                alert = new Alert(Alert.AlertType.ERROR);
+                alert.setTitle("Error Message");
+                alert.setHeaderText(null);
+                alert.setContentText("Product ID format is incorrect. It should start with 'R' followed by 4 digits.");
+                alert.showAndWait();
+            } else if (isRingIdExist(addRi_id.getText())) {
+                alert = new Alert(Alert.AlertType.ERROR);
+                alert.setTitle("Error Message");
+                alert.setHeaderText(null);
+                alert.setContentText("Product ID already exists. Please use a unique Product ID.");
+                alert.showAndWait();
+            } else if (isProductIdExistInSales(addRi_id.getText())) {
+                alert = new Alert(Alert.AlertType.ERROR);
+                alert.setTitle("Error Message");
+                alert.setHeaderText(null);
+                alert.setContentText("Product ID already exists in sales table. Please use a unique Product ID.");
+                alert.showAndWait();
+            } else {
+                prepare = connect.prepareStatement(sql);
+                String productId = addRi_id.getText();
+                prepare.setString(1, productId);
+                prepare.setString(2, addRi_category.getSelectionModel().getSelectedItem());
+                //prepare.setString(3, addRi_weight.getSelectionModel().getSelectedItem());
+                prepare.setString(3, addRi_netWeight.getText());
+                //prepare.setString(5, addRi_length.getSelectionModel().getSelectedItem());
+                prepare.setString(4, addRi_karat.getSelectionModel().getSelectedItem());
+                prepare.setString(5, addRi_rate.getText());
+                prepare.setString(6, addRi_supplier.getText());
+                prepare.setString(7, addRi_status.getSelectionModel().getSelectedItem());
+
+                String uri = getData.path;
+                if (uri != null && !uri.isEmpty()) {
+                    uri = uri.replace("\\", "\\\\");
+                    prepare.setString(8, uri);
+                } else {
+                    prepare.setString(8, null);
+                }
+
+                Date date = new Date();
+                java.sql.Date sqldate = new java.sql.Date(date.getTime());
+
+                prepare.setString(9, String.valueOf(sqldate));
+
+                prepare.executeUpdate();
+
+                addRingShowListData();
+                addRingReset();
+
+                // Show success message
+                alert = new Alert(Alert.AlertType.INFORMATION);
+                alert.setTitle("Success");
+                alert.setHeaderText(null);
+                alert.setContentText(productId + " entered successfully!");
+                alert.showAndWait();
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+    }
+
+    public void addRingUpdate() {
+        // Check if the status is selected
+        if (addRi_status.getSelectionModel().getSelectedItem() == null) {
+            Alert alert = new Alert(Alert.AlertType.ERROR);
+            alert.setTitle("Error Message");
+            alert.setHeaderText(null);
+            alert.setContentText("Please select the new status");
+            alert.showAndWait();
+            return;
+        }
+
+        // Ensure the Product ID field is filled
+        if (addRi_id.getText().isEmpty()) {
+            Alert alert = new Alert(Alert.AlertType.ERROR);
+            alert.setTitle("Error Message");
+            alert.setHeaderText(null);
+            alert.setContentText("Product ID is required to update status");
+            alert.showAndWait();
+            return;
+        }
+
+        // Prompt for confirmation
+        Alert confirmationAlert = new Alert(Alert.AlertType.CONFIRMATION);
+        confirmationAlert.setTitle("Confirmation Message");
+        confirmationAlert.setHeaderText(null);
+        confirmationAlert.setContentText("Are you sure you want to UPDATE the status for Product_ID: " + addRi_id.getText() + "?");
+
+        Optional<ButtonType> confirmationResult = confirmationAlert.showAndWait();
+        if (confirmationResult.isPresent() && confirmationResult.get().equals(ButtonType.OK)) {
+            // Verify passcode
+            if (!verifyPasscode()) {
+                Alert alert = new Alert(Alert.AlertType.ERROR);
+                alert.setTitle("Error Message");
+                alert.setHeaderText(null);
+                alert.setContentText("Invalid passcode. Update canceled.");
+                alert.showAndWait();
+                return;
+            }
+
+            // Prepare the SQL query to update only the status field
+            String sql = "UPDATE ring_details SET status = ? WHERE product_id = ?";
+
+            connect = connectDb();
+            try {
+                prepare = connect.prepareStatement(sql);
+                prepare.setString(1, addRi_status.getSelectionModel().getSelectedItem());
+                prepare.setString(2, addRi_id.getText());
+
+                int rowsUpdated = prepare.executeUpdate();
+
+                if (rowsUpdated > 0) {
+                    addRingShowListData();
+                    addRingReset();
+
+                    Alert alert = new Alert(Alert.AlertType.INFORMATION);
+                    alert.setTitle("Information Message");
+                    alert.setHeaderText(null);
+                    alert.setContentText("Status updated successfully!");
+                    alert.showAndWait();
+                } else {
+                    Alert alert = new Alert(Alert.AlertType.ERROR);
+                    alert.setTitle("Error Message");
+                    alert.setHeaderText(null);
+                    alert.setContentText("Failed to update status. Please check the Product ID.");
+                    alert.showAndWait();
+                }
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
+        }
+    }
+
+    public void addRingDelete() {
+        // Ensure the Product ID field is filled
+        if (addRi_id.getText().isEmpty()) {
+            Alert alert = new Alert(Alert.AlertType.ERROR);
+            alert.setTitle("Error Message");
+            alert.setHeaderText(null);
+            alert.setContentText("Please fill all blank fields");
+            alert.showAndWait();
+            return;
+        }
+
+        // Check if the Product ID exists
+        if (!isRingIdExist(addRi_id.getText())) {
+            Alert alert = new Alert(Alert.AlertType.ERROR);
+            alert.setTitle("Error Message");
+            alert.setHeaderText(null);
+            alert.setContentText("Product ID not found. Deletion canceled.");
+            alert.showAndWait();
+            return;
+        }
+
+        // Prompt for confirmation
+        Alert confirmationAlert = new Alert(Alert.AlertType.CONFIRMATION);
+        confirmationAlert.setTitle("Confirmation Message");
+        confirmationAlert.setHeaderText(null);
+        confirmationAlert.setContentText("Are you sure you want to DELETE Product_ID: " + addRi_id.getText() + "?");
+
+        Optional<ButtonType> confirmationResult = confirmationAlert.showAndWait();
+        if (confirmationResult.isPresent() && confirmationResult.get().equals(ButtonType.OK)) {
+            // Verify passcode
+            if (!verifyPasscode()) {
+                Alert passcodeAlert = new Alert(Alert.AlertType.ERROR);
+                passcodeAlert.setTitle("Error Message");
+                passcodeAlert.setHeaderText(null);
+                passcodeAlert.setContentText("Invalid passcode. Deletion canceled.");
+                passcodeAlert.showAndWait();
+                return;
+            }
+
+            // Proceed with deletion
+            String sql = "DELETE FROM ring_details WHERE product_id = ?";
+            connect = connectDb();
+            try {
+                prepare = connect.prepareStatement(sql);
+                prepare.setString(1, addRi_id.getText());
+
+                int rowsDeleted = prepare.executeUpdate();
+                if (rowsDeleted > 0) {
+                    addRingShowListData();
+                    addRingReset();
+
+                    Alert alert = new Alert(Alert.AlertType.INFORMATION);
+                    alert.setTitle("Information Message");
+                    alert.setHeaderText(null);
+                    alert.setContentText("Data deleted successfully!");
+                    alert.showAndWait();
+                } else {
+                    Alert alert = new Alert(Alert.AlertType.ERROR);
+                    alert.setTitle("Error Message");
+                    alert.setHeaderText(null);
+                    alert.setContentText("Failed to delete data. Please try again.");
+                    alert.showAndWait();
+                }
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
+        }
+    }
+
+    public void addRingReset() {
+        addRi_id.setText("");
+        addRi_category.getSelectionModel().clearSelection();
+        //addRi_weight.getSelectionModel().clearSelection();
+        addRi_netWeight.setText("");
+        //addRi_length.getSelectionModel().clearSelection();
+        addRi_karat.getSelectionModel().clearSelection();
+        addRi_rate.setText("");
+        addRi_supplier.setText("");
+        addRi_status.getSelectionModel().clearSelection();
+        addRi_img.setImage(null);
+        getData.path = "";
+    }
+
+    public void addRiImportImage() {
+        FileChooser open = new FileChooser();
+        open.setTitle("Open Image File");
+        open.getExtensionFilters().add(new FileChooser.ExtensionFilter("Image File", "*jpg", "*png"));
+
+        File file = open.showOpenDialog(main_form.getScene().getWindow());
+
+        if (file != null) {
+            getData.path = file.getAbsolutePath();
+            riImage = new Image(file.toURI().toString(), 90, 100, false, true);
+            addRi_img.setImage(riImage);
+        }
+    }
+
+    public void addRiListCategory() {
+        List<String> listC = new ArrayList<>();
+
+        for(String data:listRiCategory){
+            listC.add(data);
+        }
+        ObservableList<String> listData = FXCollections.observableArrayList(listRiCategory);
+        addRi_category.setItems(listData);
+    }
+
+    public void addRiListKarat() {
+        List<String> listK = new ArrayList<>();
+
+        for(String data:listKarat){
+            listK.add(data);
+        }
+        ObservableList<String> listData = FXCollections.observableArrayList(listKarat);
+        addRi_karat.setItems(listData);
+    }
+
+    public void addRiListStatus() {
+        List<String> listS = new ArrayList<>();
+
+        for(String data:listStatus){
+            listS.add(data);
+        }
+        ObservableList<String> listData = FXCollections.observableArrayList(listStatus);
+        addRi_status.setItems(listData);
+    }
+
+    public void addRingSearch() {
+        FilteredList<ringData> filter = new FilteredList<>(addRingList, e -> true);
+
+        addRi_search.textProperty().addListener((Observable, oldValue, newValue) -> {
+            filter.setPredicate(predicateRiData -> {
+                if (newValue == null || newValue.isEmpty()) {
+                    return true;
+                }
+                String searchKey = newValue.toLowerCase();
+
+                if (predicateRiData.getProductId().toString().contains(searchKey)) {
+                    return true;
+                } else if (predicateRiData.getCategory().toLowerCase().contains(searchKey)) {
+                    return true;
+                } else if (predicateRiData.getNet_weight().toString().contains(searchKey)) {
+                    return true;
+                } else if (predicateRiData.getKarat().toLowerCase().contains(searchKey)) {
+                    return true;
+                } else if (predicateRiData.getGold_rate().toString().contains(searchKey)) {
+                    return true;
+                } else if (predicateRiData.getSupplier().toString().contains(searchKey)) {
+                    return true;
+                } else if (predicateRiData.getStatus().toLowerCase().contains(searchKey)) {
+                    return true;
+                } else {
+                    return false;
+                }
+            });
+        });
+
+        SortedList<ringData> sortList = new SortedList<>(filter);
+        sortList.comparatorProperty().bind(addRi_tableView.comparatorProperty());
+        addRi_tableView.setItems(sortList);
+    }
+
+    public ObservableList<ringData> addRingListData() {
+        ObservableList<ringData> ringList = FXCollections.observableArrayList();
+
+        String sql = "SELECT * FROM ring_details";
+        connect = connectDb();
+        try {
+            prepare = connect.prepareStatement(sql);
+            result = prepare.executeQuery();
+            ringData riD;
+
+            while (result.next()) {
+                riD = new ringData(result.getString("product_id"),
+                        result.getString("category"),
+                        result.getString("weight"),
+                        result.getDouble("net_weight"),
+                        result.getString("length"),
+                        result.getString("karat"),
+                        result.getDouble("gold_rate"),
+                        result.getString("supplier"),
+                        result.getString("status"),
+                        result.getString("image"),
+                        result.getDate("date"));
+
+                ringList.add(riD);
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        return ringList;
+    }
+
+    private ObservableList<ringData> addRingList;
+
+    public void addRingShowListData() {
+        addRingList = addRingListData();
+
+        addRi_col_productID.setCellValueFactory(new PropertyValueFactory<>("productId"));
+        addRi_col_category.setCellValueFactory(new PropertyValueFactory<>("category"));
+        addRi_col_weight.setCellValueFactory(new PropertyValueFactory<>("weight"));
+        addRi_col_netWeight.setCellValueFactory(new PropertyValueFactory<>("net_weight"));
+        addRi_col_length.setCellValueFactory(new PropertyValueFactory<>("length"));
+        addRi_col_karat.setCellValueFactory(new PropertyValueFactory<>("karat"));
+        addRi_col_goldRate.setCellValueFactory(new PropertyValueFactory<>("gold_rate"));
+        addRi_col_supplier.setCellValueFactory(new PropertyValueFactory<>("supplier"));
+        addRi_col_status.setCellValueFactory(new PropertyValueFactory<>("status"));
+
+        // Set custom cell factories to format double values to two decimal places
+        addRi_col_netWeight.setCellFactory(getDoubleCellFactory());
+        addRi_col_goldRate.setCellFactory(getDoubleCellFactory());
+
+        addRi_tableView.setItems(addRingList);
+    }
+
+    public void addRingSelect() {
+        ringData riD = addRi_tableView.getSelectionModel().getSelectedItem();
+        int num = addRi_tableView.getSelectionModel().getSelectedIndex();
+
+        if ((num - 1) < -1) {
+            return;
+        }
+
+        addRi_id.setText(String.valueOf(riD.getProductId()));
+
+        if (riD.getImage() != null && !riD.getImage().isEmpty()) {
+            String uri = "file:" + riD.getImage();
+            riImage = new Image(uri, 90, 100, false, true);
+            addRi_img.setImage(riImage);
+            getData.path = riD.getImage();
+        } else {
+            addRi_img.setImage(null);
+        }
+    }
+
+    private boolean isRingIdExist(String productId) {
+        String sql = "SELECT COUNT(*) FROM ring_details WHERE product_id = ?";
+        connect = connectDb();
+        try {
+            prepare = connect.prepareStatement(sql);
+            prepare.setString(1, productId);
+            result = prepare.executeQuery();
+            if (result.next()) {
+                int count = result.getInt(1);
+                return count > 0;
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        return false;
+    }
+
+    private boolean isRingIdValid(String productId) {
+        // Check if productId starts with 'C' and has exactly 4 digits
+        return productId.matches("^R\\d{4}$");
+    }
+
+    // Method to handle bracelet data
+    private void handleRingData(ringData ringDetails, double price, double returnValue) {
+        double minPrice = ringDetails.getGold_rate() * ringDetails.getNet_weight() / 8;
+
+        if (price < minPrice) {
+            // Show alert with OK and Continue Anyway options
+            Alert alert = new Alert(Alert.AlertType.CONFIRMATION);
+            alert.setTitle("Error Message");
+            alert.setHeaderText(null);
+            alert.setContentText("Sales price must be greater than " + minPrice);
+
+            ButtonType okButton = new ButtonType("OK", ButtonBar.ButtonData.OK_DONE);
+            ButtonType continueButton = new ButtonType("Continue Anyway", ButtonBar.ButtonData.OTHER);
+            alert.getButtonTypes().setAll(okButton, continueButton);
+
+            Optional<ButtonType> result = alert.showAndWait();
+            if (result.isPresent() && result.get() == continueButton) {
+                boolean passcodeVerified = verifyPasscode();
+                if (!passcodeVerified) {
+                    showAlert(Alert.AlertType.ERROR, "Error Message", "Invalid passcode");
+                    return;
+                }
+            } else {
+                return;
+            }
+        }
+
+        if (returnValue > price) {
+            showAlert(Alert.AlertType.ERROR, "Error Message", "Invalid Exchange Value!");
+            return;
+        }
+
+        customerId();  // Ensure customer ID is set
+
+        salesData newSalesData = new salesData(
+                customerid,
+                ringDetails.getProductId(),
+                ringDetails.getCategory(),
+                ringDetails.getWeight(),
+                ringDetails.getNet_weight(),
+                ringDetails.getLength(),
+                ringDetails.getKarat(),
+                ringDetails.getGold_rate(),
+                price,
+                returnValue,
+                new java.sql.Date(new Date().getTime())
+        );
+
+        sales_tableView.getItems().add(newSalesData);
+        clearSalesInputFields();
+        updateSalesTotal();
+    }
+
+    //******************************************************************************************************************
 
     private void setComboBoxValue(ComboBox<String> comboBox, String value) {
         Platform.runLater(() -> {
@@ -1884,6 +2386,7 @@ public class dashboardController implements Initializable {
             comboBox.setValue(value);
         });
     }
+
 
     public ObservableList<salesData> salesListdata() {
         customerId();
@@ -2065,6 +2568,12 @@ public class dashboardController implements Initializable {
             paBtn.setStyle("-fx-background-color:transparent");
             neBtn.setStyle("-fx-background-color:transparent");
             baBtn.setStyle("-fx-background-color:transparent");
+
+            addRingShowListData();
+            addRiListCategory();
+            addRiListKarat();
+            addRiListStatus();
+            addRingSearch();
 
         } else if (event.getSource() == eaBtn) {
             home_form.setVisible(false);
