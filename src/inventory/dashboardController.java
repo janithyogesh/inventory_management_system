@@ -291,6 +291,12 @@ public class dashboardController implements Initializable {
         addPaListKarat();
         addPaListStatus();
         addPanchaSearch();
+
+        addNecklaceShowListData();
+        addNeListCategory();
+        addNeListKarat();
+        addNeListStatus();
+        addNecklaceSearch();
     }
 
     //********************************HOME PAGE REALTED*****************************************************************
@@ -530,9 +536,10 @@ public class dashboardController implements Initializable {
         pendantData pendantDetails = getPendantDetails(productId);
         suraData suraDetails = getSuraDetails(productId);
         panchaData panchaDetails = getPanchaDetails(productId);
+        necklaceData necklaceDetails = getNecklaceDetails(productId);
 
         if (chainDetails == null && braceletDetails == null && ringDetails == null && earringDetails == null && pendantDetails == null
-         && suraDetails == null  && panchaDetails == null) {
+         && suraDetails == null  && panchaDetails == null && necklaceDetails == null) {
             showAlert(Alert.AlertType.ERROR, "Error Message", "Product ID not found");
             return;
         }
@@ -565,6 +572,8 @@ public class dashboardController implements Initializable {
             handleSuraData(suraDetails, price, returnValue);
         } else if (panchaDetails != null) {
             handlePanchaData(panchaDetails, price, returnValue);
+        } else if (necklaceDetails != null) {
+            handleNecklaceData(necklaceDetails, price, returnValue);
         }
     }
 
@@ -708,6 +717,7 @@ public class dashboardController implements Initializable {
         String deletePendantSql = "DELETE FROM pendant_details WHERE product_id = ?";
         String deleteSuraSql = "DELETE FROM sura_details WHERE product_id = ?";
         String deletePanchaSql = "DELETE FROM pancha_details WHERE product_id = ?";
+        String deleteNecklaceSql = "DELETE FROM necklace_details WHERE product_id = ?";
 
         connect = connectDb();
         try {
@@ -743,6 +753,11 @@ public class dashboardController implements Initializable {
 
             // Delete pancha details
             prepare = connect.prepareStatement(deletePanchaSql);
+            prepare.setString(1, productId);
+            prepare.executeUpdate();
+
+            // Delete necklace details
+            prepare = connect.prepareStatement(deleteNecklaceSql);
             prepare.setString(1, productId);
             prepare.executeUpdate();
 
@@ -4494,6 +4509,497 @@ public class dashboardController implements Initializable {
         updateSalesTotal();
     }
 
+    // **************************************NECKLACE RELATED***********************************************************
+
+    private String[] listNeCategory = {"White Stone","Design"};
+
+    // Method to get pendant details from the database
+    private necklaceData getNecklaceDetails(String productId) {
+        String sql = "SELECT * FROM necklace_details WHERE product_id = ?";
+        connect = connectDb();
+        necklaceData necklaceDetails = null;
+        try {
+            prepare = connect.prepareStatement(sql);
+            prepare.setString(1, productId);
+            result = prepare.executeQuery();
+            if (result.next()) {
+                necklaceDetails = new necklaceData(
+                        result.getString("product_id"),
+                        result.getString("category"),
+                        result.getString("weight"),
+                        result.getDouble("net_weight"),
+                        result.getString("length"),
+                        result.getString("karat"),
+                        result.getDouble("gold_rate"),
+                        result.getString("supplier"),
+                        result.getString("status"),
+                        result.getString("image"),
+                        result.getDate("date"));
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        return necklaceDetails;
+    }
+
+    public void addNecklaceAdd() {
+        String sql = "INSERT INTO necklace_details (product_id, category, net_weight, karat, gold_rate, supplier, status, image, date) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?)";
+
+        connect = connectDb();
+        try {
+            Alert alert;
+
+            if (addNe_id.getText().isEmpty()
+                    || addNe_category.getSelectionModel().getSelectedItem() == null
+                    || addNe_netWeight.getText().isEmpty()
+                    || addNe_karat.getSelectionModel().getSelectedItem() == null
+                    || addNe_rate.getText().isEmpty()
+                    || addNe_supplier.getText().isEmpty()
+                    || addNe_status.getSelectionModel().getSelectedItem() == null) {
+                alert = new Alert(Alert.AlertType.ERROR);
+                alert.setTitle("Error Message");
+                alert.setHeaderText(null);
+                alert.setContentText("Please fill all blank fields");
+                alert.showAndWait();
+            } else if (!isNecklaceIdValid(addNe_id.getText())) {
+                alert = new Alert(Alert.AlertType.ERROR);
+                alert.setTitle("Error Message");
+                alert.setHeaderText(null);
+                alert.setContentText("Product ID format is incorrect. It should start with 'N' followed by 4 digits.");
+                alert.showAndWait();
+            } else if (isNecklaceIdExist(addNe_id.getText())) {
+                alert = new Alert(Alert.AlertType.ERROR);
+                alert.setTitle("Error Message");
+                alert.setHeaderText(null);
+                alert.setContentText("Product ID already exists. Please use a unique Product ID.");
+                alert.showAndWait();
+            } else if (isProductIdExistInSales(addNe_id.getText())) {
+                alert = new Alert(Alert.AlertType.ERROR);
+                alert.setTitle("Error Message");
+                alert.setHeaderText(null);
+                alert.setContentText("Product ID already exists in sales table. Please use a unique Product ID.");
+                alert.showAndWait();
+            } else {
+                prepare = connect.prepareStatement(sql);
+                String productId = addNe_id.getText();
+                prepare.setString(1, productId);
+                prepare.setString(2, addNe_category.getSelectionModel().getSelectedItem());
+                prepare.setString(3, addNe_netWeight.getText());
+                prepare.setString(4, addNe_karat.getSelectionModel().getSelectedItem());
+                prepare.setString(5, addNe_rate.getText());
+                prepare.setString(6, addNe_supplier.getText());
+                prepare.setString(7, addNe_status.getSelectionModel().getSelectedItem());
+
+                String uri = getData.path;
+                if (uri != null && !uri.isEmpty()) {
+                    uri = uri.replace("\\", "\\\\");
+                    prepare.setString(8, uri);
+                } else {
+                    prepare.setString(8, null);
+                }
+
+                Date date = new Date();
+                java.sql.Date sqldate = new java.sql.Date(date.getTime());
+
+                prepare.setString(9, String.valueOf(sqldate));
+
+                prepare.executeUpdate();
+
+                addNecklaceShowListData();
+                addNecklaceReset();
+
+                // Show success message
+                alert = new Alert(Alert.AlertType.INFORMATION);
+                alert.setTitle("Success");
+                alert.setHeaderText(null);
+                alert.setContentText(productId + " entered successfully!");
+                alert.showAndWait();
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+    }
+
+    public void addNecklaceUpdate() {
+        // Check if the status is selected
+        if (addNe_status.getSelectionModel().getSelectedItem() == null) {
+            Alert alert = new Alert(Alert.AlertType.ERROR);
+            alert.setTitle("Error Message");
+            alert.setHeaderText(null);
+            alert.setContentText("Please select the new status");
+            alert.showAndWait();
+            return;
+        }
+
+        // Ensure the Product ID field is filled
+        if (addNe_id.getText().isEmpty()) {
+            Alert alert = new Alert(Alert.AlertType.ERROR);
+            alert.setTitle("Error Message");
+            alert.setHeaderText(null);
+            alert.setContentText("Product ID is required to update status");
+            alert.showAndWait();
+            return;
+        }
+
+        // Prompt for confirmation
+        Alert confirmationAlert = new Alert(Alert.AlertType.CONFIRMATION);
+        confirmationAlert.setTitle("Confirmation Message");
+        confirmationAlert.setHeaderText(null);
+        confirmationAlert.setContentText("Are you sure you want to UPDATE the status for Product_ID: " + addNe_id.getText() + "?");
+
+        Optional<ButtonType> confirmationResult = confirmationAlert.showAndWait();
+        if (confirmationResult.isPresent() && confirmationResult.get().equals(ButtonType.OK)) {
+            // Verify passcode
+            if (!verifyPasscode()) {
+                Alert alert = new Alert(Alert.AlertType.ERROR);
+                alert.setTitle("Error Message");
+                alert.setHeaderText(null);
+                alert.setContentText("Invalid passcode. Update canceled.");
+                alert.showAndWait();
+                return;
+            }
+
+            // Prepare the SQL query to update only the status field
+            String sql = "UPDATE necklace_details SET status = ? WHERE product_id = ?";
+
+            connect = connectDb();
+            try {
+                prepare = connect.prepareStatement(sql);
+                prepare.setString(1, addNe_status.getSelectionModel().getSelectedItem());
+                prepare.setString(2, addNe_id.getText());
+
+                int rowsUpdated = prepare.executeUpdate();
+
+                if (rowsUpdated > 0) {
+                    addNecklaceShowListData();
+                    addNecklaceReset();
+
+                    Alert alert = new Alert(Alert.AlertType.INFORMATION);
+                    alert.setTitle("Information Message");
+                    alert.setHeaderText(null);
+                    alert.setContentText("Status updated successfully!");
+                    alert.showAndWait();
+                } else {
+                    Alert alert = new Alert(Alert.AlertType.ERROR);
+                    alert.setTitle("Error Message");
+                    alert.setHeaderText(null);
+                    alert.setContentText("Failed to update status. Please check the Product ID.");
+                    alert.showAndWait();
+                }
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
+        }
+    }
+
+    public void addNecklaceDelete() {
+        // Ensure the Product ID field is filled
+        if (addNe_id.getText().isEmpty()) {
+            Alert alert = new Alert(Alert.AlertType.ERROR);
+            alert.setTitle("Error Message");
+            alert.setHeaderText(null);
+            alert.setContentText("Please fill all blank fields");
+            alert.showAndWait();
+            return;
+        }
+
+        // Check if the Product ID exists
+        if (!isNecklaceIdExist(addNe_id.getText())) {
+            Alert alert = new Alert(Alert.AlertType.ERROR);
+            alert.setTitle("Error Message");
+            alert.setHeaderText(null);
+            alert.setContentText("Product ID not found. Deletion canceled.");
+            alert.showAndWait();
+            return;
+        }
+
+        // Prompt for confirmation
+        Alert confirmationAlert = new Alert(Alert.AlertType.CONFIRMATION);
+        confirmationAlert.setTitle("Confirmation Message");
+        confirmationAlert.setHeaderText(null);
+        confirmationAlert.setContentText("Are you sure you want to DELETE Product_ID: " + addNe_id.getText() + "?");
+
+        Optional<ButtonType> confirmationResult = confirmationAlert.showAndWait();
+        if (confirmationResult.isPresent() && confirmationResult.get().equals(ButtonType.OK)) {
+            // Verify passcode
+            if (!verifyPasscode()) {
+                Alert passcodeAlert = new Alert(Alert.AlertType.ERROR);
+                passcodeAlert.setTitle("Error Message");
+                passcodeAlert.setHeaderText(null);
+                passcodeAlert.setContentText("Invalid passcode. Deletion canceled.");
+                passcodeAlert.showAndWait();
+                return;
+            }
+
+            // Proceed with deletion
+            String sql = "DELETE FROM necklace_details WHERE product_id = ?";
+            connect = connectDb();
+            try {
+                prepare = connect.prepareStatement(sql);
+                prepare.setString(1, addNe_id.getText());
+
+                int rowsDeleted = prepare.executeUpdate();
+                if (rowsDeleted > 0) {
+                    addNecklaceShowListData();
+                    addNecklaceReset();
+
+                    Alert alert = new Alert(Alert.AlertType.INFORMATION);
+                    alert.setTitle("Information Message");
+                    alert.setHeaderText(null);
+                    alert.setContentText("Data deleted successfully!");
+                    alert.showAndWait();
+                } else {
+                    Alert alert = new Alert(Alert.AlertType.ERROR);
+                    alert.setTitle("Error Message");
+                    alert.setHeaderText(null);
+                    alert.setContentText("Failed to delete data. Please try again.");
+                    alert.showAndWait();
+                }
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
+        }
+    }
+
+    public void addNecklaceReset() {
+        addNe_id.setText("");
+        addNe_category.getSelectionModel().clearSelection();
+        addNe_netWeight.setText("");
+        addNe_karat.getSelectionModel().clearSelection();
+        addNe_rate.setText("");
+        addNe_supplier.setText("");
+        addNe_status.getSelectionModel().clearSelection();
+        addNe_img.setImage(null);
+        getData.path = "";
+    }
+
+    public void addNeImportImage() {
+        FileChooser open = new FileChooser();
+        open.setTitle("Open Image File");
+        open.getExtensionFilters().add(new FileChooser.ExtensionFilter("Image File", "*jpg", "*png"));
+
+        File file = open.showOpenDialog(main_form.getScene().getWindow());
+
+        if (file != null) {
+            getData.path = file.getAbsolutePath();
+            neImage = new Image(file.toURI().toString(), 90, 100, false, true);
+            addNe_img.setImage(neImage);
+        }
+    }
+
+    public void addNeListCategory() {
+        List<String> listC = new ArrayList<>();
+
+        for(String data:listNeCategory){
+            listC.add(data);
+        }
+        ObservableList<String> listData = FXCollections.observableArrayList(listNeCategory);
+        addNe_category.setItems(listData);
+    }
+
+    public void addNeListKarat() {
+        List<String> listK = new ArrayList<>();
+
+        for(String data:listKarat){
+            listK.add(data);
+        }
+        ObservableList<String> listData = FXCollections.observableArrayList(listKarat);
+        addNe_karat.setItems(listData);
+    }
+
+    public void addNeListStatus() {
+        List<String> listS = new ArrayList<>();
+
+        for(String data:listStatus){
+            listS.add(data);
+        }
+        ObservableList<String> listData = FXCollections.observableArrayList(listStatus);
+        addNe_status.setItems(listData);
+    }
+
+    public void addNecklaceSearch() {
+        FilteredList<necklaceData> filter = new FilteredList<>(addNecklaceList, e -> true);
+
+        addNe_search.textProperty().addListener((Observable, oldValue, newValue) -> {
+            filter.setPredicate(predicateNeData -> {
+                if (newValue == null || newValue.isEmpty()) {
+                    return true;
+                }
+                String searchKey = newValue.toLowerCase();
+
+                if (predicateNeData.getProductId().toString().contains(searchKey)) {
+                    return true;
+                } else if (predicateNeData.getCategory().toLowerCase().contains(searchKey)) {
+                    return true;
+                } else if (predicateNeData.getNet_weight().toString().contains(searchKey)) {
+                    return true;
+                } else if (predicateNeData.getKarat().toLowerCase().contains(searchKey)) {
+                    return true;
+                } else if (predicateNeData.getGold_rate().toString().contains(searchKey)) {
+                    return true;
+                } else if (predicateNeData.getSupplier().toString().contains(searchKey)) {
+                    return true;
+                } else if (predicateNeData.getStatus().toLowerCase().contains(searchKey)) {
+                    return true;
+                } else {
+                    return false;
+                }
+            });
+        });
+
+        SortedList<necklaceData> sortList = new SortedList<>(filter);
+        sortList.comparatorProperty().bind(addNe_tableView.comparatorProperty());
+        addNe_tableView.setItems(sortList);
+    }
+
+    public ObservableList<necklaceData> addNecklaceListData() {
+        ObservableList<necklaceData> necklaceList = FXCollections.observableArrayList();
+
+        String sql = "SELECT * FROM necklace_details";
+        connect = connectDb();
+        try {
+            prepare = connect.prepareStatement(sql);
+            result = prepare.executeQuery();
+            necklaceData neD;
+
+            while (result.next()) {
+                neD = new necklaceData(result.getString("product_id"),
+                        result.getString("category"),
+                        result.getString("weight"),
+                        result.getDouble("net_weight"),
+                        result.getString("length"),
+                        result.getString("karat"),
+                        result.getDouble("gold_rate"),
+                        result.getString("supplier"),
+                        result.getString("status"),
+                        result.getString("image"),
+                        result.getDate("date"));
+
+                necklaceList.add(neD);
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        return necklaceList;
+    }
+
+    private ObservableList<necklaceData> addNecklaceList;
+
+    public void addNecklaceShowListData() {
+        addNecklaceList = addNecklaceListData();
+
+        addNe_col_productID.setCellValueFactory(new PropertyValueFactory<>("productId"));
+        addNe_col_category.setCellValueFactory(new PropertyValueFactory<>("category"));
+        addNe_col_weight.setCellValueFactory(new PropertyValueFactory<>("weight"));
+        addNe_col_netWeight.setCellValueFactory(new PropertyValueFactory<>("net_weight"));
+        addNe_col_length.setCellValueFactory(new PropertyValueFactory<>("length"));
+        addNe_col_karat.setCellValueFactory(new PropertyValueFactory<>("karat"));
+        addNe_col_goldRate.setCellValueFactory(new PropertyValueFactory<>("gold_rate"));
+        addNe_col_supplier.setCellValueFactory(new PropertyValueFactory<>("supplier"));
+        addNe_col_status.setCellValueFactory(new PropertyValueFactory<>("status"));
+
+        // Set custom cell factories to format double values to two decimal places
+        addNe_col_netWeight.setCellFactory(getDoubleCellFactory());
+        addNe_col_goldRate.setCellFactory(getDoubleCellFactory());
+
+        addNe_tableView.setItems(addNecklaceList);
+    }
+
+    public void addNecklaceSelect() {
+        necklaceData neD = addNe_tableView.getSelectionModel().getSelectedItem();
+        int num = addNe_tableView.getSelectionModel().getSelectedIndex();
+
+        if ((num - 1) < -1) {
+            return;
+        }
+
+        addNe_id.setText(String.valueOf(neD.getProductId()));
+
+        if (neD.getImage() != null && !neD.getImage().isEmpty()) {
+            String uri = "file:" + neD.getImage();
+            neImage = new Image(uri, 90, 100, false, true);
+            addNe_img.setImage(neImage);
+            getData.path = neD.getImage();
+        } else {
+            addNe_img.setImage(null);
+        }
+    }
+
+    private boolean isNecklaceIdExist(String productId) {
+        String sql = "SELECT COUNT(*) FROM necklace_details WHERE product_id = ?";
+        connect = connectDb();
+        try {
+            prepare = connect.prepareStatement(sql);
+            prepare.setString(1, productId);
+            result = prepare.executeQuery();
+            if (result.next()) {
+                int count = result.getInt(1);
+                return count > 0;
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        return false;
+    }
+
+    private boolean isNecklaceIdValid(String productId) {
+        // Check if productId starts with 'S' and has exactly 4 digits
+        return productId.matches("^N\\d{4}$");
+    }
+
+    // Method to handle sura data
+    private void handleNecklaceData(necklaceData necklaceDetails, double price, double returnValue) {
+        double minPrice = necklaceDetails.getGold_rate() * necklaceDetails.getNet_weight() / 8;
+
+        if (price < minPrice) {
+            // Show alert with OK and Continue Anyway options
+            Alert alert = new Alert(Alert.AlertType.CONFIRMATION);
+            alert.setTitle("Error Message");
+            alert.setHeaderText(null);
+            alert.setContentText("Sales price must be greater than " + minPrice);
+
+            ButtonType okButton = new ButtonType("OK", ButtonBar.ButtonData.OK_DONE);
+            ButtonType continueButton = new ButtonType("Continue Anyway", ButtonBar.ButtonData.OTHER);
+            alert.getButtonTypes().setAll(okButton, continueButton);
+
+            Optional<ButtonType> result = alert.showAndWait();
+            if (result.isPresent() && result.get() == continueButton) {
+                boolean passcodeVerified = verifyPasscode();
+                if (!passcodeVerified) {
+                    showAlert(Alert.AlertType.ERROR, "Error Message", "Invalid passcode");
+                    return;
+                }
+            } else {
+                return;
+            }
+        }
+
+        if (returnValue > price) {
+            showAlert(Alert.AlertType.ERROR, "Error Message", "Invalid Exchange Value!");
+            return;
+        }
+
+        customerId();  // Ensure customer ID is set
+
+        salesData newSalesData = new salesData(
+                customerid,
+                necklaceDetails.getProductId(),
+                necklaceDetails.getCategory(),
+                necklaceDetails.getWeight(),
+                necklaceDetails.getNet_weight(),
+                necklaceDetails.getLength(),
+                necklaceDetails.getKarat(),
+                necklaceDetails.getGold_rate(),
+                price,
+                returnValue,
+                new java.sql.Date(new Date().getTime())
+        );
+
+        sales_tableView.getItems().add(newSalesData);
+        clearSalesInputFields();
+        updateSalesTotal();
+    }
+
     //******************************************************************************************************************
 
     private void setComboBoxValue(ComboBox<String> comboBox, String value) {
@@ -4846,6 +5352,12 @@ public class dashboardController implements Initializable {
             paBtn.setStyle("-fx-background-color:transparent");
             neBtn.setStyle("-fx-background-color:linear-gradient(to bottom ,#004cc5, #011b4a);");
             baBtn.setStyle("-fx-background-color:transparent");
+
+            addNecklaceShowListData();
+            addNeListCategory();
+            addNeListKarat();
+            addNeListStatus();
+            addNecklaceSearch();
 
         } else if (event.getSource() == baBtn) {
             home_form.setVisible(false);

@@ -908,7 +908,7 @@
                               </AnchorPane>
                            </children>
                         </AnchorPane>
-                        <AnchorPane fx:id="pa_form" layoutX="40.0" layoutY="40.0" prefHeight="604.8" prefWidth="684.8" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
+                        <AnchorPane fx:id="pa_form" layoutX="40.0" layoutY="40.0" prefHeight="604.8" prefWidth="684.8" visible="false" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
                            <children>
                               <AnchorPane layoutX="8.0" layoutY="7.0" prefHeight="591.0" prefWidth="214.0" stylesheets="@dashboardDesign.css">
                                  <styleClass>
@@ -999,7 +999,7 @@
                               </AnchorPane>
                            </children>
                         </AnchorPane>
-                        <AnchorPane fx:id="ne_form" layoutX="50.0" layoutY="50.0" prefHeight="604.8" prefWidth="684.8" visible="false" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
+                        <AnchorPane fx:id="ne_form" layoutX="50.0" layoutY="50.0" prefHeight="604.8" prefWidth="684.8" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
                            <children>
                               <AnchorPane layoutX="8.0" layoutY="7.0" prefHeight="591.0" prefWidth="214.0" stylesheets="@dashboardDesign.css">
                                  <styleClass>
@@ -1014,7 +1014,7 @@
                                        </styleClass>
                                        <children>
                                           <ImageView fx:id="addNe_img" fitHeight="100.0" fitWidth="90.0" layoutX="1.0" pickOnBounds="true" preserveRatio="true" />
-                                          <Button fx:id="addNe_importBtn" layoutX="1.0" layoutY="97.0" mnemonicParsing="false" onAction="#addChainImportImage" prefHeight="20.0" prefWidth="90.0" styleClass="import-btn" stylesheets="@dashboardDesign.css" text="Import" />
+                                          <Button fx:id="addNe_importBtn" layoutX="1.0" layoutY="97.0" mnemonicParsing="false" onAction="#addNeImportImage" prefHeight="20.0" prefWidth="90.0" styleClass="import-btn" stylesheets="@dashboardDesign.css" text="Import" />
                                        </children>
                                     </AnchorPane>
                                     <Label layoutX="11.0" layoutY="167.0" text="Necklace ID:">
@@ -1028,7 +1028,7 @@
                                           <Font name="Tahoma" size="14.0" />
                                        </font>
                                     </Label>
-                                    <ComboBox fx:id="addNe_category" layoutX="95.0" layoutY="198.0" onAction="#addChainListCategory" prefHeight="25.0" prefWidth="110.0" promptText="Choose" styleClass="textfield" stylesheets="@dashboardDesign.css" />
+                                    <ComboBox fx:id="addNe_category" layoutX="95.0" layoutY="198.0" onAction="#addNeListCategory" prefHeight="25.0" prefWidth="110.0" promptText="Choose" styleClass="textfield" stylesheets="@dashboardDesign.css" />
                                     <Label layoutX="11.0" layoutY="266.0" text="Net Weight:">
                                        <font>
                                           <Font name="Tahoma" size="14.0" />
@@ -1040,7 +1040,7 @@
                                           <Font name="Tahoma" size="14.0" />
                                        </font>
                                     </Label>
-                                    <ComboBox fx:id="addNe_karat" layoutX="95.0" layoutY="328.0" onAction="#addChainListKarat" prefHeight="25.0" prefWidth="110.0" promptText="Choose" styleClass="textfield" stylesheets="@dashboardDesign.css" />
+                                    <ComboBox fx:id="addNe_karat" layoutX="95.0" layoutY="328.0" onAction="#addNeListKarat" prefHeight="25.0" prefWidth="110.0" promptText="Choose" styleClass="textfield" stylesheets="@dashboardDesign.css" />
                                     <Label layoutX="11.0" layoutY="363.0" text="Gold Rate:">
                                        <font>
                                           <Font name="Tahoma" size="14.0" />
@@ -1053,16 +1053,16 @@
                                        </font>
                                     </Label>
                                     <TextField fx:id="addNe_supplier" layoutX="96.0" layoutY="391.0" prefHeight="25.0" prefWidth="110.0" styleClass="textfield" stylesheets="@dashboardDesign.css" />
-                                    <Button fx:id="addNe_addBtn" layoutX="13.0" layoutY="496.0" mnemonicParsing="false" onAction="#addChainAdd" prefWidth="90.0" styleClass="add-btn" stylesheets="@dashboardDesign.css" text="Add" />
-                                    <Button fx:id="addNe_updateBtn" layoutX="110.0" layoutY="496.0" mnemonicParsing="false" onAction="#addChainUpdate" prefWidth="90.0" styleClass="update-btn" stylesheets="@dashboardDesign.css" text="Update" />
-                                    <Button fx:id="addNe_resetBtn" layoutX="13.0" layoutY="537.0" mnemonicParsing="false" onAction="#addChainReset" prefWidth="90.0" styleClass="reset-btn" stylesheets="@dashboardDesign.css" text="Reset" />
-                                    <Button fx:id="addNe_deleteBtn" layoutX="110.0" layoutY="537.0" mnemonicParsing="false" onAction="#addChainDelete" prefWidth="90.0" styleClass="delete-btn" stylesheets="@dashboardDesign.css" text="Delete" />
+                                    <Button fx:id="addNe_addBtn" layoutX="13.0" layoutY="496.0" mnemonicParsing="false" onAction="#addNecklaceAdd" prefWidth="90.0" styleClass="add-btn" stylesheets="@dashboardDesign.css" text="Add" />
+                                    <Button fx:id="addNe_updateBtn" layoutX="110.0" layoutY="496.0" mnemonicParsing="false" onAction="#addNecklaceUpdate" prefWidth="90.0" styleClass="update-btn" stylesheets="@dashboardDesign.css" text="Update" />
+                                    <Button fx:id="addNe_resetBtn" layoutX="13.0" layoutY="537.0" mnemonicParsing="false" onAction="#addNecklaceReset" prefWidth="90.0" styleClass="reset-btn" stylesheets="@dashboardDesign.css" text="Reset" />
+                                    <Button fx:id="addNe_deleteBtn" layoutX="110.0" layoutY="537.0" mnemonicParsing="false" onAction="#addNecklaceDelete" prefWidth="90.0" styleClass="delete-btn" stylesheets="@dashboardDesign.css" text="Delete" />
                                     <Label layoutX="11.0" layoutY="425.0" text="Status:">
                                        <font>
                                           <Font name="Tahoma" size="14.0" />
                                        </font>
                                     </Label>
-                                    <ComboBox fx:id="addNe_status" layoutX="96.0" layoutY="422.0" onAction="#addChainListStatus" prefHeight="25.0" prefWidth="110.0" promptText="Choose" styleClass="textfield" stylesheets="@dashboardDesign.css" />
+                                    <ComboBox fx:id="addNe_status" layoutX="96.0" layoutY="422.0" onAction="#addNeListStatus" prefHeight="25.0" prefWidth="110.0" promptText="Choose" styleClass="textfield" stylesheets="@dashboardDesign.css" />
                                  </children>
                               </AnchorPane>
                               <AnchorPane layoutX="234.0" layoutY="6.0" prefHeight="591.0" prefWidth="738.0" stylesheets="@dashboardDesign.css">
@@ -1071,7 +1071,7 @@
                                     <String fx:value="white-gb" />
                                  </styleClass>
                                  <children>
-                                    <TableView fx:id="addNe_tableView" layoutX="14.0" layoutY="70.0" onMouseClicked="#addChainSelect" prefHeight="508.0" prefWidth="711.0">
+                                    <TableView fx:id="addNe_tableView" layoutX="14.0" layoutY="70.0" onMouseClicked="#addNecklaceSelect" prefHeight="508.0" prefWidth="711.0">
                                        <columns>
                                           <TableColumn fx:id="addNe_col_productID" prefWidth="75.0" text="Product ID" />
                                           <TableColumn fx:id="addNe_col_category" prefWidth="102.39990234375" text="Category" />
@@ -1084,7 +1084,7 @@
                                           <TableColumn fx:id="addNe_col_status" prefWidth="84.0" text="Status" />
                                        </columns>
                                     </TableView>
-                                    <TextField fx:id="addNe_search" layoutX="14.0" layoutY="28.0" onAction="#addChainSearch" prefHeight="35.0" prefWidth="232.0" promptText="Search" styleClass="search" stylesheets="@dashboardDesign.css" />
+                                    <TextField fx:id="addNe_search" layoutX="14.0" layoutY="28.0" onAction="#addNecklaceSearch" prefHeight="35.0" prefWidth="232.0" promptText="Search" styleClass="search" stylesheets="@dashboardDesign.css" />
                                     <FontAwesomeIcon fill="#818181" glyphName="SEARCH" layoutX="216.0" layoutY="52.0" size="1.5em" />
                                  </children>
                               </AnchorPane>
