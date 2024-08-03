@@ -279,6 +279,12 @@ public class dashboardController implements Initializable {
         addPeListKarat();
         addPeListStatus();
         addPendantSearch();
+
+        addSuraShowListData();
+        addSuListCategory();
+        addSuListKarat();
+        addSuListStatus();
+        addSuraSearch();
     }
 
     //********************************HOME PAGE REALTED*****************************************************************
@@ -516,8 +522,10 @@ public class dashboardController implements Initializable {
         ringData ringDetails = getRingDetails(productId);
         earringData earringDetails = getEarringDetails(productId);
         pendantData pendantDetails = getPendantDetails(productId);
+        suraData suraDetails = getSuraDetails(productId);
 
-        if (chainDetails == null && braceletDetails == null && ringDetails == null && earringDetails == null && pendantDetails == null) {
+        if (chainDetails == null && braceletDetails == null && ringDetails == null && earringDetails == null && pendantDetails == null
+         && suraDetails == null) {
             showAlert(Alert.AlertType.ERROR, "Error Message", "Product ID not found");
             return;
         }
@@ -546,6 +554,8 @@ public class dashboardController implements Initializable {
             handleEarringData(earringDetails, price, returnValue);
         } else if (pendantDetails != null) {
             handlePendantData(pendantDetails, price, returnValue);
+        } else if (suraDetails != null) {
+            handleSuraData(suraDetails, price, returnValue);
         }
     }
 
@@ -687,6 +697,7 @@ public class dashboardController implements Initializable {
         String deleteRingSql = "DELETE FROM ring_details WHERE product_id = ?";
         String deleteEarringSql = "DELETE FROM earring_details WHERE product_id = ?";
         String deletePendantSql = "DELETE FROM pendant_details WHERE product_id = ?";
+        String deleteSuraSql = "DELETE FROM sura_details WHERE product_id = ?";
         connect = connectDb();
         try {
             // Delete chain details
@@ -711,6 +722,11 @@ public class dashboardController implements Initializable {
 
             // Delete pendant details
             prepare = connect.prepareStatement(deletePendantSql);
+            prepare.setString(1, productId);
+            prepare.executeUpdate();
+
+            // Delete sura details
+            prepare = connect.prepareStatement(deleteSuraSql);
             prepare.setString(1, productId);
             prepare.executeUpdate();
 
@@ -962,8 +978,6 @@ public class dashboardController implements Initializable {
     private String[] listCategory = {"Box Chain", "Double Box", "Dragon Box", "Bismark Chain", "KDM Chain", "Double Albert", "Albert Chain", "Lotus Chain", "Lazer Chain", "Link Chain", "Rope Chain", "Sapna Chain", "Ball Chain", "Diamond Chain", "Lee Chain", "SP Chain", "18K Chain"};
     private String[] listWeight = {"40g", "32g", "24g", "20g", "16g", "14g", "12g", "10g", "8g", "6g", "5g", "4.5g", "4g", "3.5g", "3g", "2.5g", "2g", "1.5g", "1g"};
     private String[] listLength = {"24 in", "22 in", "20 in", "18 in", "16 in", "14 in"};
-
-
 
     // Method to get chain details from the database
     private chainData getChainDetails(String productId) {
@@ -3482,6 +3496,497 @@ public class dashboardController implements Initializable {
         updateSalesTotal();
     }
 
+    // **************************************SURA RELATED***********************************************************
+
+    private String[] listSuCategory = {"Lock Sura","Thread Sura"};
+
+    // Method to get pendant details from the database
+    private suraData getSuraDetails(String productId) {
+        String sql = "SELECT * FROM sura_details WHERE product_id = ?";
+        connect = connectDb();
+        suraData suraDetails = null;
+        try {
+            prepare = connect.prepareStatement(sql);
+            prepare.setString(1, productId);
+            result = prepare.executeQuery();
+            if (result.next()) {
+                suraDetails = new suraData(
+                        result.getString("product_id"),
+                        result.getString("category"),
+                        result.getString("weight"),
+                        result.getDouble("net_weight"),
+                        result.getString("length"),
+                        result.getString("karat"),
+                        result.getDouble("gold_rate"),
+                        result.getString("supplier"),
+                        result.getString("status"),
+                        result.getString("image"),
+                        result.getDate("date"));
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        return suraDetails;
+    }
+
+    public void addSuraAdd() {
+        String sql = "INSERT INTO sura_details (product_id, category, net_weight, karat, gold_rate, supplier, status, image, date) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?)";
+
+        connect = connectDb();
+        try {
+            Alert alert;
+
+            if (addSu_id.getText().isEmpty()
+                    || addSu_category.getSelectionModel().getSelectedItem() == null
+                    || addSu_netWeight.getText().isEmpty()
+                    || addSu_karat.getSelectionModel().getSelectedItem() == null
+                    || addSu_rate.getText().isEmpty()
+                    || addSu_supplier.getText().isEmpty()
+                    || addSu_status.getSelectionModel().getSelectedItem() == null) {
+                alert = new Alert(Alert.AlertType.ERROR);
+                alert.setTitle("Error Message");
+                alert.setHeaderText(null);
+                alert.setContentText("Please fill all blank fields");
+                alert.showAndWait();
+            } else if (!isSuraIdValid(addSu_id.getText())) {
+                alert = new Alert(Alert.AlertType.ERROR);
+                alert.setTitle("Error Message");
+                alert.setHeaderText(null);
+                alert.setContentText("Product ID format is incorrect. It should start with 'S' followed by 4 digits.");
+                alert.showAndWait();
+            } else if (isSuraIdExist(addSu_id.getText())) {
+                alert = new Alert(Alert.AlertType.ERROR);
+                alert.setTitle("Error Message");
+                alert.setHeaderText(null);
+                alert.setContentText("Product ID already exists. Please use a unique Product ID.");
+                alert.showAndWait();
+            } else if (isProductIdExistInSales(addSu_id.getText())) {
+                alert = new Alert(Alert.AlertType.ERROR);
+                alert.setTitle("Error Message");
+                alert.setHeaderText(null);
+                alert.setContentText("Product ID already exists in sales table. Please use a unique Product ID.");
+                alert.showAndWait();
+            } else {
+                prepare = connect.prepareStatement(sql);
+                String productId = addSu_id.getText();
+                prepare.setString(1, productId);
+                prepare.setString(2, addSu_category.getSelectionModel().getSelectedItem());
+                prepare.setString(3, addSu_netWeight.getText());
+                prepare.setString(4, addSu_karat.getSelectionModel().getSelectedItem());
+                prepare.setString(5, addSu_rate.getText());
+                prepare.setString(6, addSu_supplier.getText());
+                prepare.setString(7, addSu_status.getSelectionModel().getSelectedItem());
+
+                String uri = getData.path;
+                if (uri != null && !uri.isEmpty()) {
+                    uri = uri.replace("\\", "\\\\");
+                    prepare.setString(8, uri);
+                } else {
+                    prepare.setString(8, null);
+                }
+
+                Date date = new Date();
+                java.sql.Date sqldate = new java.sql.Date(date.getTime());
+
+                prepare.setString(9, String.valueOf(sqldate));
+
+                prepare.executeUpdate();
+
+                addSuraShowListData();
+                addSuraReset();
+
+                // Show success message
+                alert = new Alert(Alert.AlertType.INFORMATION);
+                alert.setTitle("Success");
+                alert.setHeaderText(null);
+                alert.setContentText(productId + " entered successfully!");
+                alert.showAndWait();
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+    }
+
+    public void addSuraUpdate() {
+        // Check if the status is selected
+        if (addSu_status.getSelectionModel().getSelectedItem() == null) {
+            Alert alert = new Alert(Alert.AlertType.ERROR);
+            alert.setTitle("Error Message");
+            alert.setHeaderText(null);
+            alert.setContentText("Please select the new status");
+            alert.showAndWait();
+            return;
+        }
+
+        // Ensure the Product ID field is filled
+        if (addSu_id.getText().isEmpty()) {
+            Alert alert = new Alert(Alert.AlertType.ERROR);
+            alert.setTitle("Error Message");
+            alert.setHeaderText(null);
+            alert.setContentText("Product ID is required to update status");
+            alert.showAndWait();
+            return;
+        }
+
+        // Prompt for confirmation
+        Alert confirmationAlert = new Alert(Alert.AlertType.CONFIRMATION);
+        confirmationAlert.setTitle("Confirmation Message");
+        confirmationAlert.setHeaderText(null);
+        confirmationAlert.setContentText("Are you sure you want to UPDATE the status for Product_ID: " + addSu_id.getText() + "?");
+
+        Optional<ButtonType> confirmationResult = confirmationAlert.showAndWait();
+        if (confirmationResult.isPresent() && confirmationResult.get().equals(ButtonType.OK)) {
+            // Verify passcode
+            if (!verifyPasscode()) {
+                Alert alert = new Alert(Alert.AlertType.ERROR);
+                alert.setTitle("Error Message");
+                alert.setHeaderText(null);
+                alert.setContentText("Invalid passcode. Update canceled.");
+                alert.showAndWait();
+                return;
+            }
+
+            // Prepare the SQL query to update only the status field
+            String sql = "UPDATE sura_details SET status = ? WHERE product_id = ?";
+
+            connect = connectDb();
+            try {
+                prepare = connect.prepareStatement(sql);
+                prepare.setString(1, addSu_status.getSelectionModel().getSelectedItem());
+                prepare.setString(2, addSu_id.getText());
+
+                int rowsUpdated = prepare.executeUpdate();
+
+                if (rowsUpdated > 0) {
+                    addSuraShowListData();
+                    addSuraReset();
+
+                    Alert alert = new Alert(Alert.AlertType.INFORMATION);
+                    alert.setTitle("Information Message");
+                    alert.setHeaderText(null);
+                    alert.setContentText("Status updated successfully!");
+                    alert.showAndWait();
+                } else {
+                    Alert alert = new Alert(Alert.AlertType.ERROR);
+                    alert.setTitle("Error Message");
+                    alert.setHeaderText(null);
+                    alert.setContentText("Failed to update status. Please check the Product ID.");
+                    alert.showAndWait();
+                }
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
+        }
+    }
+
+    public void addSuraDelete() {
+        // Ensure the Product ID field is filled
+        if (addSu_id.getText().isEmpty()) {
+            Alert alert = new Alert(Alert.AlertType.ERROR);
+            alert.setTitle("Error Message");
+            alert.setHeaderText(null);
+            alert.setContentText("Please fill all blank fields");
+            alert.showAndWait();
+            return;
+        }
+
+        // Check if the Product ID exists
+        if (!isSuraIdExist(addSu_id.getText())) {
+            Alert alert = new Alert(Alert.AlertType.ERROR);
+            alert.setTitle("Error Message");
+            alert.setHeaderText(null);
+            alert.setContentText("Product ID not found. Deletion canceled.");
+            alert.showAndWait();
+            return;
+        }
+
+        // Prompt for confirmation
+        Alert confirmationAlert = new Alert(Alert.AlertType.CONFIRMATION);
+        confirmationAlert.setTitle("Confirmation Message");
+        confirmationAlert.setHeaderText(null);
+        confirmationAlert.setContentText("Are you sure you want to DELETE Product_ID: " + addSu_id.getText() + "?");
+
+        Optional<ButtonType> confirmationResult = confirmationAlert.showAndWait();
+        if (confirmationResult.isPresent() && confirmationResult.get().equals(ButtonType.OK)) {
+            // Verify passcode
+            if (!verifyPasscode()) {
+                Alert passcodeAlert = new Alert(Alert.AlertType.ERROR);
+                passcodeAlert.setTitle("Error Message");
+                passcodeAlert.setHeaderText(null);
+                passcodeAlert.setContentText("Invalid passcode. Deletion canceled.");
+                passcodeAlert.showAndWait();
+                return;
+            }
+
+            // Proceed with deletion
+            String sql = "DELETE FROM sura_details WHERE product_id = ?";
+            connect = connectDb();
+            try {
+                prepare = connect.prepareStatement(sql);
+                prepare.setString(1, addSu_id.getText());
+
+                int rowsDeleted = prepare.executeUpdate();
+                if (rowsDeleted > 0) {
+                    addSuraShowListData();
+                    addSuraReset();
+
+                    Alert alert = new Alert(Alert.AlertType.INFORMATION);
+                    alert.setTitle("Information Message");
+                    alert.setHeaderText(null);
+                    alert.setContentText("Data deleted successfully!");
+                    alert.showAndWait();
+                } else {
+                    Alert alert = new Alert(Alert.AlertType.ERROR);
+                    alert.setTitle("Error Message");
+                    alert.setHeaderText(null);
+                    alert.setContentText("Failed to delete data. Please try again.");
+                    alert.showAndWait();
+                }
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
+        }
+    }
+
+    public void addSuraReset() {
+        addSu_id.setText("");
+        addSu_category.getSelectionModel().clearSelection();
+        addSu_netWeight.setText("");
+        addSu_karat.getSelectionModel().clearSelection();
+        addSu_rate.setText("");
+        addSu_supplier.setText("");
+        addSu_status.getSelectionModel().clearSelection();
+        addSu_img.setImage(null);
+        getData.path = "";
+    }
+
+    public void addSuImportImage() {
+        FileChooser open = new FileChooser();
+        open.setTitle("Open Image File");
+        open.getExtensionFilters().add(new FileChooser.ExtensionFilter("Image File", "*jpg", "*png"));
+
+        File file = open.showOpenDialog(main_form.getScene().getWindow());
+
+        if (file != null) {
+            getData.path = file.getAbsolutePath();
+            suImage = new Image(file.toURI().toString(), 90, 100, false, true);
+            addSu_img.setImage(suImage);
+        }
+    }
+
+    public void addSuListCategory() {
+        List<String> listC = new ArrayList<>();
+
+        for(String data:listSuCategory){
+            listC.add(data);
+        }
+        ObservableList<String> listData = FXCollections.observableArrayList(listSuCategory);
+        addSu_category.setItems(listData);
+    }
+
+    public void addSuListKarat() {
+        List<String> listK = new ArrayList<>();
+
+        for(String data:listKarat){
+            listK.add(data);
+        }
+        ObservableList<String> listData = FXCollections.observableArrayList(listKarat);
+        addSu_karat.setItems(listData);
+    }
+
+    public void addSuListStatus() {
+        List<String> listS = new ArrayList<>();
+
+        for(String data:listStatus){
+            listS.add(data);
+        }
+        ObservableList<String> listData = FXCollections.observableArrayList(listStatus);
+        addSu_status.setItems(listData);
+    }
+
+    public void addSuraSearch() {
+        FilteredList<suraData> filter = new FilteredList<>(addSuraList, e -> true);
+
+        addSu_search.textProperty().addListener((Observable, oldValue, newValue) -> {
+            filter.setPredicate(predicateSuData -> {
+                if (newValue == null || newValue.isEmpty()) {
+                    return true;
+                }
+                String searchKey = newValue.toLowerCase();
+
+                if (predicateSuData.getProductId().toString().contains(searchKey)) {
+                    return true;
+                } else if (predicateSuData.getCategory().toLowerCase().contains(searchKey)) {
+                    return true;
+                } else if (predicateSuData.getNet_weight().toString().contains(searchKey)) {
+                    return true;
+                } else if (predicateSuData.getKarat().toLowerCase().contains(searchKey)) {
+                    return true;
+                } else if (predicateSuData.getGold_rate().toString().contains(searchKey)) {
+                    return true;
+                } else if (predicateSuData.getSupplier().toString().contains(searchKey)) {
+                    return true;
+                } else if (predicateSuData.getStatus().toLowerCase().contains(searchKey)) {
+                    return true;
+                } else {
+                    return false;
+                }
+            });
+        });
+
+        SortedList<suraData> sortList = new SortedList<>(filter);
+        sortList.comparatorProperty().bind(addSu_tableView.comparatorProperty());
+        addSu_tableView.setItems(sortList);
+    }
+
+    public ObservableList<suraData> addSuraListData() {
+        ObservableList<suraData> suraList = FXCollections.observableArrayList();
+
+        String sql = "SELECT * FROM sura_details";
+        connect = connectDb();
+        try {
+            prepare = connect.prepareStatement(sql);
+            result = prepare.executeQuery();
+            suraData suD;
+
+            while (result.next()) {
+                suD = new suraData(result.getString("product_id"),
+                        result.getString("category"),
+                        result.getString("weight"),
+                        result.getDouble("net_weight"),
+                        result.getString("length"),
+                        result.getString("karat"),
+                        result.getDouble("gold_rate"),
+                        result.getString("supplier"),
+                        result.getString("status"),
+                        result.getString("image"),
+                        result.getDate("date"));
+
+                suraList.add(suD);
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        return suraList;
+    }
+
+    private ObservableList<suraData> addSuraList;
+
+    public void addSuraShowListData() {
+        addSuraList = addSuraListData();
+
+        addSu_col_productID.setCellValueFactory(new PropertyValueFactory<>("productId"));
+        addSu_col_category.setCellValueFactory(new PropertyValueFactory<>("category"));
+        addSu_col_weight.setCellValueFactory(new PropertyValueFactory<>("weight"));
+        addSu_col_netWeight.setCellValueFactory(new PropertyValueFactory<>("net_weight"));
+        addSu_col_length.setCellValueFactory(new PropertyValueFactory<>("length"));
+        addSu_col_karat.setCellValueFactory(new PropertyValueFactory<>("karat"));
+        addSu_col_goldRate.setCellValueFactory(new PropertyValueFactory<>("gold_rate"));
+        addSu_col_supplier.setCellValueFactory(new PropertyValueFactory<>("supplier"));
+        addSu_col_status.setCellValueFactory(new PropertyValueFactory<>("status"));
+
+        // Set custom cell factories to format double values to two decimal places
+        addSu_col_netWeight.setCellFactory(getDoubleCellFactory());
+        addSu_col_goldRate.setCellFactory(getDoubleCellFactory());
+
+        addSu_tableView.setItems(addSuraList);
+    }
+
+    public void addSuraSelect() {
+        suraData suD = addSu_tableView.getSelectionModel().getSelectedItem();
+        int num = addSu_tableView.getSelectionModel().getSelectedIndex();
+
+        if ((num - 1) < -1) {
+            return;
+        }
+
+        addSu_id.setText(String.valueOf(suD.getProductId()));
+
+        if (suD.getImage() != null && !suD.getImage().isEmpty()) {
+            String uri = "file:" + suD.getImage();
+            suImage = new Image(uri, 90, 100, false, true);
+            addSu_img.setImage(suImage);
+            getData.path = suD.getImage();
+        } else {
+            addSu_img.setImage(null);
+        }
+    }
+
+    private boolean isSuraIdExist(String productId) {
+        String sql = "SELECT COUNT(*) FROM sura_details WHERE product_id = ?";
+        connect = connectDb();
+        try {
+            prepare = connect.prepareStatement(sql);
+            prepare.setString(1, productId);
+            result = prepare.executeQuery();
+            if (result.next()) {
+                int count = result.getInt(1);
+                return count > 0;
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        return false;
+    }
+
+    private boolean isSuraIdValid(String productId) {
+        // Check if productId starts with 'S' and has exactly 4 digits
+        return productId.matches("^S\\d{4}$");
+    }
+
+    // Method to handle sura data
+    private void handleSuraData(suraData suraDetails, double price, double returnValue) {
+        double minPrice = suraDetails.getGold_rate() * suraDetails.getNet_weight() / 8;
+
+        if (price < minPrice) {
+            // Show alert with OK and Continue Anyway options
+            Alert alert = new Alert(Alert.AlertType.CONFIRMATION);
+            alert.setTitle("Error Message");
+            alert.setHeaderText(null);
+            alert.setContentText("Sales price must be greater than " + minPrice);
+
+            ButtonType okButton = new ButtonType("OK", ButtonBar.ButtonData.OK_DONE);
+            ButtonType continueButton = new ButtonType("Continue Anyway", ButtonBar.ButtonData.OTHER);
+            alert.getButtonTypes().setAll(okButton, continueButton);
+
+            Optional<ButtonType> result = alert.showAndWait();
+            if (result.isPresent() && result.get() == continueButton) {
+                boolean passcodeVerified = verifyPasscode();
+                if (!passcodeVerified) {
+                    showAlert(Alert.AlertType.ERROR, "Error Message", "Invalid passcode");
+                    return;
+                }
+            } else {
+                return;
+            }
+        }
+
+        if (returnValue > price) {
+            showAlert(Alert.AlertType.ERROR, "Error Message", "Invalid Exchange Value!");
+            return;
+        }
+
+        customerId();  // Ensure customer ID is set
+
+        salesData newSalesData = new salesData(
+                customerid,
+                suraDetails.getProductId(),
+                suraDetails.getCategory(),
+                suraDetails.getWeight(),
+                suraDetails.getNet_weight(),
+                suraDetails.getLength(),
+                suraDetails.getKarat(),
+                suraDetails.getGold_rate(),
+                price,
+                returnValue,
+                new java.sql.Date(new Date().getTime())
+        );
+
+        sales_tableView.getItems().add(newSalesData);
+        clearSalesInputFields();
+        updateSalesTotal();
+    }
+
     //******************************************************************************************************************
 
     private void setComboBoxValue(ComboBox<String> comboBox, String value) {
@@ -3770,6 +4275,12 @@ public class dashboardController implements Initializable {
             paBtn.setStyle("-fx-background-color:transparent");
             neBtn.setStyle("-fx-background-color:transparent");
             baBtn.setStyle("-fx-background-color:transparent");
+
+            addSuraShowListData();
+            addSuListCategory();
+            addSuListKarat();
+            addSuListStatus();
+            addSuraSearch();
 
         } else if (event.getSource() == paBtn) {
             home_form.setVisible(false);
