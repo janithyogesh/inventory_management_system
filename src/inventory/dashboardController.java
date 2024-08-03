@@ -20,11 +20,9 @@ import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.AnchorPane;
+import javafx.scene.layout.StackPane;
 import javafx.scene.layout.VBox;
-import javafx.stage.FileChooser;
-import javafx.stage.Modality;
-import javafx.stage.Stage;
-import javafx.stage.StageStyle;
+import javafx.stage.*;
 import javafx.util.Callback;
 import net.sf.jasperreports.engine.JasperCompileManager;
 import net.sf.jasperreports.engine.JasperFillManager;
@@ -35,6 +33,7 @@ import net.sf.jasperreports.engine.xml.JRXmlLoader;
 import net.sf.jasperreports.view.JasperViewer;
 
 import java.io.File;
+import java.math.BigDecimal;
 import java.net.URL;
 import java.sql.*;
 import java.text.DecimalFormat;
@@ -49,7 +48,7 @@ import static inventory.database.connectDb;
 public class dashboardController implements Initializable {
 
     @FXML
-    private Button addChain_addBtn, addChain_deleteBtn, addChain_importBtn, addChain_resetBtn, addChain_updateBtn;
+    private Button addChain_addBtn, addChain_deleteBtn, addChain_importBtn, addChain_resetBtn, addChain_updateBtn, addCt_chain;
     @FXML
     private Button addBr_addBtn, addBr_deleteBtn, addBr_importBtn, addBr_resetBtn, addBr_updateBtn;
     @FXML
@@ -1093,6 +1092,18 @@ public class dashboardController implements Initializable {
                 alert.setHeaderText(null);
                 alert.setContentText("Product ID already exists in sales table. Please use a unique Product ID.");
                 alert.showAndWait();
+            } else if (!isValidDecimal(addChain_netWeight.getText())) {
+                alert = new Alert(Alert.AlertType.ERROR);
+                alert.setTitle("Error Message");
+                alert.setHeaderText(null);
+                alert.setContentText("Invalid Net Weight!");
+                alert.showAndWait();
+            } else if (!isValidNumber(addChain_rate.getText())) {
+                alert = new Alert(Alert.AlertType.ERROR);
+                alert.setTitle("Error Message");
+                alert.setHeaderText(null);
+                alert.setContentText("Invalid Gold Rate!");
+                alert.showAndWait();
             } else {
                 prepare = connect.prepareStatement(sql);
                 String productId = addChain_id.getText();
@@ -1302,6 +1313,37 @@ public class dashboardController implements Initializable {
             getData.path = file.getAbsolutePath();
             chainImage = new Image(file.toURI().toString(), 90, 100, false, true);
             addChain_img.setImage(chainImage);
+        }
+    }
+
+    public void showChain() {
+        if (chainImage != null) {
+            ImageView largeImageView = new ImageView(chainImage);
+            largeImageView.setPreserveRatio(true);
+            largeImageView.setFitWidth(600);
+            largeImageView.setFitHeight(600);
+
+            StackPane root = new StackPane();
+            root.getChildren().add(largeImageView);
+
+            Scene scene = new Scene(root, 600, 600);
+
+            Stage stage = new Stage();
+            stage.setTitle("Image View");
+            stage.setScene(scene);
+            stage.initModality(Modality.APPLICATION_MODAL);
+
+            stage.setOnCloseRequest((WindowEvent event) -> {
+                chainImage = null;
+            });
+
+            stage.showAndWait();
+        } else {
+            Alert alert = new Alert(Alert.AlertType.INFORMATION);
+            alert.setTitle("No Image Available");
+            alert.setHeaderText(null);
+            alert.setContentText("No photo uploaded.");
+            alert.showAndWait();
         }
     }
 
@@ -1616,7 +1658,19 @@ public class dashboardController implements Initializable {
                 alert.setHeaderText(null);
                 alert.setContentText("Product ID already exists in sales table. Please use a unique Product ID.");
                 alert.showAndWait();
-            } else {
+            } else if (!isValidDecimal(addBr_netWeight.getText())) {
+                alert = new Alert(Alert.AlertType.ERROR);
+                alert.setTitle("Error Message");
+                alert.setHeaderText(null);
+                alert.setContentText("Invalid Net Weight!");
+                alert.showAndWait();
+            } else if (!isValidNumber(addBr_rate.getText())) {
+                alert = new Alert(Alert.AlertType.ERROR);
+                alert.setTitle("Error Message");
+                alert.setHeaderText(null);
+                alert.setContentText("Invalid Gold Rate!");
+                alert.showAndWait();
+            }else {
                 prepare = connect.prepareStatement(sql);
                 String productId = addBr_id.getText();
                 prepare.setString(1, productId);
@@ -1825,6 +1879,37 @@ public class dashboardController implements Initializable {
             getData.path = file.getAbsolutePath();
             brImage = new Image(file.toURI().toString(), 90, 100, false, true);
             addBr_img.setImage(brImage);
+        }
+    }
+
+    public void showBracelet() {
+        if (brImage != null) {
+            ImageView largeImageView = new ImageView(brImage);
+            largeImageView.setPreserveRatio(true);
+            largeImageView.setFitWidth(600);
+            largeImageView.setFitHeight(600);
+
+            StackPane root = new StackPane();
+            root.getChildren().add(largeImageView);
+
+            Scene scene = new Scene(root, 600, 600);
+
+            Stage stage = new Stage();
+            stage.setTitle("Image View");
+            stage.setScene(scene);
+            stage.initModality(Modality.APPLICATION_MODAL);
+
+            stage.setOnCloseRequest((WindowEvent event) -> {
+                brImage = null;
+            });
+
+            stage.showAndWait();
+        } else {
+            Alert alert = new Alert(Alert.AlertType.INFORMATION);
+            alert.setTitle("No Image Available");
+            alert.setHeaderText(null);
+            alert.setContentText("No photo uploaded.");
+            alert.showAndWait();
         }
     }
 
@@ -2135,7 +2220,19 @@ public class dashboardController implements Initializable {
                 alert.setHeaderText(null);
                 alert.setContentText("Product ID already exists in sales table. Please use a unique Product ID.");
                 alert.showAndWait();
-            } else {
+            } else if (!isValidDecimal(addRi_netWeight.getText())) {
+                alert = new Alert(Alert.AlertType.ERROR);
+                alert.setTitle("Error Message");
+                alert.setHeaderText(null);
+                alert.setContentText("Invalid Net Weight!");
+                alert.showAndWait();
+            } else if (!isValidNumber(addRi_rate.getText())) {
+                alert = new Alert(Alert.AlertType.ERROR);
+                alert.setTitle("Error Message");
+                alert.setHeaderText(null);
+                alert.setContentText("Invalid Gold Rate!");
+                alert.showAndWait();
+            }else {
                 prepare = connect.prepareStatement(sql);
                 String productId = addRi_id.getText();
                 prepare.setString(1, productId);
@@ -2322,9 +2419,7 @@ public class dashboardController implements Initializable {
     public void addRingReset() {
         addRi_id.setText("");
         addRi_category.getSelectionModel().clearSelection();
-        //addRi_weight.getSelectionModel().clearSelection();
         addRi_netWeight.setText("");
-        //addRi_length.getSelectionModel().clearSelection();
         addRi_karat.getSelectionModel().clearSelection();
         addRi_rate.setText("");
         addRi_supplier.setText("");
@@ -2344,6 +2439,37 @@ public class dashboardController implements Initializable {
             getData.path = file.getAbsolutePath();
             riImage = new Image(file.toURI().toString(), 90, 100, false, true);
             addRi_img.setImage(riImage);
+        }
+    }
+
+    public void showRing() {
+        if (riImage != null) {
+            ImageView largeImageView = new ImageView(riImage);
+            largeImageView.setPreserveRatio(true);
+            largeImageView.setFitWidth(600);
+            largeImageView.setFitHeight(600);
+
+            StackPane root = new StackPane();
+            root.getChildren().add(largeImageView);
+
+            Scene scene = new Scene(root, 600, 600);
+
+            Stage stage = new Stage();
+            stage.setTitle("Image View");
+            stage.setScene(scene);
+            stage.initModality(Modality.APPLICATION_MODAL);
+
+            stage.setOnCloseRequest((WindowEvent event) -> {
+                riImage = null;
+            });
+
+            stage.showAndWait();
+        } else {
+            Alert alert = new Alert(Alert.AlertType.INFORMATION);
+            alert.setTitle("No Image Available");
+            alert.setHeaderText(null);
+            alert.setContentText("No photo uploaded.");
+            alert.showAndWait();
         }
     }
 
@@ -2630,7 +2756,19 @@ public class dashboardController implements Initializable {
                 alert.setHeaderText(null);
                 alert.setContentText("Product ID already exists in sales table. Please use a unique Product ID.");
                 alert.showAndWait();
-            } else {
+            } else if (!isValidDecimal(addEr_netWeight.getText())) {
+                alert = new Alert(Alert.AlertType.ERROR);
+                alert.setTitle("Error Message");
+                alert.setHeaderText(null);
+                alert.setContentText("Invalid Net Weight!");
+                alert.showAndWait();
+            } else if (!isValidNumber(addEr_rate.getText())) {
+                alert = new Alert(Alert.AlertType.ERROR);
+                alert.setTitle("Error Message");
+                alert.setHeaderText(null);
+                alert.setContentText("Invalid Gold Rate!");
+                alert.showAndWait();
+            }else {
                 prepare = connect.prepareStatement(sql);
                 String productId = addEr_id.getText();
                 prepare.setString(1, productId);
@@ -2835,6 +2973,37 @@ public class dashboardController implements Initializable {
             getData.path = file.getAbsolutePath();
             erImage = new Image(file.toURI().toString(), 90, 100, false, true);
             addEr_img.setImage(erImage);
+        }
+    }
+
+    public void showEarring() {
+        if (erImage != null) {
+            ImageView largeImageView = new ImageView(erImage);
+            largeImageView.setPreserveRatio(true);
+            largeImageView.setFitWidth(600);
+            largeImageView.setFitHeight(600);
+
+            StackPane root = new StackPane();
+            root.getChildren().add(largeImageView);
+
+            Scene scene = new Scene(root, 600, 600);
+
+            Stage stage = new Stage();
+            stage.setTitle("Image View");
+            stage.setScene(scene);
+            stage.initModality(Modality.APPLICATION_MODAL);
+
+            stage.setOnCloseRequest((WindowEvent event) -> {
+                erImage = null;
+            });
+
+            stage.showAndWait();
+        } else {
+            Alert alert = new Alert(Alert.AlertType.INFORMATION);
+            alert.setTitle("No Image Available");
+            alert.setHeaderText(null);
+            alert.setContentText("No photo uploaded.");
+            alert.showAndWait();
         }
     }
 
@@ -3121,7 +3290,19 @@ public class dashboardController implements Initializable {
                 alert.setHeaderText(null);
                 alert.setContentText("Product ID already exists in sales table. Please use a unique Product ID.");
                 alert.showAndWait();
-            } else {
+            } else if (!isValidDecimal(addPe_netWeight.getText())) {
+                alert = new Alert(Alert.AlertType.ERROR);
+                alert.setTitle("Error Message");
+                alert.setHeaderText(null);
+                alert.setContentText("Invalid Net Weight!");
+                alert.showAndWait();
+            } else if (!isValidNumber(addPe_rate.getText())) {
+                alert = new Alert(Alert.AlertType.ERROR);
+                alert.setTitle("Error Message");
+                alert.setHeaderText(null);
+                alert.setContentText("Invalid Gold Rate!");
+                alert.showAndWait();
+            }else {
                 prepare = connect.prepareStatement(sql);
                 String productId = addPe_id.getText();
                 prepare.setString(1, productId);
@@ -3326,6 +3507,37 @@ public class dashboardController implements Initializable {
             getData.path = file.getAbsolutePath();
             peImage = new Image(file.toURI().toString(), 90, 100, false, true);
             addPe_img.setImage(peImage);
+        }
+    }
+
+    public void showPendent() {
+        if (peImage != null) {
+            ImageView largeImageView = new ImageView(peImage);
+            largeImageView.setPreserveRatio(true);
+            largeImageView.setFitWidth(600);
+            largeImageView.setFitHeight(600);
+
+            StackPane root = new StackPane();
+            root.getChildren().add(largeImageView);
+
+            Scene scene = new Scene(root, 600, 600);
+
+            Stage stage = new Stage();
+            stage.setTitle("Image View");
+            stage.setScene(scene);
+            stage.initModality(Modality.APPLICATION_MODAL);
+
+            stage.setOnCloseRequest((WindowEvent event) -> {
+                peImage = null;
+            });
+
+            stage.showAndWait();
+        } else {
+            Alert alert = new Alert(Alert.AlertType.INFORMATION);
+            alert.setTitle("No Image Available");
+            alert.setHeaderText(null);
+            alert.setContentText("No photo uploaded.");
+            alert.showAndWait();
         }
     }
 
@@ -3612,7 +3824,19 @@ public class dashboardController implements Initializable {
                 alert.setHeaderText(null);
                 alert.setContentText("Product ID already exists in sales table. Please use a unique Product ID.");
                 alert.showAndWait();
-            } else {
+            } else if (!isValidDecimal(addSu_netWeight.getText())) {
+                alert = new Alert(Alert.AlertType.ERROR);
+                alert.setTitle("Error Message");
+                alert.setHeaderText(null);
+                alert.setContentText("Invalid Net Weight!");
+                alert.showAndWait();
+            } else if (!isValidNumber(addSu_rate.getText())) {
+                alert = new Alert(Alert.AlertType.ERROR);
+                alert.setTitle("Error Message");
+                alert.setHeaderText(null);
+                alert.setContentText("Invalid Gold Rate!");
+                alert.showAndWait();
+            }else {
                 prepare = connect.prepareStatement(sql);
                 String productId = addSu_id.getText();
                 prepare.setString(1, productId);
@@ -3817,6 +4041,37 @@ public class dashboardController implements Initializable {
             getData.path = file.getAbsolutePath();
             suImage = new Image(file.toURI().toString(), 90, 100, false, true);
             addSu_img.setImage(suImage);
+        }
+    }
+
+    public void showSura() {
+        if (suImage != null) {
+            ImageView largeImageView = new ImageView(suImage);
+            largeImageView.setPreserveRatio(true);
+            largeImageView.setFitWidth(600);
+            largeImageView.setFitHeight(600);
+
+            StackPane root = new StackPane();
+            root.getChildren().add(largeImageView);
+
+            Scene scene = new Scene(root, 600, 600);
+
+            Stage stage = new Stage();
+            stage.setTitle("Image View");
+            stage.setScene(scene);
+            stage.initModality(Modality.APPLICATION_MODAL);
+
+            stage.setOnCloseRequest((WindowEvent event) -> {
+                suImage = null;
+            });
+
+            stage.showAndWait();
+        } else {
+            Alert alert = new Alert(Alert.AlertType.INFORMATION);
+            alert.setTitle("No Image Available");
+            alert.setHeaderText(null);
+            alert.setContentText("No photo uploaded.");
+            alert.showAndWait();
         }
     }
 
@@ -4103,7 +4358,19 @@ public class dashboardController implements Initializable {
                 alert.setHeaderText(null);
                 alert.setContentText("Product ID already exists in sales table. Please use a unique Product ID.");
                 alert.showAndWait();
-            } else {
+            } else if (!isValidDecimal(addPa_netWeight.getText())) {
+                alert = new Alert(Alert.AlertType.ERROR);
+                alert.setTitle("Error Message");
+                alert.setHeaderText(null);
+                alert.setContentText("Invalid Net Weight!");
+                alert.showAndWait();
+            } else if (!isValidNumber(addPa_rate.getText())) {
+                alert = new Alert(Alert.AlertType.ERROR);
+                alert.setTitle("Error Message");
+                alert.setHeaderText(null);
+                alert.setContentText("Invalid Gold Rate!");
+                alert.showAndWait();
+            }else {
                 prepare = connect.prepareStatement(sql);
                 String productId = addPa_id.getText();
                 prepare.setString(1, productId);
@@ -4308,6 +4575,37 @@ public class dashboardController implements Initializable {
             getData.path = file.getAbsolutePath();
             paImage = new Image(file.toURI().toString(), 90, 100, false, true);
             addPa_img.setImage(paImage);
+        }
+    }
+
+    public void showPancha() {
+        if (paImage != null) {
+            ImageView largeImageView = new ImageView(paImage);
+            largeImageView.setPreserveRatio(true);
+            largeImageView.setFitWidth(600);
+            largeImageView.setFitHeight(600);
+
+            StackPane root = new StackPane();
+            root.getChildren().add(largeImageView);
+
+            Scene scene = new Scene(root, 600, 600);
+
+            Stage stage = new Stage();
+            stage.setTitle("Image View");
+            stage.setScene(scene);
+            stage.initModality(Modality.APPLICATION_MODAL);
+
+            stage.setOnCloseRequest((WindowEvent event) -> {
+                paImage = null;
+            });
+
+            stage.showAndWait();
+        } else {
+            Alert alert = new Alert(Alert.AlertType.INFORMATION);
+            alert.setTitle("No Image Available");
+            alert.setHeaderText(null);
+            alert.setContentText("No photo uploaded.");
+            alert.showAndWait();
         }
     }
 
@@ -4594,7 +4892,19 @@ public class dashboardController implements Initializable {
                 alert.setHeaderText(null);
                 alert.setContentText("Product ID already exists in sales table. Please use a unique Product ID.");
                 alert.showAndWait();
-            } else {
+            } else if (!isValidDecimal(addNe_netWeight.getText())) {
+                alert = new Alert(Alert.AlertType.ERROR);
+                alert.setTitle("Error Message");
+                alert.setHeaderText(null);
+                alert.setContentText("Invalid Net Weight!");
+                alert.showAndWait();
+            } else if (!isValidNumber(addNe_rate.getText())) {
+                alert = new Alert(Alert.AlertType.ERROR);
+                alert.setTitle("Error Message");
+                alert.setHeaderText(null);
+                alert.setContentText("Invalid Gold Rate!");
+                alert.showAndWait();
+            }else {
                 prepare = connect.prepareStatement(sql);
                 String productId = addNe_id.getText();
                 prepare.setString(1, productId);
@@ -4799,6 +5109,37 @@ public class dashboardController implements Initializable {
             getData.path = file.getAbsolutePath();
             neImage = new Image(file.toURI().toString(), 90, 100, false, true);
             addNe_img.setImage(neImage);
+        }
+    }
+
+    public void showNecklace() {
+        if (neImage != null) {
+            ImageView largeImageView = new ImageView(neImage);
+            largeImageView.setPreserveRatio(true);
+            largeImageView.setFitWidth(600);
+            largeImageView.setFitHeight(600);
+
+            StackPane root = new StackPane();
+            root.getChildren().add(largeImageView);
+
+            Scene scene = new Scene(root, 600, 600);
+
+            Stage stage = new Stage();
+            stage.setTitle("Image View");
+            stage.setScene(scene);
+            stage.initModality(Modality.APPLICATION_MODAL);
+
+            stage.setOnCloseRequest((WindowEvent event) -> {
+                neImage = null;
+            });
+
+            stage.showAndWait();
+        } else {
+            Alert alert = new Alert(Alert.AlertType.INFORMATION);
+            alert.setTitle("No Image Available");
+            alert.setHeaderText(null);
+            alert.setContentText("No photo uploaded.");
+            alert.showAndWait();
         }
     }
 
@@ -5085,7 +5426,19 @@ public class dashboardController implements Initializable {
                 alert.setHeaderText(null);
                 alert.setContentText("Product ID already exists in sales table. Please use a unique Product ID.");
                 alert.showAndWait();
-            } else {
+            } else if (!isValidDecimal(addBa_netWeight.getText())) {
+                alert = new Alert(Alert.AlertType.ERROR);
+                alert.setTitle("Error Message");
+                alert.setHeaderText(null);
+                alert.setContentText("Invalid Net Weight!");
+                alert.showAndWait();
+            } else if (!isValidNumber(addBa_rate.getText())) {
+                alert = new Alert(Alert.AlertType.ERROR);
+                alert.setTitle("Error Message");
+                alert.setHeaderText(null);
+                alert.setContentText("Invalid Gold Rate!");
+                alert.showAndWait();
+            }else {
                 prepare = connect.prepareStatement(sql);
                 String productId = addBa_id.getText();
                 prepare.setString(1, productId);
@@ -5290,6 +5643,37 @@ public class dashboardController implements Initializable {
             getData.path = file.getAbsolutePath();
             baImage = new Image(file.toURI().toString(), 90, 100, false, true);
             addBa_img.setImage(baImage);
+        }
+    }
+
+    public void showBangle() {
+        if (baImage != null) {
+            ImageView largeImageView = new ImageView(baImage);
+            largeImageView.setPreserveRatio(true);
+            largeImageView.setFitWidth(600);
+            largeImageView.setFitHeight(600);
+
+            StackPane root = new StackPane();
+            root.getChildren().add(largeImageView);
+
+            Scene scene = new Scene(root, 600, 600);
+
+            Stage stage = new Stage();
+            stage.setTitle("Image View");
+            stage.setScene(scene);
+            stage.initModality(Modality.APPLICATION_MODAL);
+
+            stage.setOnCloseRequest((WindowEvent event) -> {
+                baImage = null;
+            });
+
+            stage.showAndWait();
+        } else {
+            Alert alert = new Alert(Alert.AlertType.INFORMATION);
+            alert.setTitle("No Image Available");
+            alert.setHeaderText(null);
+            alert.setContentText("No photo uploaded.");
+            alert.showAndWait();
         }
     }
 
@@ -6064,5 +6448,22 @@ public class dashboardController implements Initializable {
 
         Optional<String> result = dialog.showAndWait();
         return result.isPresent() && "1212".equals(result.get()); // You can change this passcode as needed
+    }
+    private boolean isValidDecimal(String value) {
+        try {
+            new BigDecimal(value);
+            return true;
+        } catch (NumberFormatException e) {
+            return false;
+        }
+    }
+
+    private boolean isValidNumber(String value) {
+        try {
+            Double.parseDouble(value);
+            return true;
+        } catch (NumberFormatException e) {
+            return false;
+        }
     }
 }

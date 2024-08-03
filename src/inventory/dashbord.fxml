@@ -153,7 +153,7 @@
                     <center>
                         <AnchorPane prefHeight="200.0" prefWidth="200.0" BorderPane.alignment="CENTER">
                             <children>
-                                <AnchorPane fx:id="home_form" layoutX="56.0" layoutY="76.0" prefHeight="604.8" prefWidth="684.8" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
+                                <AnchorPane fx:id="home_form" layoutX="56.0" layoutY="76.0" prefHeight="604.8" prefWidth="684.8" visible="false" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
                                     <children>
                                         <AnchorPane layoutX="14.0" layoutY="14.0" prefHeight="132.0" prefWidth="959.0" stylesheets="@dashboardDesign.css">
                                             <styleClass>
@@ -338,7 +338,7 @@
                                         </AnchorPane>
                                     </children>
                                 </AnchorPane>
-                                <AnchorPane fx:id="chain_form" layoutX="114.0" layoutY="68.0" prefHeight="604.8" prefWidth="684.8" visible="false" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
+                                <AnchorPane fx:id="chain_form" layoutX="114.0" layoutY="68.0" prefHeight="604.8" prefWidth="684.8" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
                                     <children>
                                         <AnchorPane layoutX="8.0" layoutY="7.0" prefHeight="591.0" prefWidth="214.0" stylesheets="@dashboardDesign.css">
                                             <styleClass>
@@ -352,7 +352,7 @@
                                                         <String fx:value="shadow" />
                                                     </styleClass>
                                                     <children>
-                                                        <ImageView fx:id="addChain_img" fitHeight="100.0" fitWidth="90.0" layoutX="1.0" pickOnBounds="true" preserveRatio="true" />
+                                                        <ImageView fx:id="addChain_img" fitHeight="100.0" fitWidth="90.0" layoutX="1.0" onMouseClicked="#showChain" pickOnBounds="true" preserveRatio="true" />
                                                         <Button fx:id="addChain_importBtn" layoutX="1.0" layoutY="97.0" mnemonicParsing="false" onAction="#addChainImportImage" prefHeight="20.0" prefWidth="90.0" styleClass="import-btn" stylesheets="@dashboardDesign.css" text="Import" />
                                                     </children>
                                                 </AnchorPane>
@@ -437,6 +437,7 @@
                                                 </TableView>
                                                 <TextField fx:id="addChain_search" layoutX="14.0" layoutY="28.0" onAction="#addChainSearch" prefHeight="35.0" prefWidth="232.0" promptText="Search" styleClass="search" stylesheets="@dashboardDesign.css" />
                                                 <FontAwesomeIcon fill="#818181" glyphName="SEARCH" layoutX="216.0" layoutY="52.0" size="1.5em" />
+                                    <Button fx:id="addCt_chain" layoutX="584.0" layoutY="33.0" mnemonicParsing="false" prefHeight="26.0" prefWidth="129.0" styleClass="pay-btn" stylesheets="@dashboardDesign.css" text="Add Category" />
                                             </children>
                                         </AnchorPane>
                                     </children>
@@ -455,7 +456,7 @@
                                           <String fx:value="shadow" />
                                        </styleClass>
                                        <children>
-                                          <ImageView fx:id="addBr_img" fitHeight="100.0" fitWidth="90.0" layoutX="1.0" pickOnBounds="true" preserveRatio="true" />
+                                          <ImageView fx:id="addBr_img" fitHeight="100.0" fitWidth="90.0" layoutX="1.0" onMouseClicked="#showBracelet" pickOnBounds="true" preserveRatio="true" />
                                           <Button fx:id="addBr_importBtn" layoutX="1.0" layoutY="97.0" mnemonicParsing="false" onAction="#addBrImportImage" prefHeight="20.0" prefWidth="90.0" styleClass="import-btn" stylesheets="@dashboardDesign.css" text="Import" />
                                        </children>
                                     </AnchorPane>
@@ -558,7 +559,7 @@
                                           <String fx:value="shadow" />
                                        </styleClass>
                                        <children>
-                                          <ImageView fx:id="addRi_img" fitHeight="100.0" fitWidth="90.0" layoutX="1.0" pickOnBounds="true" preserveRatio="true" />
+                                          <ImageView fx:id="addRi_img" fitHeight="100.0" fitWidth="90.0" layoutX="1.0" onMouseClicked="#showRing" pickOnBounds="true" preserveRatio="true" />
                                           <Button fx:id="addRi_importBtn" layoutX="1.0" layoutY="97.0" mnemonicParsing="false" onAction="#addRiImportImage" prefHeight="20.0" prefWidth="90.0" styleClass="import-btn" stylesheets="@dashboardDesign.css" text="Import" />
                                        </children>
                                     </AnchorPane>
@@ -574,40 +575,40 @@
                                        </font>
                                     </Label>
                                     <ComboBox fx:id="addRi_category" layoutX="95.0" layoutY="198.0" onAction="#addRiListCategory" prefHeight="25.0" prefWidth="110.0" promptText="Choose" styleClass="textfield" stylesheets="@dashboardDesign.css" />
-                                    <Label layoutX="11.0" layoutY="266.0" text="Net Weight:">
+                                    <Label layoutX="11.0" layoutY="236.0" text="Net Weight:">
                                        <font>
                                           <Font name="Tahoma" size="14.0" />
                                        </font>
                                     </Label>
-                                    <TextField fx:id="addRi_netWeight" layoutX="95.0" layoutY="263.0" prefHeight="25.0" prefWidth="110.0" styleClass="textfield" stylesheets="@dashboardDesign.css" />
-                                    <Label layoutX="11.0" layoutY="331.0" text="Karat:">
+                                    <TextField fx:id="addRi_netWeight" layoutX="95.0" layoutY="233.0" prefHeight="25.0" prefWidth="110.0" styleClass="textfield" stylesheets="@dashboardDesign.css" />
+                                    <Label layoutX="11.0" layoutY="272.0" text="Karat:">
                                        <font>
                                           <Font name="Tahoma" size="14.0" />
                                        </font>
                                     </Label>
-                                    <ComboBox fx:id="addRi_karat" layoutX="95.0" layoutY="328.0" onAction="#addRiListKarat" prefHeight="25.0" prefWidth="110.0" promptText="Choose" styleClass="textfield" stylesheets="@dashboardDesign.css" />
-                                    <Label layoutX="11.0" layoutY="363.0" text="Gold Rate:">
+                                    <ComboBox fx:id="addRi_karat" layoutX="95.0" layoutY="269.0" onAction="#addRiListKarat" prefHeight="25.0" prefWidth="110.0" promptText="Choose" styleClass="textfield" stylesheets="@dashboardDesign.css" />
+                                    <Label layoutX="11.0" layoutY="309.0" text="Gold Rate:">
                                        <font>
                                           <Font name="Tahoma" size="14.0" />
                                        </font>
                                     </Label>
-                                    <TextField fx:id="addRi_rate" layoutX="96.0" layoutY="360.0" prefHeight="25.0" prefWidth="110.0" styleClass="textfield" stylesheets="@dashboardDesign.css" />
-                                    <Label layoutX="11.0" layoutY="394.0" text="Supplier:">
+                                    <TextField fx:id="addRi_rate" layoutX="95.0" layoutY="306.0" prefHeight="25.0" prefWidth="110.0" styleClass="textfield" stylesheets="@dashboardDesign.css" />
+                                    <Label layoutX="11.0" layoutY="345.0" text="Supplier:">
                                        <font>
                                           <Font name="Tahoma" size="14.0" />
                                        </font>
                                     </Label>
-                                    <TextField fx:id="addRi_supplier" layoutX="96.0" layoutY="391.0" prefHeight="25.0" prefWidth="110.0" styleClass="textfield" stylesheets="@dashboardDesign.css" />
+                                    <TextField fx:id="addRi_supplier" layoutX="95.0" layoutY="342.0" prefHeight="25.0" prefWidth="110.0" styleClass="textfield" stylesheets="@dashboardDesign.css" />
                                     <Button fx:id="addRi_addBtn" layoutX="13.0" layoutY="496.0" mnemonicParsing="false" onAction="#addRingAdd" prefWidth="90.0" styleClass="add-btn" stylesheets="@dashboardDesign.css" text="Add" />
                                     <Button fx:id="addRi_updateBtn" layoutX="110.0" layoutY="496.0" mnemonicParsing="false" onAction="#addRingUpdate" prefWidth="90.0" styleClass="update-btn" stylesheets="@dashboardDesign.css" text="Update" />
                                     <Button fx:id="addRi_resetBtn" layoutX="13.0" layoutY="537.0" mnemonicParsing="false" onAction="#addRingReset" prefWidth="90.0" styleClass="reset-btn" stylesheets="@dashboardDesign.css" text="Reset" />
                                     <Button fx:id="addRi_deleteBtn" layoutX="110.0" layoutY="537.0" mnemonicParsing="false" onAction="#addRingDelete" prefWidth="90.0" styleClass="delete-btn" stylesheets="@dashboardDesign.css" text="Delete" />
-                                    <Label layoutX="11.0" layoutY="425.0" text="Status:">
+                                    <Label layoutX="11.0" layoutY="381.0" text="Status:">
                                        <font>
                                           <Font name="Tahoma" size="14.0" />
                                        </font>
                                     </Label>
-                                    <ComboBox fx:id="addRi_status" layoutX="96.0" layoutY="422.0" onAction="#addRiListStatus" prefHeight="25.0" prefWidth="110.0" promptText="Choose" styleClass="textfield" stylesheets="@dashboardDesign.css" />
+                                    <ComboBox fx:id="addRi_status" layoutX="95.0" layoutY="378.0" onAction="#addRiListStatus" prefHeight="25.0" prefWidth="110.0" promptText="Choose" styleClass="textfield" stylesheets="@dashboardDesign.css" />
                                  </children>
                               </AnchorPane>
                               <AnchorPane layoutX="234.0" layoutY="6.0" prefHeight="591.0" prefWidth="738.0" stylesheets="@dashboardDesign.css">
@@ -649,7 +650,7 @@
                                           <String fx:value="shadow" />
                                        </styleClass>
                                        <children>
-                                          <ImageView fx:id="addEr_img" fitHeight="100.0" fitWidth="90.0" layoutX="1.0" pickOnBounds="true" preserveRatio="true" />
+                                          <ImageView fx:id="addEr_img" fitHeight="100.0" fitWidth="90.0" layoutX="1.0" onMouseClicked="#showEarring" pickOnBounds="true" preserveRatio="true" />
                                           <Button fx:id="addEr_importBtn" layoutX="1.0" layoutY="97.0" mnemonicParsing="false" onAction="#addErImportImage" prefHeight="20.0" prefWidth="90.0" styleClass="import-btn" stylesheets="@dashboardDesign.css" text="Import" />
                                        </children>
                                     </AnchorPane>
@@ -665,40 +666,40 @@
                                        </font>
                                     </Label>
                                     <ComboBox fx:id="addEr_category" layoutX="95.0" layoutY="198.0" onAction="#addErListCategory" prefHeight="25.0" prefWidth="110.0" promptText="Choose" styleClass="textfield" stylesheets="@dashboardDesign.css" />
-                                    <Label layoutX="11.0" layoutY="266.0" text="Net Weight:">
+                                    <Label layoutX="11.0" layoutY="236.0" text="Net Weight:">
                                        <font>
                                           <Font name="Tahoma" size="14.0" />
                                        </font>
                                     </Label>
-                                    <TextField fx:id="addEr_netWeight" layoutX="95.0" layoutY="263.0" prefHeight="25.0" prefWidth="110.0" styleClass="textfield" stylesheets="@dashboardDesign.css" />
-                                    <Label layoutX="11.0" layoutY="331.0" text="Karat:">
+                                    <TextField fx:id="addEr_netWeight" layoutX="95.0" layoutY="233.0" prefHeight="25.0" prefWidth="110.0" styleClass="textfield" stylesheets="@dashboardDesign.css" />
+                                    <Label layoutX="11.0" layoutY="271.0" text="Karat:">
                                        <font>
                                           <Font name="Tahoma" size="14.0" />
                                        </font>
                                     </Label>
-                                    <ComboBox fx:id="addEr_karat" layoutX="95.0" layoutY="328.0" onAction="#addErListKarat" prefHeight="25.0" prefWidth="110.0" promptText="Choose" styleClass="textfield" stylesheets="@dashboardDesign.css" />
-                                    <Label layoutX="11.0" layoutY="363.0" text="Gold Rate:">
+                                    <ComboBox fx:id="addEr_karat" layoutX="95.0" layoutY="268.0" onAction="#addErListKarat" prefHeight="25.0" prefWidth="110.0" promptText="Choose" styleClass="textfield" stylesheets="@dashboardDesign.css" />
+                                    <Label layoutX="11.0" layoutY="305.0" text="Gold Rate:">
                                        <font>
                                           <Font name="Tahoma" size="14.0" />
                                        </font>
                                     </Label>
-                                    <TextField fx:id="addEr_rate" layoutX="96.0" layoutY="360.0" prefHeight="25.0" prefWidth="110.0" styleClass="textfield" stylesheets="@dashboardDesign.css" />
-                                    <Label layoutX="11.0" layoutY="394.0" text="Supplier:">
+                                    <TextField fx:id="addEr_rate" layoutX="95.0" layoutY="302.0" prefHeight="25.0" prefWidth="110.0" styleClass="textfield" stylesheets="@dashboardDesign.css" />
+                                    <Label layoutX="11.0" layoutY="339.0" text="Supplier:">
                                        <font>
                                           <Font name="Tahoma" size="14.0" />
                                        </font>
                                     </Label>
-                                    <TextField fx:id="addEr_supplier" layoutX="96.0" layoutY="391.0" prefHeight="25.0" prefWidth="110.0" styleClass="textfield" stylesheets="@dashboardDesign.css" />
+                                    <TextField fx:id="addEr_supplier" layoutX="95.0" layoutY="336.0" prefHeight="25.0" prefWidth="110.0" styleClass="textfield" stylesheets="@dashboardDesign.css" />
                                     <Button fx:id="addEr_addBtn" layoutX="13.0" layoutY="496.0" mnemonicParsing="false" onAction="#addEarringAdd" prefWidth="90.0" styleClass="add-btn" stylesheets="@dashboardDesign.css" text="Add" />
                                     <Button fx:id="addEr_updateBtn" layoutX="110.0" layoutY="496.0" mnemonicParsing="false" onAction="#addEarringUpdate" prefWidth="90.0" styleClass="update-btn" stylesheets="@dashboardDesign.css" text="Update" />
                                     <Button fx:id="addEr_resetBtn" layoutX="13.0" layoutY="537.0" mnemonicParsing="false" onAction="#addEarringReset" prefWidth="90.0" styleClass="reset-btn" stylesheets="@dashboardDesign.css" text="Reset" />
                                     <Button fx:id="addEr_deleteBtn" layoutX="110.0" layoutY="537.0" mnemonicParsing="false" onAction="#addEarringDelete" prefWidth="90.0" styleClass="delete-btn" stylesheets="@dashboardDesign.css" text="Delete" />
-                                    <Label layoutX="11.0" layoutY="425.0" text="Status:">
+                                    <Label layoutX="11.0" layoutY="374.0" text="Status:">
                                        <font>
                                           <Font name="Tahoma" size="14.0" />
                                        </font>
                                     </Label>
-                                    <ComboBox fx:id="addEr_status" layoutX="96.0" layoutY="422.0" onAction="#addErListStatus" prefHeight="25.0" prefWidth="110.0" promptText="Choose" styleClass="textfield" stylesheets="@dashboardDesign.css" />
+                                    <ComboBox fx:id="addEr_status" layoutX="95.0" layoutY="371.0" onAction="#addErListStatus" prefHeight="25.0" prefWidth="110.0" promptText="Choose" styleClass="textfield" stylesheets="@dashboardDesign.css" />
                                  </children>
                               </AnchorPane>
                               <AnchorPane layoutX="234.0" layoutY="6.0" prefHeight="591.0" prefWidth="738.0" stylesheets="@dashboardDesign.css">
@@ -740,7 +741,7 @@
                                           <String fx:value="shadow" />
                                        </styleClass>
                                        <children>
-                                          <ImageView fx:id="addPe_img" fitHeight="100.0" fitWidth="90.0" layoutX="1.0" pickOnBounds="true" preserveRatio="true" />
+                                          <ImageView fx:id="addPe_img" fitHeight="100.0" fitWidth="90.0" layoutX="1.0" onMouseClicked="#showPendent" pickOnBounds="true" preserveRatio="true" />
                                           <Button fx:id="addPe_importBtn" layoutX="1.0" layoutY="97.0" mnemonicParsing="false" onAction="#addPeImportImage" prefHeight="20.0" prefWidth="90.0" styleClass="import-btn" stylesheets="@dashboardDesign.css" text="Import" />
                                        </children>
                                     </AnchorPane>
@@ -756,40 +757,40 @@
                                        </font>
                                     </Label>
                                     <ComboBox fx:id="addPe_category" layoutX="95.0" layoutY="198.0" onAction="#addPeListCategory" prefHeight="25.0" prefWidth="110.0" promptText="Choose" styleClass="textfield" stylesheets="@dashboardDesign.css" />
-                                    <Label layoutX="11.0" layoutY="266.0" text="Net Weight:">
+                                    <Label layoutX="11.0" layoutY="236.0" text="Net Weight:">
                                        <font>
                                           <Font name="Tahoma" size="14.0" />
                                        </font>
                                     </Label>
-                                    <TextField fx:id="addPe_netWeight" layoutX="95.0" layoutY="263.0" prefHeight="25.0" prefWidth="110.0" styleClass="textfield" stylesheets="@dashboardDesign.css" />
-                                    <Label layoutX="11.0" layoutY="331.0" text="Karat:">
+                                    <TextField fx:id="addPe_netWeight" layoutX="95.0" layoutY="233.0" prefHeight="25.0" prefWidth="110.0" styleClass="textfield" stylesheets="@dashboardDesign.css" />
+                                    <Label layoutX="11.0" layoutY="271.0" text="Karat:">
                                        <font>
                                           <Font name="Tahoma" size="14.0" />
                                        </font>
                                     </Label>
-                                    <ComboBox fx:id="addPe_karat" layoutX="95.0" layoutY="328.0" onAction="#addPeListKarat" prefHeight="25.0" prefWidth="110.0" promptText="Choose" styleClass="textfield" stylesheets="@dashboardDesign.css" />
-                                    <Label layoutX="11.0" layoutY="363.0" text="Gold Rate:">
+                                    <ComboBox fx:id="addPe_karat" layoutX="95.0" layoutY="268.0" onAction="#addPeListKarat" prefHeight="25.0" prefWidth="110.0" promptText="Choose" styleClass="textfield" stylesheets="@dashboardDesign.css" />
+                                    <Label layoutX="11.0" layoutY="305.0" text="Gold Rate:">
                                        <font>
                                           <Font name="Tahoma" size="14.0" />
                                        </font>
                                     </Label>
-                                    <TextField fx:id="addPe_rate" layoutX="96.0" layoutY="360.0" prefHeight="25.0" prefWidth="110.0" styleClass="textfield" stylesheets="@dashboardDesign.css" />
-                                    <Label layoutX="11.0" layoutY="394.0" text="Supplier:">
+                                    <TextField fx:id="addPe_rate" layoutX="95.0" layoutY="302.0" prefHeight="25.0" prefWidth="110.0" styleClass="textfield" stylesheets="@dashboardDesign.css" />
+                                    <Label layoutX="11.0" layoutY="339.0" text="Supplier:">
                                        <font>
                                           <Font name="Tahoma" size="14.0" />
                                        </font>
                                     </Label>
-                                    <TextField fx:id="addPe_supplier" layoutX="96.0" layoutY="391.0" prefHeight="25.0" prefWidth="110.0" styleClass="textfield" stylesheets="@dashboardDesign.css" />
+                                    <TextField fx:id="addPe_supplier" layoutX="95.0" layoutY="336.0" prefHeight="25.0" prefWidth="110.0" styleClass="textfield" stylesheets="@dashboardDesign.css" />
                                     <Button fx:id="addPe_addBtn" layoutX="13.0" layoutY="496.0" mnemonicParsing="false" onAction="#addPendantAdd" prefWidth="90.0" styleClass="add-btn" stylesheets="@dashboardDesign.css" text="Add" />
                                     <Button fx:id="addPe_updateBtn" layoutX="110.0" layoutY="496.0" mnemonicParsing="false" onAction="#addPendantUpdate" prefWidth="90.0" styleClass="update-btn" stylesheets="@dashboardDesign.css" text="Update" />
                                     <Button fx:id="addPe_resetBtn" layoutX="13.0" layoutY="537.0" mnemonicParsing="false" onAction="#addPendantReset" prefWidth="90.0" styleClass="reset-btn" stylesheets="@dashboardDesign.css" text="Reset" />
                                     <Button fx:id="addPe_deleteBtn" layoutX="110.0" layoutY="537.0" mnemonicParsing="false" onAction="#addPendantDelete" prefWidth="90.0" styleClass="delete-btn" stylesheets="@dashboardDesign.css" text="Delete" />
-                                    <Label layoutX="11.0" layoutY="425.0" text="Status:">
+                                    <Label layoutX="11.0" layoutY="374.0" text="Status:">
                                        <font>
                                           <Font name="Tahoma" size="14.0" />
                                        </font>
                                     </Label>
-                                    <ComboBox fx:id="addPe_status" layoutX="96.0" layoutY="422.0" onAction="#addPeListStatus" prefHeight="25.0" prefWidth="110.0" promptText="Choose" styleClass="textfield" stylesheets="@dashboardDesign.css" />
+                                    <ComboBox fx:id="addPe_status" layoutX="95.0" layoutY="371.0" onAction="#addPeListStatus" prefHeight="25.0" prefWidth="110.0" promptText="Choose" styleClass="textfield" stylesheets="@dashboardDesign.css" />
                                  </children>
                               </AnchorPane>
                               <AnchorPane layoutX="234.0" layoutY="6.0" prefHeight="591.0" prefWidth="738.0" stylesheets="@dashboardDesign.css">
@@ -831,7 +832,7 @@
                                           <String fx:value="shadow" />
                                        </styleClass>
                                        <children>
-                                          <ImageView fx:id="addSu_img" fitHeight="100.0" fitWidth="90.0" layoutX="1.0" pickOnBounds="true" preserveRatio="true" />
+                                          <ImageView fx:id="addSu_img" fitHeight="100.0" fitWidth="90.0" layoutX="1.0" onMouseClicked="#showSura" pickOnBounds="true" preserveRatio="true" />
                                           <Button fx:id="addSu_importBtn" layoutX="1.0" layoutY="97.0" mnemonicParsing="false" onAction="#addSuImportImage" prefHeight="20.0" prefWidth="90.0" styleClass="import-btn" stylesheets="@dashboardDesign.css" text="Import" />
                                        </children>
                                     </AnchorPane>
@@ -847,40 +848,40 @@
                                        </font>
                                     </Label>
                                     <ComboBox fx:id="addSu_category" layoutX="95.0" layoutY="198.0" onAction="#addSuListCategory" prefHeight="25.0" prefWidth="110.0" promptText="Choose" styleClass="textfield" stylesheets="@dashboardDesign.css" />
-                                    <Label layoutX="11.0" layoutY="266.0" text="Net Weight:">
+                                    <Label layoutX="11.0" layoutY="236.0" text="Net Weight:">
                                        <font>
                                           <Font name="Tahoma" size="14.0" />
                                        </font>
                                     </Label>
-                                    <TextField fx:id="addSu_netWeight" layoutX="95.0" layoutY="263.0" prefHeight="25.0" prefWidth="110.0" styleClass="textfield" stylesheets="@dashboardDesign.css" />
-                                    <Label layoutX="11.0" layoutY="331.0" text="Karat:">
+                                    <TextField fx:id="addSu_netWeight" layoutX="95.0" layoutY="233.0" prefHeight="25.0" prefWidth="110.0" styleClass="textfield" stylesheets="@dashboardDesign.css" />
+                                    <Label layoutX="11.0" layoutY="271.0" text="Karat:">
                                        <font>
                                           <Font name="Tahoma" size="14.0" />
                                        </font>
                                     </Label>
-                                    <ComboBox fx:id="addSu_karat" layoutX="95.0" layoutY="328.0" onAction="#addSuListKarat" prefHeight="25.0" prefWidth="110.0" promptText="Choose" styleClass="textfield" stylesheets="@dashboardDesign.css" />
-                                    <Label layoutX="11.0" layoutY="363.0" text="Gold Rate:">
+                                    <ComboBox fx:id="addSu_karat" layoutX="95.0" layoutY="268.0" onAction="#addSuListKarat" prefHeight="25.0" prefWidth="110.0" promptText="Choose" styleClass="textfield" stylesheets="@dashboardDesign.css" />
+                                    <Label layoutX="11.0" layoutY="305.0" text="Gold Rate:">
                                        <font>
                                           <Font name="Tahoma" size="14.0" />
                                        </font>
                                     </Label>
-                                    <TextField fx:id="addSu_rate" layoutX="96.0" layoutY="360.0" prefHeight="25.0" prefWidth="110.0" styleClass="textfield" stylesheets="@dashboardDesign.css" />
-                                    <Label layoutX="11.0" layoutY="394.0" text="Supplier:">
+                                    <TextField fx:id="addSu_rate" layoutX="95.0" layoutY="302.0" prefHeight="25.0" prefWidth="110.0" styleClass="textfield" stylesheets="@dashboardDesign.css" />
+                                    <Label layoutX="11.0" layoutY="341.0" text="Supplier:">
                                        <font>
                                           <Font name="Tahoma" size="14.0" />
                                        </font>
                                     </Label>
-                                    <TextField fx:id="addSu_supplier" layoutX="96.0" layoutY="391.0" prefHeight="25.0" prefWidth="110.0" styleClass="textfield" stylesheets="@dashboardDesign.css" />
+                                    <TextField fx:id="addSu_supplier" layoutX="95.0" layoutY="338.0" prefHeight="25.0" prefWidth="110.0" styleClass="textfield" stylesheets="@dashboardDesign.css" />
                                     <Button fx:id="addSu_addBtn" layoutX="13.0" layoutY="496.0" mnemonicParsing="false" onAction="#addSuraAdd" prefWidth="90.0" styleClass="add-btn" stylesheets="@dashboardDesign.css" text="Add" />
                                     <Button fx:id="addSu_updateBtn" layoutX="110.0" layoutY="496.0" mnemonicParsing="false" onAction="#addSuraUpdate" prefWidth="90.0" styleClass="update-btn" stylesheets="@dashboardDesign.css" text="Update" />
                                     <Button fx:id="addSu_resetBtn" layoutX="13.0" layoutY="537.0" mnemonicParsing="false" onAction="#addSuraReset" prefWidth="90.0" styleClass="reset-btn" stylesheets="@dashboardDesign.css" text="Reset" />
                                     <Button fx:id="addSu_deleteBtn" layoutX="110.0" layoutY="537.0" mnemonicParsing="false" onAction="#addSuraDelete" prefWidth="90.0" styleClass="delete-btn" stylesheets="@dashboardDesign.css" text="Delete" />
-                                    <Label layoutX="11.0" layoutY="425.0" text="Status:">
+                                    <Label layoutX="11.0" layoutY="377.0" text="Status:">
                                        <font>
                                           <Font name="Tahoma" size="14.0" />
                                        </font>
                                     </Label>
-                                    <ComboBox fx:id="addSu_status" layoutX="96.0" layoutY="422.0" onAction="#addSuListStatus" prefHeight="25.0" prefWidth="110.0" promptText="Choose" styleClass="textfield" stylesheets="@dashboardDesign.css" />
+                                    <ComboBox fx:id="addSu_status" layoutX="95.0" layoutY="374.0" onAction="#addSuListStatus" prefHeight="25.0" prefWidth="110.0" promptText="Choose" styleClass="textfield" stylesheets="@dashboardDesign.css" />
                                  </children>
                               </AnchorPane>
                               <AnchorPane layoutX="234.0" layoutY="6.0" prefHeight="591.0" prefWidth="738.0" stylesheets="@dashboardDesign.css">
@@ -922,7 +923,7 @@
                                           <String fx:value="shadow" />
                                        </styleClass>
                                        <children>
-                                          <ImageView fx:id="addPa_img" fitHeight="100.0" fitWidth="90.0" layoutX="1.0" pickOnBounds="true" preserveRatio="true" />
+                                          <ImageView fx:id="addPa_img" fitHeight="100.0" fitWidth="90.0" layoutX="1.0" onMouseClicked="#showPancha" pickOnBounds="true" preserveRatio="true" />
                                           <Button fx:id="addPa_importBtn" layoutX="1.0" layoutY="97.0" mnemonicParsing="false" onAction="#addPaImportImage" prefHeight="20.0" prefWidth="90.0" styleClass="import-btn" stylesheets="@dashboardDesign.css" text="Import" />
                                        </children>
                                     </AnchorPane>
@@ -938,40 +939,40 @@
                                        </font>
                                     </Label>
                                     <ComboBox fx:id="addPa_category" layoutX="95.0" layoutY="198.0" onAction="#addPaListCategory" prefHeight="25.0" prefWidth="110.0" promptText="Choose" styleClass="textfield" stylesheets="@dashboardDesign.css" />
-                                    <Label layoutX="11.0" layoutY="266.0" text="Net Weight:">
+                                    <Label layoutX="11.0" layoutY="236.0" text="Net Weight:">
                                        <font>
                                           <Font name="Tahoma" size="14.0" />
                                        </font>
                                     </Label>
-                                    <TextField fx:id="addPa_netWeight" layoutX="95.0" layoutY="263.0" prefHeight="25.0" prefWidth="110.0" styleClass="textfield" stylesheets="@dashboardDesign.css" />
-                                    <Label layoutX="11.0" layoutY="331.0" text="Karat:">
+                                    <TextField fx:id="addPa_netWeight" layoutX="95.0" layoutY="233.0" prefHeight="25.0" prefWidth="110.0" styleClass="textfield" stylesheets="@dashboardDesign.css" />
+                                    <Label layoutX="11.0" layoutY="271.0" text="Karat:">
                                        <font>
                                           <Font name="Tahoma" size="14.0" />
                                        </font>
                                     </Label>
-                                    <ComboBox fx:id="addPa_karat" layoutX="95.0" layoutY="328.0" onAction="#addPeListKarat" prefHeight="25.0" prefWidth="110.0" promptText="Choose" styleClass="textfield" stylesheets="@dashboardDesign.css" />
-                                    <Label layoutX="11.0" layoutY="363.0" text="Gold Rate:">
+                                    <ComboBox fx:id="addPa_karat" layoutX="95.0" layoutY="268.0" onAction="#addPeListKarat" prefHeight="25.0" prefWidth="110.0" promptText="Choose" styleClass="textfield" stylesheets="@dashboardDesign.css" />
+                                    <Label layoutX="11.0" layoutY="306.0" text="Gold Rate:">
                                        <font>
                                           <Font name="Tahoma" size="14.0" />
                                        </font>
                                     </Label>
-                                    <TextField fx:id="addPa_rate" layoutX="96.0" layoutY="360.0" prefHeight="25.0" prefWidth="110.0" styleClass="textfield" stylesheets="@dashboardDesign.css" />
-                                    <Label layoutX="11.0" layoutY="394.0" text="Supplier:">
+                                    <TextField fx:id="addPa_rate" layoutX="95.0" layoutY="303.0" prefHeight="25.0" prefWidth="110.0" styleClass="textfield" stylesheets="@dashboardDesign.css" />
+                                    <Label layoutX="11.0" layoutY="341.0" text="Supplier:">
                                        <font>
                                           <Font name="Tahoma" size="14.0" />
                                        </font>
                                     </Label>
-                                    <TextField fx:id="addPa_supplier" layoutX="96.0" layoutY="391.0" prefHeight="25.0" prefWidth="110.0" styleClass="textfield" stylesheets="@dashboardDesign.css" />
+                                    <TextField fx:id="addPa_supplier" layoutX="95.0" layoutY="338.0" prefHeight="25.0" prefWidth="110.0" styleClass="textfield" stylesheets="@dashboardDesign.css" />
                                     <Button fx:id="addPa_addBtn" layoutX="13.0" layoutY="496.0" mnemonicParsing="false" onAction="#addPanchaAdd" prefWidth="90.0" styleClass="add-btn" stylesheets="@dashboardDesign.css" text="Add" />
                                     <Button fx:id="addPa_updateBtn" layoutX="110.0" layoutY="496.0" mnemonicParsing="false" onAction="#addPanchaUpdate" prefWidth="90.0" styleClass="update-btn" stylesheets="@dashboardDesign.css" text="Update" />
                                     <Button fx:id="addPa_resetBtn" layoutX="13.0" layoutY="537.0" mnemonicParsing="false" onAction="#addPanchaReset" prefWidth="90.0" styleClass="reset-btn" stylesheets="@dashboardDesign.css" text="Reset" />
                                     <Button fx:id="addPa_deleteBtn" layoutX="110.0" layoutY="537.0" mnemonicParsing="false" onAction="#addPanchaDelete" prefWidth="90.0" styleClass="delete-btn" stylesheets="@dashboardDesign.css" text="Delete" />
-                                    <Label layoutX="11.0" layoutY="425.0" text="Status:">
+                                    <Label layoutX="11.0" layoutY="376.0" text="Status:">
                                        <font>
                                           <Font name="Tahoma" size="14.0" />
                                        </font>
                                     </Label>
-                                    <ComboBox fx:id="addPa_status" layoutX="96.0" layoutY="422.0" onAction="#addPaListStatus" prefHeight="25.0" prefWidth="110.0" promptText="Choose" styleClass="textfield" stylesheets="@dashboardDesign.css" />
+                                    <ComboBox fx:id="addPa_status" layoutX="95.0" layoutY="373.0" onAction="#addPaListStatus" prefHeight="25.0" prefWidth="110.0" promptText="Choose" styleClass="textfield" stylesheets="@dashboardDesign.css" />
                                  </children>
                               </AnchorPane>
                               <AnchorPane layoutX="234.0" layoutY="6.0" prefHeight="591.0" prefWidth="738.0" stylesheets="@dashboardDesign.css">
@@ -1013,7 +1014,7 @@
                                           <String fx:value="shadow" />
                                        </styleClass>
                                        <children>
-                                          <ImageView fx:id="addNe_img" fitHeight="100.0" fitWidth="90.0" layoutX="1.0" pickOnBounds="true" preserveRatio="true" />
+                                          <ImageView fx:id="addNe_img" fitHeight="100.0" fitWidth="90.0" layoutX="1.0" onMouseClicked="#showNecklace" pickOnBounds="true" preserveRatio="true" />
                                           <Button fx:id="addNe_importBtn" layoutX="1.0" layoutY="97.0" mnemonicParsing="false" onAction="#addNeImportImage" prefHeight="20.0" prefWidth="90.0" styleClass="import-btn" stylesheets="@dashboardDesign.css" text="Import" />
                                        </children>
                                     </AnchorPane>
@@ -1029,40 +1030,40 @@
                                        </font>
                                     </Label>
                                     <ComboBox fx:id="addNe_category" layoutX="95.0" layoutY="198.0" onAction="#addNeListCategory" prefHeight="25.0" prefWidth="110.0" promptText="Choose" styleClass="textfield" stylesheets="@dashboardDesign.css" />
-                                    <Label layoutX="11.0" layoutY="266.0" text="Net Weight:">
+                                    <Label layoutX="11.0" layoutY="236.0" text="Net Weight:">
                                        <font>
                                           <Font name="Tahoma" size="14.0" />
                                        </font>
                                     </Label>
-                                    <TextField fx:id="addNe_netWeight" layoutX="95.0" layoutY="263.0" prefHeight="25.0" prefWidth="110.0" styleClass="textfield" stylesheets="@dashboardDesign.css" />
-                                    <Label layoutX="11.0" layoutY="331.0" text="Karat:">
+                                    <TextField fx:id="addNe_netWeight" layoutX="95.0" layoutY="233.0" prefHeight="25.0" prefWidth="110.0" styleClass="textfield" stylesheets="@dashboardDesign.css" />
+                                    <Label layoutX="11.0" layoutY="271.0" text="Karat:">
                                        <font>
                                           <Font name="Tahoma" size="14.0" />
                                        </font>
                                     </Label>
-                                    <ComboBox fx:id="addNe_karat" layoutX="95.0" layoutY="328.0" onAction="#addNeListKarat" prefHeight="25.0" prefWidth="110.0" promptText="Choose" styleClass="textfield" stylesheets="@dashboardDesign.css" />
-                                    <Label layoutX="11.0" layoutY="363.0" text="Gold Rate:">
+                                    <ComboBox fx:id="addNe_karat" layoutX="95.0" layoutY="268.0" onAction="#addNeListKarat" prefHeight="25.0" prefWidth="110.0" promptText="Choose" styleClass="textfield" stylesheets="@dashboardDesign.css" />
+                                    <Label layoutX="11.0" layoutY="306.0" text="Gold Rate:">
                                        <font>
                                           <Font name="Tahoma" size="14.0" />
                                        </font>
                                     </Label>
-                                    <TextField fx:id="addNe_rate" layoutX="96.0" layoutY="360.0" prefHeight="25.0" prefWidth="110.0" styleClass="textfield" stylesheets="@dashboardDesign.css" />
-                                    <Label layoutX="11.0" layoutY="394.0" text="Supplier:">
+                                    <TextField fx:id="addNe_rate" layoutX="95.0" layoutY="303.0" prefHeight="25.0" prefWidth="110.0" styleClass="textfield" stylesheets="@dashboardDesign.css" />
+                                    <Label layoutX="11.0" layoutY="344.0" text="Supplier:">
                                        <font>
                                           <Font name="Tahoma" size="14.0" />
                                        </font>
                                     </Label>
-                                    <TextField fx:id="addNe_supplier" layoutX="96.0" layoutY="391.0" prefHeight="25.0" prefWidth="110.0" styleClass="textfield" stylesheets="@dashboardDesign.css" />
+                                    <TextField fx:id="addNe_supplier" layoutX="95.0" layoutY="341.0" prefHeight="25.0" prefWidth="110.0" styleClass="textfield" stylesheets="@dashboardDesign.css" />
                                     <Button fx:id="addNe_addBtn" layoutX="13.0" layoutY="496.0" mnemonicParsing="false" onAction="#addNecklaceAdd" prefWidth="90.0" styleClass="add-btn" stylesheets="@dashboardDesign.css" text="Add" />
                                     <Button fx:id="addNe_updateBtn" layoutX="110.0" layoutY="496.0" mnemonicParsing="false" onAction="#addNecklaceUpdate" prefWidth="90.0" styleClass="update-btn" stylesheets="@dashboardDesign.css" text="Update" />
                                     <Button fx:id="addNe_resetBtn" layoutX="13.0" layoutY="537.0" mnemonicParsing="false" onAction="#addNecklaceReset" prefWidth="90.0" styleClass="reset-btn" stylesheets="@dashboardDesign.css" text="Reset" />
                                     <Button fx:id="addNe_deleteBtn" layoutX="110.0" layoutY="537.0" mnemonicParsing="false" onAction="#addNecklaceDelete" prefWidth="90.0" styleClass="delete-btn" stylesheets="@dashboardDesign.css" text="Delete" />
-                                    <Label layoutX="11.0" layoutY="425.0" text="Status:">
+                                    <Label layoutX="11.0" layoutY="380.0" text="Status:">
                                        <font>
                                           <Font name="Tahoma" size="14.0" />
                                        </font>
                                     </Label>
-                                    <ComboBox fx:id="addNe_status" layoutX="96.0" layoutY="422.0" onAction="#addNeListStatus" prefHeight="25.0" prefWidth="110.0" promptText="Choose" styleClass="textfield" stylesheets="@dashboardDesign.css" />
+                                    <ComboBox fx:id="addNe_status" layoutX="95.0" layoutY="377.0" onAction="#addNeListStatus" prefHeight="25.0" prefWidth="110.0" promptText="Choose" styleClass="textfield" stylesheets="@dashboardDesign.css" />
                                  </children>
                               </AnchorPane>
                               <AnchorPane layoutX="234.0" layoutY="6.0" prefHeight="591.0" prefWidth="738.0" stylesheets="@dashboardDesign.css">
@@ -1104,7 +1105,7 @@
                                           <String fx:value="shadow" />
                                        </styleClass>
                                        <children>
-                                          <ImageView fx:id="addBa_img" fitHeight="100.0" fitWidth="90.0" layoutX="1.0" pickOnBounds="true" preserveRatio="true" />
+                                          <ImageView fx:id="addBa_img" fitHeight="100.0" fitWidth="90.0" layoutX="1.0" onMouseClicked="#showBangle" pickOnBounds="true" preserveRatio="true" />
                                           <Button fx:id="addBa_importBtn" layoutX="1.0" layoutY="97.0" mnemonicParsing="false" onAction="#addBaImportImage" prefHeight="20.0" prefWidth="90.0" styleClass="import-btn" stylesheets="@dashboardDesign.css" text="Import" />
                                        </children>
                                     </AnchorPane>
@@ -1120,40 +1121,40 @@
                                        </font>
                                     </Label>
                                     <ComboBox fx:id="addBa_category" layoutX="95.0" layoutY="198.0" onAction="#addBaListCategory" prefHeight="25.0" prefWidth="110.0" promptText="Choose" styleClass="textfield" stylesheets="@dashboardDesign.css" />
-                                    <Label layoutX="11.0" layoutY="266.0" text="Net Weight:">
+                                    <Label layoutX="11.0" layoutY="236.0" text="Net Weight:">
                                        <font>
                                           <Font name="Tahoma" size="14.0" />
                                        </font>
                                     </Label>
-                                    <TextField fx:id="addBa_netWeight" layoutX="95.0" layoutY="263.0" prefHeight="25.0" prefWidth="110.0" styleClass="textfield" stylesheets="@dashboardDesign.css" />
-                                    <Label layoutX="11.0" layoutY="331.0" text="Karat:">
+                                    <TextField fx:id="addBa_netWeight" layoutX="95.0" layoutY="233.0" prefHeight="25.0" prefWidth="110.0" styleClass="textfield" stylesheets="@dashboardDesign.css" />
+                                    <Label layoutX="11.0" layoutY="271.0" text="Karat:">
                                        <font>
                                           <Font name="Tahoma" size="14.0" />
                                        </font>
                                     </Label>
-                                    <ComboBox fx:id="addBa_karat" layoutX="95.0" layoutY="328.0" onAction="#addBaListKarat" prefHeight="25.0" prefWidth="110.0" promptText="Choose" styleClass="textfield" stylesheets="@dashboardDesign.css" />
-                                    <Label layoutX="11.0" layoutY="363.0" text="Gold Rate:">
+                                    <ComboBox fx:id="addBa_karat" layoutX="95.0" layoutY="268.0" onAction="#addBaListKarat" prefHeight="25.0" prefWidth="110.0" promptText="Choose" styleClass="textfield" stylesheets="@dashboardDesign.css" />
+                                    <Label layoutX="11.0" layoutY="306.0" text="Gold Rate:">
                                        <font>
                                           <Font name="Tahoma" size="14.0" />
                                        </font>
                                     </Label>
-                                    <TextField fx:id="addBa_rate" layoutX="96.0" layoutY="360.0" prefHeight="25.0" prefWidth="110.0" styleClass="textfield" stylesheets="@dashboardDesign.css" />
-                                    <Label layoutX="11.0" layoutY="394.0" text="Supplier:">
+                                    <TextField fx:id="addBa_rate" layoutX="95.0" layoutY="303.0" prefHeight="25.0" prefWidth="110.0" styleClass="textfield" stylesheets="@dashboardDesign.css" />
+                                    <Label layoutX="11.0" layoutY="343.0" text="Supplier:">
                                        <font>
                                           <Font name="Tahoma" size="14.0" />
                                        </font>
                                     </Label>
-                                    <TextField fx:id="addBa_supplier" layoutX="96.0" layoutY="391.0" prefHeight="25.0" prefWidth="110.0" styleClass="textfield" stylesheets="@dashboardDesign.css" />
+                                    <TextField fx:id="addBa_supplier" layoutX="95.0" layoutY="340.0" prefHeight="25.0" prefWidth="110.0" styleClass="textfield" stylesheets="@dashboardDesign.css" />
                                     <Button fx:id="addBa_addBtn" layoutX="13.0" layoutY="496.0" mnemonicParsing="false" onAction="#addBangleAdd" prefWidth="90.0" styleClass="add-btn" stylesheets="@dashboardDesign.css" text="Add" />
                                     <Button fx:id="addBa_updateBtn" layoutX="110.0" layoutY="496.0" mnemonicParsing="false" onAction="#addBangleUpdate" prefWidth="90.0" styleClass="update-btn" stylesheets="@dashboardDesign.css" text="Update" />
                                     <Button fx:id="addBa_resetBtn" layoutX="13.0" layoutY="537.0" mnemonicParsing="false" onAction="#addBangleReset" prefWidth="90.0" styleClass="reset-btn" stylesheets="@dashboardDesign.css" text="Reset" />
                                     <Button fx:id="addBa_deleteBtn" layoutX="110.0" layoutY="537.0" mnemonicParsing="false" onAction="#addBangleDelete" prefWidth="90.0" styleClass="delete-btn" stylesheets="@dashboardDesign.css" text="Delete" />
-                                    <Label layoutX="11.0" layoutY="425.0" text="Status:">
+                                    <Label layoutX="11.0" layoutY="379.0" text="Status:">
                                        <font>
                                           <Font name="Tahoma" size="14.0" />
                                        </font>
                                     </Label>
-                                    <ComboBox fx:id="addBa_status" layoutX="96.0" layoutY="422.0" onAction="#addBaListStatus" prefHeight="25.0" prefWidth="110.0" promptText="Choose" styleClass="textfield" stylesheets="@dashboardDesign.css" />
+                                    <ComboBox fx:id="addBa_status" layoutX="95.0" layoutY="376.0" onAction="#addBaListStatus" prefHeight="25.0" prefWidth="110.0" promptText="Choose" styleClass="textfield" stylesheets="@dashboardDesign.css" />
                                  </children>
                               </AnchorPane>
                               <AnchorPane layoutX="234.0" layoutY="6.0" prefHeight="591.0" prefWidth="738.0" stylesheets="@dashboardDesign.css">

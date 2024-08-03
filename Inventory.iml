@@ -25,5 +25,6 @@
       </library>
     </orderEntry>
     <orderEntry type="library" name="log4j-core-2.23.1" level="project" />
+    <orderEntry type="library" name="lib" level="project" />
   </component>
 </module>
