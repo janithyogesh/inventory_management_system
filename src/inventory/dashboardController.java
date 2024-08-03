@@ -54,6 +54,19 @@ public class dashboardController implements Initializable {
     private Button addBr_addBtn, addBr_deleteBtn, addBr_importBtn, addBr_resetBtn, addBr_updateBtn;
     @FXML
     private Button addRi_addBtn, addRi_deleteBtn, addRi_importBtn, addRi_resetBtn, addRi_updateBtn;
+    @FXML
+    private Button addEr_addBtn, addEr_deleteBtn, addEr_importBtn, addEr_resetBtn, addEr_updateBtn;
+    @FXML
+    private Button addPe_addBtn, addPe_deleteBtn, addPe_importBtn, addPe_resetBtn, addPe_updateBtn;
+    @FXML
+    private Button addSu_addBtn, addSu_deleteBtn, addSu_importBtn, addSu_resetBtn, addSu_updateBtn;
+    @FXML
+    private Button addPa_addBtn, addPa_deleteBtn, addPa_importBtn, addPa_resetBtn, addPa_updateBtn;
+    @FXML
+    private Button addNe_addBtn, addNe_deleteBtn, addNe_importBtn, addNe_resetBtn, addNe_updateBtn;
+    @FXML
+    private Button addBa_addBtn, addBa_deleteBtn, addBa_importBtn, addBa_resetBtn, addBa_updateBtn;
+
 
     @FXML
     private ComboBox<String> addChain_category, addChain_karat, addChain_length, addChain_status, addChain_weight;
@@ -61,6 +74,19 @@ public class dashboardController implements Initializable {
     private ComboBox<String> addBr_category, addBr_karat, addBr_length, addBr_status, addBr_weight;
     @FXML
     private ComboBox<String> addRi_category, addRi_karat, addRi_status;
+    @FXML
+    private ComboBox<String> addEr_category, addEr_karat, addEr_status;
+    @FXML
+    private ComboBox<String> addPe_category, addPe_karat, addPe_status;
+    @FXML
+    private ComboBox<String> addSu_category, addSu_karat, addSu_status;
+    @FXML
+    private ComboBox<String> addPa_category, addPa_karat, addPa_status;
+    @FXML
+    private ComboBox<String> addNe_category, addNe_karat, addNe_status;
+    @FXML
+    private ComboBox<String> addBa_category, addBa_karat, addBa_status;
+
 
     @FXML
     private TableColumn<chainData, String> addChain_col_category, addChain_col_karat, addChain_col_length, addChain_col_productID, addChain_col_status, addChain_col_supplier, addChain_col_weight;
@@ -74,6 +100,31 @@ public class dashboardController implements Initializable {
     private TableColumn<ringData, String> addRi_col_category, addRi_col_karat, addRi_col_length, addRi_col_productID, addRi_col_status, addRi_col_supplier, addRi_col_weight;
     @FXML
     private TableColumn<ringData, Double> addRi_col_goldRate, addRi_col_netWeight;
+    @FXML
+    private TableColumn<earringData, String> addEr_col_category, addEr_col_karat, addEr_col_length, addEr_col_productID, addEr_col_status, addEr_col_supplier, addEr_col_weight;
+    @FXML
+    private TableColumn<earringData, Double> addEr_col_goldRate, addEr_col_netWeight;
+    @FXML
+    private TableColumn<pendantData, String> addPe_col_category, addPe_col_karat, addPe_col_length, addPe_col_productID, addPe_col_status, addPe_col_supplier, addPe_col_weight;
+    @FXML
+    private TableColumn<pendantData, Double> addPe_col_goldRate, addPe_col_netWeight;
+    @FXML
+    private TableColumn<suraData, String> addSu_col_category, addSu_col_karat, addSu_col_length, addSu_col_productID, addSu_col_status, addSu_col_supplier, addSu_col_weight;
+    @FXML
+    private TableColumn<suraData, Double> addSu_col_goldRate, addSu_col_netWeight;
+    @FXML
+    private TableColumn<panchaData, String> addPa_col_category, addPa_col_karat, addPa_col_length, addPa_col_productID, addPa_col_status, addPa_col_supplier, addPa_col_weight;
+    @FXML
+    private TableColumn<panchaData, Double> addPa_col_goldRate, addPa_col_netWeight;
+    @FXML
+    private TableColumn<necklaceData, String> addNe_col_category, addNe_col_karat, addNe_col_length, addNe_col_productID, addNe_col_status, addNe_col_supplier, addNe_col_weight;
+    @FXML
+    private TableColumn<necklaceData, Double> addNe_col_goldRate, addNe_col_netWeight;
+    @FXML
+    private TableColumn<bangleData, String> addBa_col_category, addBa_col_karat, addBa_col_length, addBa_col_productID, addBa_col_status, addBa_col_supplier, addBa_col_weight;
+    @FXML
+    private TableColumn<bangleData, Double> addBa_col_goldRate, addBa_col_netWeight;
+
 
     @FXML
     private TextField addChain_id, addChain_netWeight, addChain_rate, addChain_search, addChain_supplier;
@@ -81,6 +132,19 @@ public class dashboardController implements Initializable {
     private TextField addBr_id, addBr_netWeight, addBr_rate, addBr_search, addBr_supplier;
     @FXML
     private TextField addRi_id, addRi_netWeight, addRi_rate, addRi_search, addRi_supplier;
+    @FXML
+    private TextField addEr_id, addEr_netWeight, addEr_rate, addEr_search, addEr_supplier;
+    @FXML
+    private TextField addPe_id, addPe_netWeight, addPe_rate, addPe_search, addPe_supplier;
+    @FXML
+    private TextField addSu_id, addSu_netWeight, addSu_rate, addSu_search, addSu_supplier;
+    @FXML
+    private TextField addPa_id, addPa_netWeight, addPa_rate, addPa_search, addPa_supplier;
+    @FXML
+    private TextField addNe_id, addNe_netWeight, addNe_rate, addNe_search, addNe_supplier;
+    @FXML
+    private TextField addBa_id, addBa_netWeight, addBa_rate, addBa_search, addBa_supplier;
+
 
     @FXML
     private ImageView addChain_img;
@@ -88,6 +152,19 @@ public class dashboardController implements Initializable {
     private ImageView addBr_img;
     @FXML
     private ImageView addRi_img;
+    @FXML
+    private ImageView addEr_img;
+    @FXML
+    private ImageView addPe_img;
+    @FXML
+    private ImageView addSu_img;
+    @FXML
+    private ImageView addPa_img;
+    @FXML
+    private ImageView addNe_img;
+    @FXML
+    private ImageView addBa_img;
+
 
     @FXML
     private TableView<chainData> addChain_tableView;
@@ -95,8 +172,19 @@ public class dashboardController implements Initializable {
     private TableView<braceletData> addBr_tableView;
     @FXML
     private TableView<ringData> addRi_tableView;
+    @FXML
+    private TableView<ringData> addEr_tableView;
+    @FXML
+    private TableView<ringData> addPe_tableView;
+    @FXML
+    private TableView<ringData> addSu_tableView;
+    @FXML
+    private TableView<ringData> addPa_tableView;
+    @FXML
+    private TableView<ringData> addNe_tableView;
+    @FXML
+    private TableView<ringData> addBa_tableView;
 
-    //*****************************************DO NOT DO CHANGES********************************************************
 
     @FXML
     private Button chainBtn, close, homeBtn, logout, minimize, salesBtn, brBtn, riBtn, eaBtn, peBtn, suBtn, paBtn, neBtn, baBtn;
@@ -121,17 +209,24 @@ public class dashboardController implements Initializable {
     @FXML
     private Label home_sales,home_income,home_stock;
 
+
     private Connection connect;
     private PreparedStatement prepare;
     private Statement statement;
     private ResultSet result;
 
-    //***************************
+
     private Image chainImage;
     private Image brImage;
     private Image riImage;
+    private Image erImage;
+    private Image peImage;
+    private Image suImage;
+    private Image paImage;
+    private Image neImage;
+    private Image baImage;
 
-    // Declare customerid as a class-level variable
+
     private int customerid;
 
 
