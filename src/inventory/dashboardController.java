@@ -246,7 +246,6 @@ public class dashboardController implements Initializable {
         displayIncomeChart();
         displaySalesChart();
 
-        //********************************
         addChainShowListData();
         addChainListCategory();
         addChainListWeight();
@@ -274,6 +273,12 @@ public class dashboardController implements Initializable {
         addErListKarat();
         addErListStatus();
         addEarringSearch();
+
+        addPendantShowListData();
+        addPeListCategory();
+        addPeListKarat();
+        addPeListStatus();
+        addPendantSearch();
     }
 
     //********************************HOME PAGE REALTED*****************************************************************
@@ -510,8 +515,9 @@ public class dashboardController implements Initializable {
         braceletData braceletDetails = getBraceletDetails(productId);
         ringData ringDetails = getRingDetails(productId);
         earringData earringDetails = getEarringDetails(productId);
+        pendantData pendantDetails = getPendantDetails(productId);
 
-        if (chainDetails == null && braceletDetails == null && ringDetails == null && earringDetails == null) {
+        if (chainDetails == null && braceletDetails == null && ringDetails == null && earringDetails == null && pendantDetails == null) {
             showAlert(Alert.AlertType.ERROR, "Error Message", "Product ID not found");
             return;
         }
@@ -538,6 +544,8 @@ public class dashboardController implements Initializable {
             handleRingData(ringDetails, price, returnValue);
         } else if (earringDetails != null) {
             handleEarringData(earringDetails, price, returnValue);
+        } else if (pendantDetails != null) {
+            handlePendantData(pendantDetails, price, returnValue);
         }
     }
 
@@ -678,6 +686,7 @@ public class dashboardController implements Initializable {
         String deleteBraceletSql = "DELETE FROM bracelet_details WHERE product_id = ?";
         String deleteRingSql = "DELETE FROM ring_details WHERE product_id = ?";
         String deleteEarringSql = "DELETE FROM earring_details WHERE product_id = ?";
+        String deletePendantSql = "DELETE FROM pendant_details WHERE product_id = ?";
         connect = connectDb();
         try {
             // Delete chain details
@@ -697,6 +706,11 @@ public class dashboardController implements Initializable {
 
             // Delete earring details
             prepare = connect.prepareStatement(deleteEarringSql);
+            prepare.setString(1, productId);
+            prepare.executeUpdate();
+
+            // Delete pendant details
+            prepare = connect.prepareStatement(deletePendantSql);
             prepare.setString(1, productId);
             prepare.executeUpdate();
 
@@ -2977,6 +2991,497 @@ public class dashboardController implements Initializable {
         updateSalesTotal();
     }
 
+    // **************************************PENDANT RELATED***********************************************************
+
+    private String[] listPeCategory = {"Ladies Pendant","Gents Pendant"};
+
+    // Method to get pendant details from the database
+    private pendantData getPendantDetails(String productId) {
+        String sql = "SELECT * FROM pendant_details WHERE product_id = ?";
+        connect = connectDb();
+        pendantData pendantDetails = null;
+        try {
+            prepare = connect.prepareStatement(sql);
+            prepare.setString(1, productId);
+            result = prepare.executeQuery();
+            if (result.next()) {
+                pendantDetails = new pendantData(
+                        result.getString("product_id"),
+                        result.getString("category"),
+                        result.getString("weight"),
+                        result.getDouble("net_weight"),
+                        result.getString("length"),
+                        result.getString("karat"),
+                        result.getDouble("gold_rate"),
+                        result.getString("supplier"),
+                        result.getString("status"),
+                        result.getString("image"),
+                        result.getDate("date"));
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        return pendantDetails;
+    }
+
+    public void addPendantAdd() {
+        String sql = "INSERT INTO pendant_details (product_id, category, net_weight, karat, gold_rate, supplier, status, image, date) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?)";
+
+        connect = connectDb();
+        try {
+            Alert alert;
+
+            if (addPe_id.getText().isEmpty()
+                    || addPe_category.getSelectionModel().getSelectedItem() == null
+                    || addPe_netWeight.getText().isEmpty()
+                    || addPe_karat.getSelectionModel().getSelectedItem() == null
+                    || addPe_rate.getText().isEmpty()
+                    || addPe_supplier.getText().isEmpty()
+                    || addPe_status.getSelectionModel().getSelectedItem() == null) {
+                alert = new Alert(Alert.AlertType.ERROR);
+                alert.setTitle("Error Message");
+                alert.setHeaderText(null);
+                alert.setContentText("Please fill all blank fields");
+                alert.showAndWait();
+            } else if (!isPendantIdValid(addPe_id.getText())) {
+                alert = new Alert(Alert.AlertType.ERROR);
+                alert.setTitle("Error Message");
+                alert.setHeaderText(null);
+                alert.setContentText("Product ID format is incorrect. It should start with 'P' followed by 4 digits.");
+                alert.showAndWait();
+            } else if (isPendantIdExist(addPe_id.getText())) {
+                alert = new Alert(Alert.AlertType.ERROR);
+                alert.setTitle("Error Message");
+                alert.setHeaderText(null);
+                alert.setContentText("Product ID already exists. Please use a unique Product ID.");
+                alert.showAndWait();
+            } else if (isProductIdExistInSales(addPe_id.getText())) {
+                alert = new Alert(Alert.AlertType.ERROR);
+                alert.setTitle("Error Message");
+                alert.setHeaderText(null);
+                alert.setContentText("Product ID already exists in sales table. Please use a unique Product ID.");
+                alert.showAndWait();
+            } else {
+                prepare = connect.prepareStatement(sql);
+                String productId = addPe_id.getText();
+                prepare.setString(1, productId);
+                prepare.setString(2, addPe_category.getSelectionModel().getSelectedItem());
+                prepare.setString(3, addPe_netWeight.getText());
+                prepare.setString(4, addPe_karat.getSelectionModel().getSelectedItem());
+                prepare.setString(5, addPe_rate.getText());
+                prepare.setString(6, addPe_supplier.getText());
+                prepare.setString(7, addPe_status.getSelectionModel().getSelectedItem());
+
+                String uri = getData.path;
+                if (uri != null && !uri.isEmpty()) {
+                    uri = uri.replace("\\", "\\\\");
+                    prepare.setString(8, uri);
+                } else {
+                    prepare.setString(8, null);
+                }
+
+                Date date = new Date();
+                java.sql.Date sqldate = new java.sql.Date(date.getTime());
+
+                prepare.setString(9, String.valueOf(sqldate));
+
+                prepare.executeUpdate();
+
+                addPendantShowListData();
+                addPendantReset();
+
+                // Show success message
+                alert = new Alert(Alert.AlertType.INFORMATION);
+                alert.setTitle("Success");
+                alert.setHeaderText(null);
+                alert.setContentText(productId + " entered successfully!");
+                alert.showAndWait();
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+    }
+
+    public void addPendantUpdate() {
+        // Check if the status is selected
+        if (addPe_status.getSelectionModel().getSelectedItem() == null) {
+            Alert alert = new Alert(Alert.AlertType.ERROR);
+            alert.setTitle("Error Message");
+            alert.setHeaderText(null);
+            alert.setContentText("Please select the new status");
+            alert.showAndWait();
+            return;
+        }
+
+        // Ensure the Product ID field is filled
+        if (addPe_id.getText().isEmpty()) {
+            Alert alert = new Alert(Alert.AlertType.ERROR);
+            alert.setTitle("Error Message");
+            alert.setHeaderText(null);
+            alert.setContentText("Product ID is required to update status");
+            alert.showAndWait();
+            return;
+        }
+
+        // Prompt for confirmation
+        Alert confirmationAlert = new Alert(Alert.AlertType.CONFIRMATION);
+        confirmationAlert.setTitle("Confirmation Message");
+        confirmationAlert.setHeaderText(null);
+        confirmationAlert.setContentText("Are you sure you want to UPDATE the status for Product_ID: " + addPe_id.getText() + "?");
+
+        Optional<ButtonType> confirmationResult = confirmationAlert.showAndWait();
+        if (confirmationResult.isPresent() && confirmationResult.get().equals(ButtonType.OK)) {
+            // Verify passcode
+            if (!verifyPasscode()) {
+                Alert alert = new Alert(Alert.AlertType.ERROR);
+                alert.setTitle("Error Message");
+                alert.setHeaderText(null);
+                alert.setContentText("Invalid passcode. Update canceled.");
+                alert.showAndWait();
+                return;
+            }
+
+            // Prepare the SQL query to update only the status field
+            String sql = "UPDATE pendant_details SET status = ? WHERE product_id = ?";
+
+            connect = connectDb();
+            try {
+                prepare = connect.prepareStatement(sql);
+                prepare.setString(1, addPe_status.getSelectionModel().getSelectedItem());
+                prepare.setString(2, addPe_id.getText());
+
+                int rowsUpdated = prepare.executeUpdate();
+
+                if (rowsUpdated > 0) {
+                    addPendantShowListData();
+                    addPendantReset();
+
+                    Alert alert = new Alert(Alert.AlertType.INFORMATION);
+                    alert.setTitle("Information Message");
+                    alert.setHeaderText(null);
+                    alert.setContentText("Status updated successfully!");
+                    alert.showAndWait();
+                } else {
+                    Alert alert = new Alert(Alert.AlertType.ERROR);
+                    alert.setTitle("Error Message");
+                    alert.setHeaderText(null);
+                    alert.setContentText("Failed to update status. Please check the Product ID.");
+                    alert.showAndWait();
+                }
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
+        }
+    }
+
+    public void addPendantDelete() {
+        // Ensure the Product ID field is filled
+        if (addPe_id.getText().isEmpty()) {
+            Alert alert = new Alert(Alert.AlertType.ERROR);
+            alert.setTitle("Error Message");
+            alert.setHeaderText(null);
+            alert.setContentText("Please fill all blank fields");
+            alert.showAndWait();
+            return;
+        }
+
+        // Check if the Product ID exists
+        if (!isPendantIdExist(addPe_id.getText())) {
+            Alert alert = new Alert(Alert.AlertType.ERROR);
+            alert.setTitle("Error Message");
+            alert.setHeaderText(null);
+            alert.setContentText("Product ID not found. Deletion canceled.");
+            alert.showAndWait();
+            return;
+        }
+
+        // Prompt for confirmation
+        Alert confirmationAlert = new Alert(Alert.AlertType.CONFIRMATION);
+        confirmationAlert.setTitle("Confirmation Message");
+        confirmationAlert.setHeaderText(null);
+        confirmationAlert.setContentText("Are you sure you want to DELETE Product_ID: " + addPe_id.getText() + "?");
+
+        Optional<ButtonType> confirmationResult = confirmationAlert.showAndWait();
+        if (confirmationResult.isPresent() && confirmationResult.get().equals(ButtonType.OK)) {
+            // Verify passcode
+            if (!verifyPasscode()) {
+                Alert passcodeAlert = new Alert(Alert.AlertType.ERROR);
+                passcodeAlert.setTitle("Error Message");
+                passcodeAlert.setHeaderText(null);
+                passcodeAlert.setContentText("Invalid passcode. Deletion canceled.");
+                passcodeAlert.showAndWait();
+                return;
+            }
+
+            // Proceed with deletion
+            String sql = "DELETE FROM pendant_details WHERE product_id = ?";
+            connect = connectDb();
+            try {
+                prepare = connect.prepareStatement(sql);
+                prepare.setString(1, addPe_id.getText());
+
+                int rowsDeleted = prepare.executeUpdate();
+                if (rowsDeleted > 0) {
+                    addPendantShowListData();
+                    addPendantReset();
+
+                    Alert alert = new Alert(Alert.AlertType.INFORMATION);
+                    alert.setTitle("Information Message");
+                    alert.setHeaderText(null);
+                    alert.setContentText("Data deleted successfully!");
+                    alert.showAndWait();
+                } else {
+                    Alert alert = new Alert(Alert.AlertType.ERROR);
+                    alert.setTitle("Error Message");
+                    alert.setHeaderText(null);
+                    alert.setContentText("Failed to delete data. Please try again.");
+                    alert.showAndWait();
+                }
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
+        }
+    }
+
+    public void addPendantReset() {
+        addPe_id.setText("");
+        addPe_category.getSelectionModel().clearSelection();
+        addPe_netWeight.setText("");
+        addPe_karat.getSelectionModel().clearSelection();
+        addPe_rate.setText("");
+        addPe_supplier.setText("");
+        addPe_status.getSelectionModel().clearSelection();
+        addPe_img.setImage(null);
+        getData.path = "";
+    }
+
+    public void addPeImportImage() {
+        FileChooser open = new FileChooser();
+        open.setTitle("Open Image File");
+        open.getExtensionFilters().add(new FileChooser.ExtensionFilter("Image File", "*jpg", "*png"));
+
+        File file = open.showOpenDialog(main_form.getScene().getWindow());
+
+        if (file != null) {
+            getData.path = file.getAbsolutePath();
+            peImage = new Image(file.toURI().toString(), 90, 100, false, true);
+            addPe_img.setImage(peImage);
+        }
+    }
+
+    public void addPeListCategory() {
+        List<String> listC = new ArrayList<>();
+
+        for(String data:listPeCategory){
+            listC.add(data);
+        }
+        ObservableList<String> listData = FXCollections.observableArrayList(listPeCategory);
+        addPe_category.setItems(listData);
+    }
+
+    public void addPeListKarat() {
+        List<String> listK = new ArrayList<>();
+
+        for(String data:listKarat){
+            listK.add(data);
+        }
+        ObservableList<String> listData = FXCollections.observableArrayList(listKarat);
+        addPe_karat.setItems(listData);
+    }
+
+    public void addPeListStatus() {
+        List<String> listS = new ArrayList<>();
+
+        for(String data:listStatus){
+            listS.add(data);
+        }
+        ObservableList<String> listData = FXCollections.observableArrayList(listStatus);
+        addPe_status.setItems(listData);
+    }
+
+    public void addPendantSearch() {
+        FilteredList<pendantData> filter = new FilteredList<>(addPendantList, e -> true);
+
+        addPe_search.textProperty().addListener((Observable, oldValue, newValue) -> {
+            filter.setPredicate(predicatePeData -> {
+                if (newValue == null || newValue.isEmpty()) {
+                    return true;
+                }
+                String searchKey = newValue.toLowerCase();
+
+                if (predicatePeData.getProductId().toString().contains(searchKey)) {
+                    return true;
+                } else if (predicatePeData.getCategory().toLowerCase().contains(searchKey)) {
+                    return true;
+                } else if (predicatePeData.getNet_weight().toString().contains(searchKey)) {
+                    return true;
+                } else if (predicatePeData.getKarat().toLowerCase().contains(searchKey)) {
+                    return true;
+                } else if (predicatePeData.getGold_rate().toString().contains(searchKey)) {
+                    return true;
+                } else if (predicatePeData.getSupplier().toString().contains(searchKey)) {
+                    return true;
+                } else if (predicatePeData.getStatus().toLowerCase().contains(searchKey)) {
+                    return true;
+                } else {
+                    return false;
+                }
+            });
+        });
+
+        SortedList<pendantData> sortList = new SortedList<>(filter);
+        sortList.comparatorProperty().bind(addPe_tableView.comparatorProperty());
+        addPe_tableView.setItems(sortList);
+    }
+
+    public ObservableList<pendantData> addPendantListData() {
+        ObservableList<pendantData> pendantList = FXCollections.observableArrayList();
+
+        String sql = "SELECT * FROM pendant_details";
+        connect = connectDb();
+        try {
+            prepare = connect.prepareStatement(sql);
+            result = prepare.executeQuery();
+            pendantData peD;
+
+            while (result.next()) {
+                peD = new pendantData(result.getString("product_id"),
+                        result.getString("category"),
+                        result.getString("weight"),
+                        result.getDouble("net_weight"),
+                        result.getString("length"),
+                        result.getString("karat"),
+                        result.getDouble("gold_rate"),
+                        result.getString("supplier"),
+                        result.getString("status"),
+                        result.getString("image"),
+                        result.getDate("date"));
+
+                pendantList.add(peD);
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        return pendantList;
+    }
+
+    private ObservableList<pendantData> addPendantList;
+
+    public void addPendantShowListData() {
+        addPendantList = addPendantListData();
+
+        addPe_col_productID.setCellValueFactory(new PropertyValueFactory<>("productId"));
+        addPe_col_category.setCellValueFactory(new PropertyValueFactory<>("category"));
+        addPe_col_weight.setCellValueFactory(new PropertyValueFactory<>("weight"));
+        addPe_col_netWeight.setCellValueFactory(new PropertyValueFactory<>("net_weight"));
+        addPe_col_length.setCellValueFactory(new PropertyValueFactory<>("length"));
+        addPe_col_karat.setCellValueFactory(new PropertyValueFactory<>("karat"));
+        addPe_col_goldRate.setCellValueFactory(new PropertyValueFactory<>("gold_rate"));
+        addPe_col_supplier.setCellValueFactory(new PropertyValueFactory<>("supplier"));
+        addPe_col_status.setCellValueFactory(new PropertyValueFactory<>("status"));
+
+        // Set custom cell factories to format double values to two decimal places
+        addPe_col_netWeight.setCellFactory(getDoubleCellFactory());
+        addPe_col_goldRate.setCellFactory(getDoubleCellFactory());
+
+        addPe_tableView.setItems(addPendantList);
+    }
+
+    public void addPendantSelect() {
+        pendantData peD = addPe_tableView.getSelectionModel().getSelectedItem();
+        int num = addPe_tableView.getSelectionModel().getSelectedIndex();
+
+        if ((num - 1) < -1) {
+            return;
+        }
+
+        addPe_id.setText(String.valueOf(peD.getProductId()));
+
+        if (peD.getImage() != null && !peD.getImage().isEmpty()) {
+            String uri = "file:" + peD.getImage();
+            peImage = new Image(uri, 90, 100, false, true);
+            addPe_img.setImage(peImage);
+            getData.path = peD.getImage();
+        } else {
+            addPe_img.setImage(null);
+        }
+    }
+
+    private boolean isPendantIdExist(String productId) {
+        String sql = "SELECT COUNT(*) FROM pendant_details WHERE product_id = ?";
+        connect = connectDb();
+        try {
+            prepare = connect.prepareStatement(sql);
+            prepare.setString(1, productId);
+            result = prepare.executeQuery();
+            if (result.next()) {
+                int count = result.getInt(1);
+                return count > 0;
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        return false;
+    }
+
+    private boolean isPendantIdValid(String productId) {
+        // Check if productId starts with 'C' and has exactly 4 digits
+        return productId.matches("^P\\d{4}$");
+    }
+
+    // Method to handle earring data
+    private void handlePendantData(pendantData pendantDetails, double price, double returnValue) {
+        double minPrice = pendantDetails.getGold_rate() * pendantDetails.getNet_weight() / 8;
+
+        if (price < minPrice) {
+            // Show alert with OK and Continue Anyway options
+            Alert alert = new Alert(Alert.AlertType.CONFIRMATION);
+            alert.setTitle("Error Message");
+            alert.setHeaderText(null);
+            alert.setContentText("Sales price must be greater than " + minPrice);
+
+            ButtonType okButton = new ButtonType("OK", ButtonBar.ButtonData.OK_DONE);
+            ButtonType continueButton = new ButtonType("Continue Anyway", ButtonBar.ButtonData.OTHER);
+            alert.getButtonTypes().setAll(okButton, continueButton);
+
+            Optional<ButtonType> result = alert.showAndWait();
+            if (result.isPresent() && result.get() == continueButton) {
+                boolean passcodeVerified = verifyPasscode();
+                if (!passcodeVerified) {
+                    showAlert(Alert.AlertType.ERROR, "Error Message", "Invalid passcode");
+                    return;
+                }
+            } else {
+                return;
+            }
+        }
+
+        if (returnValue > price) {
+            showAlert(Alert.AlertType.ERROR, "Error Message", "Invalid Exchange Value!");
+            return;
+        }
+
+        customerId();  // Ensure customer ID is set
+
+        salesData newSalesData = new salesData(
+                customerid,
+                pendantDetails.getProductId(),
+                pendantDetails.getCategory(),
+                pendantDetails.getWeight(),
+                pendantDetails.getNet_weight(),
+                pendantDetails.getLength(),
+                pendantDetails.getKarat(),
+                pendantDetails.getGold_rate(),
+                price,
+                returnValue,
+                new java.sql.Date(new Date().getTime())
+        );
+
+        sales_tableView.getItems().add(newSalesData);
+        clearSalesInputFields();
+        updateSalesTotal();
+    }
+
     //******************************************************************************************************************
 
     private void setComboBoxValue(ComboBox<String> comboBox, String value) {
@@ -3233,6 +3738,12 @@ public class dashboardController implements Initializable {
             paBtn.setStyle("-fx-background-color:transparent");
             neBtn.setStyle("-fx-background-color:transparent");
             baBtn.setStyle("-fx-background-color:transparent");
+
+            addPendantShowListData();
+            addPeListCategory();
+            addPeListKarat();
+            addPeListStatus();
+            addPendantSearch();
 
         } else if (event.getSource() == suBtn) {
             home_form.setVisible(false);
