@@ -173,17 +173,17 @@ public class dashboardController implements Initializable {
     @FXML
     private TableView<ringData> addRi_tableView;
     @FXML
-    private TableView<ringData> addEr_tableView;
+    private TableView<earringData> addEr_tableView;
     @FXML
-    private TableView<ringData> addPe_tableView;
+    private TableView<pendantData> addPe_tableView;
     @FXML
-    private TableView<ringData> addSu_tableView;
+    private TableView<suraData> addSu_tableView;
     @FXML
-    private TableView<ringData> addPa_tableView;
+    private TableView<panchaData> addPa_tableView;
     @FXML
-    private TableView<ringData> addNe_tableView;
+    private TableView<necklaceData> addNe_tableView;
     @FXML
-    private TableView<ringData> addBa_tableView;
+    private TableView<bangleData> addBa_tableView;
 
 
     @FXML
@@ -268,6 +268,12 @@ public class dashboardController implements Initializable {
         addRiListKarat();
         addRiListStatus();
         addRingSearch();
+
+        addEarringShowListData();
+        addErListCategory();
+        addErListKarat();
+        addErListStatus();
+        addEarringSearch();
     }
 
     //********************************HOME PAGE REALTED*****************************************************************
@@ -503,8 +509,9 @@ public class dashboardController implements Initializable {
         chainData chainDetails = getChainDetails(productId);
         braceletData braceletDetails = getBraceletDetails(productId);
         ringData ringDetails = getRingDetails(productId);
+        earringData earringDetails = getEarringDetails(productId);
 
-        if (chainDetails == null && braceletDetails == null && ringDetails == null) {
+        if (chainDetails == null && braceletDetails == null && ringDetails == null && earringDetails == null) {
             showAlert(Alert.AlertType.ERROR, "Error Message", "Product ID not found");
             return;
         }
@@ -529,6 +536,8 @@ public class dashboardController implements Initializable {
             handleBraceletData(braceletDetails, price, returnValue);
         } else if (ringDetails != null) {
             handleRingData(ringDetails, price, returnValue);
+        } else if (earringDetails != null) {
+            handleEarringData(earringDetails, price, returnValue);
         }
     }
 
@@ -668,6 +677,7 @@ public class dashboardController implements Initializable {
         String deleteChainSql = "DELETE FROM chain_details WHERE product_id = ?";
         String deleteBraceletSql = "DELETE FROM bracelet_details WHERE product_id = ?";
         String deleteRingSql = "DELETE FROM ring_details WHERE product_id = ?";
+        String deleteEarringSql = "DELETE FROM earring_details WHERE product_id = ?";
         connect = connectDb();
         try {
             // Delete chain details
@@ -682,6 +692,11 @@ public class dashboardController implements Initializable {
 
             // Delete ring details
             prepare = connect.prepareStatement(deleteRingSql);
+            prepare.setString(1, productId);
+            prepare.executeUpdate();
+
+            // Delete earring details
+            prepare = connect.prepareStatement(deleteEarringSql);
             prepare.setString(1, productId);
             prepare.executeUpdate();
 
@@ -2471,6 +2486,497 @@ public class dashboardController implements Initializable {
         updateSalesTotal();
     }
 
+    // **************************************EARRING RELATED***********************************************************
+
+    private String[] listErCategory = {"Baby Earring","Ladies Earring"};
+
+    // Method to get ring details from the database
+    private earringData getEarringDetails(String productId) {
+        String sql = "SELECT * FROM earring_details WHERE product_id = ?";
+        connect = connectDb();
+        earringData earringDetails = null;
+        try {
+            prepare = connect.prepareStatement(sql);
+            prepare.setString(1, productId);
+            result = prepare.executeQuery();
+            if (result.next()) {
+                earringDetails = new earringData(
+                        result.getString("product_id"),
+                        result.getString("category"),
+                        result.getString("weight"),
+                        result.getDouble("net_weight"),
+                        result.getString("length"),
+                        result.getString("karat"),
+                        result.getDouble("gold_rate"),
+                        result.getString("supplier"),
+                        result.getString("status"),
+                        result.getString("image"),
+                        result.getDate("date"));
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        return earringDetails;
+    }
+
+    public void addEarringAdd() {
+        String sql = "INSERT INTO earring_details (product_id, category, net_weight, karat, gold_rate, supplier, status, image, date) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?)";
+
+        connect = connectDb();
+        try {
+            Alert alert;
+
+            if (addEr_id.getText().isEmpty()
+                    || addEr_category.getSelectionModel().getSelectedItem() == null
+                    || addEr_netWeight.getText().isEmpty()
+                    || addEr_karat.getSelectionModel().getSelectedItem() == null
+                    || addEr_rate.getText().isEmpty()
+                    || addEr_supplier.getText().isEmpty()
+                    || addEr_status.getSelectionModel().getSelectedItem() == null) {
+                alert = new Alert(Alert.AlertType.ERROR);
+                alert.setTitle("Error Message");
+                alert.setHeaderText(null);
+                alert.setContentText("Please fill all blank fields");
+                alert.showAndWait();
+            } else if (!isEarringIdValid(addEr_id.getText())) {
+                alert = new Alert(Alert.AlertType.ERROR);
+                alert.setTitle("Error Message");
+                alert.setHeaderText(null);
+                alert.setContentText("Product ID format is incorrect. It should start with 'E' followed by 4 digits.");
+                alert.showAndWait();
+            } else if (isEarringIdExist(addEr_id.getText())) {
+                alert = new Alert(Alert.AlertType.ERROR);
+                alert.setTitle("Error Message");
+                alert.setHeaderText(null);
+                alert.setContentText("Product ID already exists. Please use a unique Product ID.");
+                alert.showAndWait();
+            } else if (isProductIdExistInSales(addEr_id.getText())) {
+                alert = new Alert(Alert.AlertType.ERROR);
+                alert.setTitle("Error Message");
+                alert.setHeaderText(null);
+                alert.setContentText("Product ID already exists in sales table. Please use a unique Product ID.");
+                alert.showAndWait();
+            } else {
+                prepare = connect.prepareStatement(sql);
+                String productId = addEr_id.getText();
+                prepare.setString(1, productId);
+                prepare.setString(2, addEr_category.getSelectionModel().getSelectedItem());
+                prepare.setString(3, addEr_netWeight.getText());
+                prepare.setString(4, addEr_karat.getSelectionModel().getSelectedItem());
+                prepare.setString(5, addEr_rate.getText());
+                prepare.setString(6, addEr_supplier.getText());
+                prepare.setString(7, addEr_status.getSelectionModel().getSelectedItem());
+
+                String uri = getData.path;
+                if (uri != null && !uri.isEmpty()) {
+                    uri = uri.replace("\\", "\\\\");
+                    prepare.setString(8, uri);
+                } else {
+                    prepare.setString(8, null);
+                }
+
+                Date date = new Date();
+                java.sql.Date sqldate = new java.sql.Date(date.getTime());
+
+                prepare.setString(9, String.valueOf(sqldate));
+
+                prepare.executeUpdate();
+
+                addEarringShowListData();
+                addEarringReset();
+
+                // Show success message
+                alert = new Alert(Alert.AlertType.INFORMATION);
+                alert.setTitle("Success");
+                alert.setHeaderText(null);
+                alert.setContentText(productId + " entered successfully!");
+                alert.showAndWait();
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+    }
+
+    public void addEarringUpdate() {
+        // Check if the status is selected
+        if (addEr_status.getSelectionModel().getSelectedItem() == null) {
+            Alert alert = new Alert(Alert.AlertType.ERROR);
+            alert.setTitle("Error Message");
+            alert.setHeaderText(null);
+            alert.setContentText("Please select the new status");
+            alert.showAndWait();
+            return;
+        }
+
+        // Ensure the Product ID field is filled
+        if (addEr_id.getText().isEmpty()) {
+            Alert alert = new Alert(Alert.AlertType.ERROR);
+            alert.setTitle("Error Message");
+            alert.setHeaderText(null);
+            alert.setContentText("Product ID is required to update status");
+            alert.showAndWait();
+            return;
+        }
+
+        // Prompt for confirmation
+        Alert confirmationAlert = new Alert(Alert.AlertType.CONFIRMATION);
+        confirmationAlert.setTitle("Confirmation Message");
+        confirmationAlert.setHeaderText(null);
+        confirmationAlert.setContentText("Are you sure you want to UPDATE the status for Product_ID: " + addEr_id.getText() + "?");
+
+        Optional<ButtonType> confirmationResult = confirmationAlert.showAndWait();
+        if (confirmationResult.isPresent() && confirmationResult.get().equals(ButtonType.OK)) {
+            // Verify passcode
+            if (!verifyPasscode()) {
+                Alert alert = new Alert(Alert.AlertType.ERROR);
+                alert.setTitle("Error Message");
+                alert.setHeaderText(null);
+                alert.setContentText("Invalid passcode. Update canceled.");
+                alert.showAndWait();
+                return;
+            }
+
+            // Prepare the SQL query to update only the status field
+            String sql = "UPDATE earring_details SET status = ? WHERE product_id = ?";
+
+            connect = connectDb();
+            try {
+                prepare = connect.prepareStatement(sql);
+                prepare.setString(1, addEr_status.getSelectionModel().getSelectedItem());
+                prepare.setString(2, addEr_id.getText());
+
+                int rowsUpdated = prepare.executeUpdate();
+
+                if (rowsUpdated > 0) {
+                    addEarringShowListData();
+                    addEarringReset();
+
+                    Alert alert = new Alert(Alert.AlertType.INFORMATION);
+                    alert.setTitle("Information Message");
+                    alert.setHeaderText(null);
+                    alert.setContentText("Status updated successfully!");
+                    alert.showAndWait();
+                } else {
+                    Alert alert = new Alert(Alert.AlertType.ERROR);
+                    alert.setTitle("Error Message");
+                    alert.setHeaderText(null);
+                    alert.setContentText("Failed to update status. Please check the Product ID.");
+                    alert.showAndWait();
+                }
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
+        }
+    }
+
+    public void addEarringDelete() {
+        // Ensure the Product ID field is filled
+        if (addEr_id.getText().isEmpty()) {
+            Alert alert = new Alert(Alert.AlertType.ERROR);
+            alert.setTitle("Error Message");
+            alert.setHeaderText(null);
+            alert.setContentText("Please fill all blank fields");
+            alert.showAndWait();
+            return;
+        }
+
+        // Check if the Product ID exists
+        if (!isEarringIdExist(addEr_id.getText())) {
+            Alert alert = new Alert(Alert.AlertType.ERROR);
+            alert.setTitle("Error Message");
+            alert.setHeaderText(null);
+            alert.setContentText("Product ID not found. Deletion canceled.");
+            alert.showAndWait();
+            return;
+        }
+
+        // Prompt for confirmation
+        Alert confirmationAlert = new Alert(Alert.AlertType.CONFIRMATION);
+        confirmationAlert.setTitle("Confirmation Message");
+        confirmationAlert.setHeaderText(null);
+        confirmationAlert.setContentText("Are you sure you want to DELETE Product_ID: " + addEr_id.getText() + "?");
+
+        Optional<ButtonType> confirmationResult = confirmationAlert.showAndWait();
+        if (confirmationResult.isPresent() && confirmationResult.get().equals(ButtonType.OK)) {
+            // Verify passcode
+            if (!verifyPasscode()) {
+                Alert passcodeAlert = new Alert(Alert.AlertType.ERROR);
+                passcodeAlert.setTitle("Error Message");
+                passcodeAlert.setHeaderText(null);
+                passcodeAlert.setContentText("Invalid passcode. Deletion canceled.");
+                passcodeAlert.showAndWait();
+                return;
+            }
+
+            // Proceed with deletion
+            String sql = "DELETE FROM earring_details WHERE product_id = ?";
+            connect = connectDb();
+            try {
+                prepare = connect.prepareStatement(sql);
+                prepare.setString(1, addEr_id.getText());
+
+                int rowsDeleted = prepare.executeUpdate();
+                if (rowsDeleted > 0) {
+                    addEarringShowListData();
+                    addEarringReset();
+
+                    Alert alert = new Alert(Alert.AlertType.INFORMATION);
+                    alert.setTitle("Information Message");
+                    alert.setHeaderText(null);
+                    alert.setContentText("Data deleted successfully!");
+                    alert.showAndWait();
+                } else {
+                    Alert alert = new Alert(Alert.AlertType.ERROR);
+                    alert.setTitle("Error Message");
+                    alert.setHeaderText(null);
+                    alert.setContentText("Failed to delete data. Please try again.");
+                    alert.showAndWait();
+                }
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
+        }
+    }
+
+    public void addEarringReset() {
+        addEr_id.setText("");
+        addEr_category.getSelectionModel().clearSelection();
+        addEr_netWeight.setText("");
+        addEr_karat.getSelectionModel().clearSelection();
+        addEr_rate.setText("");
+        addEr_supplier.setText("");
+        addEr_status.getSelectionModel().clearSelection();
+        addEr_img.setImage(null);
+        getData.path = "";
+    }
+
+    public void addErImportImage() {
+        FileChooser open = new FileChooser();
+        open.setTitle("Open Image File");
+        open.getExtensionFilters().add(new FileChooser.ExtensionFilter("Image File", "*jpg", "*png"));
+
+        File file = open.showOpenDialog(main_form.getScene().getWindow());
+
+        if (file != null) {
+            getData.path = file.getAbsolutePath();
+            erImage = new Image(file.toURI().toString(), 90, 100, false, true);
+            addEr_img.setImage(erImage);
+        }
+    }
+
+    public void addErListCategory() {
+        List<String> listC = new ArrayList<>();
+
+        for(String data:listErCategory){
+            listC.add(data);
+        }
+        ObservableList<String> listData = FXCollections.observableArrayList(listErCategory);
+        addEr_category.setItems(listData);
+    }
+
+    public void addErListKarat() {
+        List<String> listK = new ArrayList<>();
+
+        for(String data:listKarat){
+            listK.add(data);
+        }
+        ObservableList<String> listData = FXCollections.observableArrayList(listKarat);
+        addEr_karat.setItems(listData);
+    }
+
+    public void addErListStatus() {
+        List<String> listS = new ArrayList<>();
+
+        for(String data:listStatus){
+            listS.add(data);
+        }
+        ObservableList<String> listData = FXCollections.observableArrayList(listStatus);
+        addEr_status.setItems(listData);
+    }
+
+    public void addEarringSearch() {
+        FilteredList<earringData> filter = new FilteredList<>(addEarringList, e -> true);
+
+        addEr_search.textProperty().addListener((Observable, oldValue, newValue) -> {
+            filter.setPredicate(predicateErData -> {
+                if (newValue == null || newValue.isEmpty()) {
+                    return true;
+                }
+                String searchKey = newValue.toLowerCase();
+
+                if (predicateErData.getProductId().toString().contains(searchKey)) {
+                    return true;
+                } else if (predicateErData.getCategory().toLowerCase().contains(searchKey)) {
+                    return true;
+                } else if (predicateErData.getNet_weight().toString().contains(searchKey)) {
+                    return true;
+                } else if (predicateErData.getKarat().toLowerCase().contains(searchKey)) {
+                    return true;
+                } else if (predicateErData.getGold_rate().toString().contains(searchKey)) {
+                    return true;
+                } else if (predicateErData.getSupplier().toString().contains(searchKey)) {
+                    return true;
+                } else if (predicateErData.getStatus().toLowerCase().contains(searchKey)) {
+                    return true;
+                } else {
+                    return false;
+                }
+            });
+        });
+
+        SortedList<earringData> sortList = new SortedList<>(filter);
+        sortList.comparatorProperty().bind(addEr_tableView.comparatorProperty());
+        addEr_tableView.setItems(sortList);
+    }
+
+    public ObservableList<earringData> addEarringListData() {
+        ObservableList<earringData> earringList = FXCollections.observableArrayList();
+
+        String sql = "SELECT * FROM earring_details";
+        connect = connectDb();
+        try {
+            prepare = connect.prepareStatement(sql);
+            result = prepare.executeQuery();
+            earringData erD;
+
+            while (result.next()) {
+                erD = new earringData(result.getString("product_id"),
+                        result.getString("category"),
+                        result.getString("weight"),
+                        result.getDouble("net_weight"),
+                        result.getString("length"),
+                        result.getString("karat"),
+                        result.getDouble("gold_rate"),
+                        result.getString("supplier"),
+                        result.getString("status"),
+                        result.getString("image"),
+                        result.getDate("date"));
+
+                earringList.add(erD);
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        return earringList;
+    }
+
+    private ObservableList<earringData> addEarringList;
+
+    public void addEarringShowListData() {
+        addEarringList = addEarringListData();
+
+        addEr_col_productID.setCellValueFactory(new PropertyValueFactory<>("productId"));
+        addEr_col_category.setCellValueFactory(new PropertyValueFactory<>("category"));
+        addEr_col_weight.setCellValueFactory(new PropertyValueFactory<>("weight"));
+        addEr_col_netWeight.setCellValueFactory(new PropertyValueFactory<>("net_weight"));
+        addEr_col_length.setCellValueFactory(new PropertyValueFactory<>("length"));
+        addEr_col_karat.setCellValueFactory(new PropertyValueFactory<>("karat"));
+        addEr_col_goldRate.setCellValueFactory(new PropertyValueFactory<>("gold_rate"));
+        addEr_col_supplier.setCellValueFactory(new PropertyValueFactory<>("supplier"));
+        addEr_col_status.setCellValueFactory(new PropertyValueFactory<>("status"));
+
+        // Set custom cell factories to format double values to two decimal places
+        addEr_col_netWeight.setCellFactory(getDoubleCellFactory());
+        addEr_col_goldRate.setCellFactory(getDoubleCellFactory());
+
+        addEr_tableView.setItems(addEarringList);
+    }
+
+    public void addEarringSelect() {
+        earringData erD = addEr_tableView.getSelectionModel().getSelectedItem();
+        int num = addEr_tableView.getSelectionModel().getSelectedIndex();
+
+        if ((num - 1) < -1) {
+            return;
+        }
+
+        addEr_id.setText(String.valueOf(erD.getProductId()));
+
+        if (erD.getImage() != null && !erD.getImage().isEmpty()) {
+            String uri = "file:" + erD.getImage();
+            erImage = new Image(uri, 90, 100, false, true);
+            addEr_img.setImage(erImage);
+            getData.path = erD.getImage();
+        } else {
+            addEr_img.setImage(null);
+        }
+    }
+
+    private boolean isEarringIdExist(String productId) {
+        String sql = "SELECT COUNT(*) FROM earring_details WHERE product_id = ?";
+        connect = connectDb();
+        try {
+            prepare = connect.prepareStatement(sql);
+            prepare.setString(1, productId);
+            result = prepare.executeQuery();
+            if (result.next()) {
+                int count = result.getInt(1);
+                return count > 0;
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        return false;
+    }
+
+    private boolean isEarringIdValid(String productId) {
+        // Check if productId starts with 'C' and has exactly 4 digits
+        return productId.matches("^E\\d{4}$");
+    }
+
+    // Method to handle earring data
+    private void handleEarringData(earringData earringDetails, double price, double returnValue) {
+        double minPrice = earringDetails.getGold_rate() * earringDetails.getNet_weight() / 8;
+
+        if (price < minPrice) {
+            // Show alert with OK and Continue Anyway options
+            Alert alert = new Alert(Alert.AlertType.CONFIRMATION);
+            alert.setTitle("Error Message");
+            alert.setHeaderText(null);
+            alert.setContentText("Sales price must be greater than " + minPrice);
+
+            ButtonType okButton = new ButtonType("OK", ButtonBar.ButtonData.OK_DONE);
+            ButtonType continueButton = new ButtonType("Continue Anyway", ButtonBar.ButtonData.OTHER);
+            alert.getButtonTypes().setAll(okButton, continueButton);
+
+            Optional<ButtonType> result = alert.showAndWait();
+            if (result.isPresent() && result.get() == continueButton) {
+                boolean passcodeVerified = verifyPasscode();
+                if (!passcodeVerified) {
+                    showAlert(Alert.AlertType.ERROR, "Error Message", "Invalid passcode");
+                    return;
+                }
+            } else {
+                return;
+            }
+        }
+
+        if (returnValue > price) {
+            showAlert(Alert.AlertType.ERROR, "Error Message", "Invalid Exchange Value!");
+            return;
+        }
+
+        customerId();  // Ensure customer ID is set
+
+        salesData newSalesData = new salesData(
+                customerid,
+                earringDetails.getProductId(),
+                earringDetails.getCategory(),
+                earringDetails.getWeight(),
+                earringDetails.getNet_weight(),
+                earringDetails.getLength(),
+                earringDetails.getKarat(),
+                earringDetails.getGold_rate(),
+                price,
+                returnValue,
+                new java.sql.Date(new Date().getTime())
+        );
+
+        sales_tableView.getItems().add(newSalesData);
+        clearSalesInputFields();
+        updateSalesTotal();
+    }
+
     //******************************************************************************************************************
 
     private void setComboBoxValue(ComboBox<String> comboBox, String value) {
@@ -2695,6 +3201,12 @@ public class dashboardController implements Initializable {
             paBtn.setStyle("-fx-background-color:transparent");
             neBtn.setStyle("-fx-background-color:transparent");
             baBtn.setStyle("-fx-background-color:transparent");
+
+            addEarringShowListData();
+            addErListCategory();
+            addErListKarat();
+            addErListStatus();
+            addEarringSearch();
 
         } else if (event.getSource() == peBtn) {
             home_form.setVisible(false);
