@@ -297,6 +297,12 @@ public class dashboardController implements Initializable {
         addNeListKarat();
         addNeListStatus();
         addNecklaceSearch();
+
+        addBangleShowListData();
+        addBaListCategory();
+        addBaListKarat();
+        addBaListStatus();
+        addBangleSearch();
     }
 
     //********************************HOME PAGE REALTED*****************************************************************
@@ -537,9 +543,10 @@ public class dashboardController implements Initializable {
         suraData suraDetails = getSuraDetails(productId);
         panchaData panchaDetails = getPanchaDetails(productId);
         necklaceData necklaceDetails = getNecklaceDetails(productId);
+        bangleData bangleDetails = getBangleDetails(productId);
 
         if (chainDetails == null && braceletDetails == null && ringDetails == null && earringDetails == null && pendantDetails == null
-         && suraDetails == null  && panchaDetails == null && necklaceDetails == null) {
+         && suraDetails == null  && panchaDetails == null && necklaceDetails == null && bangleDetails == null) {
             showAlert(Alert.AlertType.ERROR, "Error Message", "Product ID not found");
             return;
         }
@@ -574,6 +581,8 @@ public class dashboardController implements Initializable {
             handlePanchaData(panchaDetails, price, returnValue);
         } else if (necklaceDetails != null) {
             handleNecklaceData(necklaceDetails, price, returnValue);
+        } else if (bangleDetails != null) {
+            handleBangleData(bangleDetails, price, returnValue);
         }
     }
 
@@ -718,6 +727,7 @@ public class dashboardController implements Initializable {
         String deleteSuraSql = "DELETE FROM sura_details WHERE product_id = ?";
         String deletePanchaSql = "DELETE FROM pancha_details WHERE product_id = ?";
         String deleteNecklaceSql = "DELETE FROM necklace_details WHERE product_id = ?";
+        String deleteBangleSql = "DELETE FROM bangle_details WHERE product_id = ?";
 
         connect = connectDb();
         try {
@@ -758,6 +768,11 @@ public class dashboardController implements Initializable {
 
             // Delete necklace details
             prepare = connect.prepareStatement(deleteNecklaceSql);
+            prepare.setString(1, productId);
+            prepare.executeUpdate();
+
+            // Delete bangle details
+            prepare = connect.prepareStatement(deleteBangleSql);
             prepare.setString(1, productId);
             prepare.executeUpdate();
 
@@ -5000,6 +5015,497 @@ public class dashboardController implements Initializable {
         updateSalesTotal();
     }
 
+    // **************************************BANGLE RELATED***********************************************************
+
+    private String[] listBaCategory = {"Machine Cut","Hand Made"};
+
+    // Method to get pendant details from the database
+    private bangleData getBangleDetails(String productId) {
+        String sql = "SELECT * FROM bangle_details WHERE product_id = ?";
+        connect = connectDb();
+        bangleData bangleDetails = null;
+        try {
+            prepare = connect.prepareStatement(sql);
+            prepare.setString(1, productId);
+            result = prepare.executeQuery();
+            if (result.next()) {
+                bangleDetails = new bangleData(
+                        result.getString("product_id"),
+                        result.getString("category"),
+                        result.getString("weight"),
+                        result.getDouble("net_weight"),
+                        result.getString("length"),
+                        result.getString("karat"),
+                        result.getDouble("gold_rate"),
+                        result.getString("supplier"),
+                        result.getString("status"),
+                        result.getString("image"),
+                        result.getDate("date"));
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        return bangleDetails;
+    }
+
+    public void addBangleAdd() {
+        String sql = "INSERT INTO bangle_details (product_id, category, net_weight, karat, gold_rate, supplier, status, image, date) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?)";
+
+        connect = connectDb();
+        try {
+            Alert alert;
+
+            if (addBa_id.getText().isEmpty()
+                    || addBa_category.getSelectionModel().getSelectedItem() == null
+                    || addBa_netWeight.getText().isEmpty()
+                    || addBa_karat.getSelectionModel().getSelectedItem() == null
+                    || addBa_rate.getText().isEmpty()
+                    || addBa_supplier.getText().isEmpty()
+                    || addBa_status.getSelectionModel().getSelectedItem() == null) {
+                alert = new Alert(Alert.AlertType.ERROR);
+                alert.setTitle("Error Message");
+                alert.setHeaderText(null);
+                alert.setContentText("Please fill all blank fields");
+                alert.showAndWait();
+            } else if (!isBangleIdValid(addBa_id.getText())) {
+                alert = new Alert(Alert.AlertType.ERROR);
+                alert.setTitle("Error Message");
+                alert.setHeaderText(null);
+                alert.setContentText("Product ID format is incorrect. It should start with 'G' followed by 4 digits.");
+                alert.showAndWait();
+            } else if (isBangleIdExist(addBa_id.getText())) {
+                alert = new Alert(Alert.AlertType.ERROR);
+                alert.setTitle("Error Message");
+                alert.setHeaderText(null);
+                alert.setContentText("Product ID already exists. Please use a unique Product ID.");
+                alert.showAndWait();
+            } else if (isProductIdExistInSales(addBa_id.getText())) {
+                alert = new Alert(Alert.AlertType.ERROR);
+                alert.setTitle("Error Message");
+                alert.setHeaderText(null);
+                alert.setContentText("Product ID already exists in sales table. Please use a unique Product ID.");
+                alert.showAndWait();
+            } else {
+                prepare = connect.prepareStatement(sql);
+                String productId = addBa_id.getText();
+                prepare.setString(1, productId);
+                prepare.setString(2, addBa_category.getSelectionModel().getSelectedItem());
+                prepare.setString(3, addBa_netWeight.getText());
+                prepare.setString(4, addBa_karat.getSelectionModel().getSelectedItem());
+                prepare.setString(5, addBa_rate.getText());
+                prepare.setString(6, addBa_supplier.getText());
+                prepare.setString(7, addBa_status.getSelectionModel().getSelectedItem());
+
+                String uri = getData.path;
+                if (uri != null && !uri.isEmpty()) {
+                    uri = uri.replace("\\", "\\\\");
+                    prepare.setString(8, uri);
+                } else {
+                    prepare.setString(8, null);
+                }
+
+                Date date = new Date();
+                java.sql.Date sqldate = new java.sql.Date(date.getTime());
+
+                prepare.setString(9, String.valueOf(sqldate));
+
+                prepare.executeUpdate();
+
+                addBangleShowListData();
+                addBangleReset();
+
+                // Show success message
+                alert = new Alert(Alert.AlertType.INFORMATION);
+                alert.setTitle("Success");
+                alert.setHeaderText(null);
+                alert.setContentText(productId + " entered successfully!");
+                alert.showAndWait();
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+    }
+
+    public void addBangleUpdate() {
+        // Check if the status is selected
+        if (addBa_status.getSelectionModel().getSelectedItem() == null) {
+            Alert alert = new Alert(Alert.AlertType.ERROR);
+            alert.setTitle("Error Message");
+            alert.setHeaderText(null);
+            alert.setContentText("Please select the new status");
+            alert.showAndWait();
+            return;
+        }
+
+        // Ensure the Product ID field is filled
+        if (addBa_id.getText().isEmpty()) {
+            Alert alert = new Alert(Alert.AlertType.ERROR);
+            alert.setTitle("Error Message");
+            alert.setHeaderText(null);
+            alert.setContentText("Product ID is required to update status");
+            alert.showAndWait();
+            return;
+        }
+
+        // Prompt for confirmation
+        Alert confirmationAlert = new Alert(Alert.AlertType.CONFIRMATION);
+        confirmationAlert.setTitle("Confirmation Message");
+        confirmationAlert.setHeaderText(null);
+        confirmationAlert.setContentText("Are you sure you want to UPDATE the status for Product_ID: " + addBa_id.getText() + "?");
+
+        Optional<ButtonType> confirmationResult = confirmationAlert.showAndWait();
+        if (confirmationResult.isPresent() && confirmationResult.get().equals(ButtonType.OK)) {
+            // Verify passcode
+            if (!verifyPasscode()) {
+                Alert alert = new Alert(Alert.AlertType.ERROR);
+                alert.setTitle("Error Message");
+                alert.setHeaderText(null);
+                alert.setContentText("Invalid passcode. Update canceled.");
+                alert.showAndWait();
+                return;
+            }
+
+            // Prepare the SQL query to update only the status field
+            String sql = "UPDATE bangle_details SET status = ? WHERE product_id = ?";
+
+            connect = connectDb();
+            try {
+                prepare = connect.prepareStatement(sql);
+                prepare.setString(1, addBa_status.getSelectionModel().getSelectedItem());
+                prepare.setString(2, addBa_id.getText());
+
+                int rowsUpdated = prepare.executeUpdate();
+
+                if (rowsUpdated > 0) {
+                    addBangleShowListData();
+                    addBangleReset();
+
+                    Alert alert = new Alert(Alert.AlertType.INFORMATION);
+                    alert.setTitle("Information Message");
+                    alert.setHeaderText(null);
+                    alert.setContentText("Status updated successfully!");
+                    alert.showAndWait();
+                } else {
+                    Alert alert = new Alert(Alert.AlertType.ERROR);
+                    alert.setTitle("Error Message");
+                    alert.setHeaderText(null);
+                    alert.setContentText("Failed to update status. Please check the Product ID.");
+                    alert.showAndWait();
+                }
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
+        }
+    }
+
+    public void addBangleDelete() {
+        // Ensure the Product ID field is filled
+        if (addBa_id.getText().isEmpty()) {
+            Alert alert = new Alert(Alert.AlertType.ERROR);
+            alert.setTitle("Error Message");
+            alert.setHeaderText(null);
+            alert.setContentText("Please fill all blank fields");
+            alert.showAndWait();
+            return;
+        }
+
+        // Check if the Product ID exists
+        if (!isBangleIdExist(addBa_id.getText())) {
+            Alert alert = new Alert(Alert.AlertType.ERROR);
+            alert.setTitle("Error Message");
+            alert.setHeaderText(null);
+            alert.setContentText("Product ID not found. Deletion canceled.");
+            alert.showAndWait();
+            return;
+        }
+
+        // Prompt for confirmation
+        Alert confirmationAlert = new Alert(Alert.AlertType.CONFIRMATION);
+        confirmationAlert.setTitle("Confirmation Message");
+        confirmationAlert.setHeaderText(null);
+        confirmationAlert.setContentText("Are you sure you want to DELETE Product_ID: " + addBa_id.getText() + "?");
+
+        Optional<ButtonType> confirmationResult = confirmationAlert.showAndWait();
+        if (confirmationResult.isPresent() && confirmationResult.get().equals(ButtonType.OK)) {
+            // Verify passcode
+            if (!verifyPasscode()) {
+                Alert passcodeAlert = new Alert(Alert.AlertType.ERROR);
+                passcodeAlert.setTitle("Error Message");
+                passcodeAlert.setHeaderText(null);
+                passcodeAlert.setContentText("Invalid passcode. Deletion canceled.");
+                passcodeAlert.showAndWait();
+                return;
+            }
+
+            // Proceed with deletion
+            String sql = "DELETE FROM bangle_details WHERE product_id = ?";
+            connect = connectDb();
+            try {
+                prepare = connect.prepareStatement(sql);
+                prepare.setString(1, addBa_id.getText());
+
+                int rowsDeleted = prepare.executeUpdate();
+                if (rowsDeleted > 0) {
+                    addBangleShowListData();
+                    addBangleReset();
+
+                    Alert alert = new Alert(Alert.AlertType.INFORMATION);
+                    alert.setTitle("Information Message");
+                    alert.setHeaderText(null);
+                    alert.setContentText("Data deleted successfully!");
+                    alert.showAndWait();
+                } else {
+                    Alert alert = new Alert(Alert.AlertType.ERROR);
+                    alert.setTitle("Error Message");
+                    alert.setHeaderText(null);
+                    alert.setContentText("Failed to delete data. Please try again.");
+                    alert.showAndWait();
+                }
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
+        }
+    }
+
+    public void addBangleReset() {
+        addBa_id.setText("");
+        addBa_category.getSelectionModel().clearSelection();
+        addBa_netWeight.setText("");
+        addBa_karat.getSelectionModel().clearSelection();
+        addBa_rate.setText("");
+        addBa_supplier.setText("");
+        addBa_status.getSelectionModel().clearSelection();
+        addBa_img.setImage(null);
+        getData.path = "";
+    }
+
+    public void addBaImportImage() {
+        FileChooser open = new FileChooser();
+        open.setTitle("Open Image File");
+        open.getExtensionFilters().add(new FileChooser.ExtensionFilter("Image File", "*jpg", "*png"));
+
+        File file = open.showOpenDialog(main_form.getScene().getWindow());
+
+        if (file != null) {
+            getData.path = file.getAbsolutePath();
+            baImage = new Image(file.toURI().toString(), 90, 100, false, true);
+            addBa_img.setImage(baImage);
+        }
+    }
+
+    public void addBaListCategory() {
+        List<String> listC = new ArrayList<>();
+
+        for(String data:listBaCategory){
+            listC.add(data);
+        }
+        ObservableList<String> listData = FXCollections.observableArrayList(listBaCategory);
+        addBa_category.setItems(listData);
+    }
+
+    public void addBaListKarat() {
+        List<String> listK = new ArrayList<>();
+
+        for(String data:listKarat){
+            listK.add(data);
+        }
+        ObservableList<String> listData = FXCollections.observableArrayList(listKarat);
+        addBa_karat.setItems(listData);
+    }
+
+    public void addBaListStatus() {
+        List<String> listS = new ArrayList<>();
+
+        for(String data:listStatus){
+            listS.add(data);
+        }
+        ObservableList<String> listData = FXCollections.observableArrayList(listStatus);
+        addBa_status.setItems(listData);
+    }
+
+    public void addBangleSearch() {
+        FilteredList<bangleData> filter = new FilteredList<>(addBangleList, e -> true);
+
+        addBa_search.textProperty().addListener((Observable, oldValue, newValue) -> {
+            filter.setPredicate(predicateBaData -> {
+                if (newValue == null || newValue.isEmpty()) {
+                    return true;
+                }
+                String searchKey = newValue.toLowerCase();
+
+                if (predicateBaData.getProductId().toString().contains(searchKey)) {
+                    return true;
+                } else if (predicateBaData.getCategory().toLowerCase().contains(searchKey)) {
+                    return true;
+                } else if (predicateBaData.getNet_weight().toString().contains(searchKey)) {
+                    return true;
+                } else if (predicateBaData.getKarat().toLowerCase().contains(searchKey)) {
+                    return true;
+                } else if (predicateBaData.getGold_rate().toString().contains(searchKey)) {
+                    return true;
+                } else if (predicateBaData.getSupplier().toString().contains(searchKey)) {
+                    return true;
+                } else if (predicateBaData.getStatus().toLowerCase().contains(searchKey)) {
+                    return true;
+                } else {
+                    return false;
+                }
+            });
+        });
+
+        SortedList<bangleData> sortList = new SortedList<>(filter);
+        sortList.comparatorProperty().bind(addBa_tableView.comparatorProperty());
+        addBa_tableView.setItems(sortList);
+    }
+
+    public ObservableList<bangleData> addBangleListData() {
+        ObservableList<bangleData> bangleList = FXCollections.observableArrayList();
+
+        String sql = "SELECT * FROM bangle_details";
+        connect = connectDb();
+        try {
+            prepare = connect.prepareStatement(sql);
+            result = prepare.executeQuery();
+            bangleData baD;
+
+            while (result.next()) {
+                baD = new bangleData(result.getString("product_id"),
+                        result.getString("category"),
+                        result.getString("weight"),
+                        result.getDouble("net_weight"),
+                        result.getString("length"),
+                        result.getString("karat"),
+                        result.getDouble("gold_rate"),
+                        result.getString("supplier"),
+                        result.getString("status"),
+                        result.getString("image"),
+                        result.getDate("date"));
+
+                bangleList.add(baD);
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        return bangleList;
+    }
+
+    private ObservableList<bangleData> addBangleList;
+
+    public void addBangleShowListData() {
+        addBangleList = addBangleListData();
+
+        addBa_col_productID.setCellValueFactory(new PropertyValueFactory<>("productId"));
+        addBa_col_category.setCellValueFactory(new PropertyValueFactory<>("category"));
+        addBa_col_weight.setCellValueFactory(new PropertyValueFactory<>("weight"));
+        addBa_col_netWeight.setCellValueFactory(new PropertyValueFactory<>("net_weight"));
+        addBa_col_length.setCellValueFactory(new PropertyValueFactory<>("length"));
+        addBa_col_karat.setCellValueFactory(new PropertyValueFactory<>("karat"));
+        addBa_col_goldRate.setCellValueFactory(new PropertyValueFactory<>("gold_rate"));
+        addBa_col_supplier.setCellValueFactory(new PropertyValueFactory<>("supplier"));
+        addBa_col_status.setCellValueFactory(new PropertyValueFactory<>("status"));
+
+        // Set custom cell factories to format double values to two decimal places
+        addBa_col_netWeight.setCellFactory(getDoubleCellFactory());
+        addBa_col_goldRate.setCellFactory(getDoubleCellFactory());
+
+        addBa_tableView.setItems(addBangleList);
+    }
+
+    public void addBangleSelect() {
+        bangleData baD = addBa_tableView.getSelectionModel().getSelectedItem();
+        int num = addBa_tableView.getSelectionModel().getSelectedIndex();
+
+        if ((num - 1) < -1) {
+            return;
+        }
+
+        addBa_id.setText(String.valueOf(baD.getProductId()));
+
+        if (baD.getImage() != null && !baD.getImage().isEmpty()) {
+            String uri = "file:" + baD.getImage();
+            baImage = new Image(uri, 90, 100, false, true);
+            addBa_img.setImage(baImage);
+            getData.path = baD.getImage();
+        } else {
+            addBa_img.setImage(null);
+        }
+    }
+
+    private boolean isBangleIdExist(String productId) {
+        String sql = "SELECT COUNT(*) FROM bangle_details WHERE product_id = ?";
+        connect = connectDb();
+        try {
+            prepare = connect.prepareStatement(sql);
+            prepare.setString(1, productId);
+            result = prepare.executeQuery();
+            if (result.next()) {
+                int count = result.getInt(1);
+                return count > 0;
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        return false;
+    }
+
+    private boolean isBangleIdValid(String productId) {
+        // Check if productId starts with 'G' and has exactly 4 digits
+        return productId.matches("^G\\d{4}$");
+    }
+
+    // Method to handle bangle data
+    private void handleBangleData(bangleData bangleDetails, double price, double returnValue) {
+        double minPrice = bangleDetails.getGold_rate() * bangleDetails.getNet_weight() / 8;
+
+        if (price < minPrice) {
+            // Show alert with OK and Continue Anyway options
+            Alert alert = new Alert(Alert.AlertType.CONFIRMATION);
+            alert.setTitle("Error Message");
+            alert.setHeaderText(null);
+            alert.setContentText("Sales price must be greater than " + minPrice);
+
+            ButtonType okButton = new ButtonType("OK", ButtonBar.ButtonData.OK_DONE);
+            ButtonType continueButton = new ButtonType("Continue Anyway", ButtonBar.ButtonData.OTHER);
+            alert.getButtonTypes().setAll(okButton, continueButton);
+
+            Optional<ButtonType> result = alert.showAndWait();
+            if (result.isPresent() && result.get() == continueButton) {
+                boolean passcodeVerified = verifyPasscode();
+                if (!passcodeVerified) {
+                    showAlert(Alert.AlertType.ERROR, "Error Message", "Invalid passcode");
+                    return;
+                }
+            } else {
+                return;
+            }
+        }
+
+        if (returnValue > price) {
+            showAlert(Alert.AlertType.ERROR, "Error Message", "Invalid Exchange Value!");
+            return;
+        }
+
+        customerId();  // Ensure customer ID is set
+
+        salesData newSalesData = new salesData(
+                customerid,
+                bangleDetails.getProductId(),
+                bangleDetails.getCategory(),
+                bangleDetails.getWeight(),
+                bangleDetails.getNet_weight(),
+                bangleDetails.getLength(),
+                bangleDetails.getKarat(),
+                bangleDetails.getGold_rate(),
+                price,
+                returnValue,
+                new java.sql.Date(new Date().getTime())
+        );
+
+        sales_tableView.getItems().add(newSalesData);
+        clearSalesInputFields();
+        updateSalesTotal();
+    }
+
     //******************************************************************************************************************
 
     private void setComboBoxValue(ComboBox<String> comboBox, String value) {
@@ -5384,6 +5890,12 @@ public class dashboardController implements Initializable {
             paBtn.setStyle("-fx-background-color:transparent");
             neBtn.setStyle("-fx-background-color:transparent");
             baBtn.setStyle("-fx-background-color:linear-gradient(to bottom ,#004cc5, #011b4a);");
+
+            addBangleShowListData();
+            addBaListCategory();
+            addBaListKarat();
+            addBaListStatus();
+            addBangleSearch();
 
         } else if (event.getSource() == salesBtn) {
             home_form.setVisible(false);
