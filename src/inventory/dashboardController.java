@@ -213,7 +213,9 @@ public class dashboardController implements Initializable {
     @FXML
     private Button sales_payBtn, sales_receiptBtn, sales_soldBtn, sales_addBtn, sales_removeBtn, sales_stockBtn;
     @FXML
-    private Label home_sales,home_income,home_stock,gold_rate;
+    private Label home_sales,home_income,gold_rate;
+    @FXML
+    private Label ch_stock,br_stock;
 
     @FXML
     private Label dateTimeLabel;
@@ -316,7 +318,8 @@ public class dashboardController implements Initializable {
         // Display today's total sales count, total payable amount, and total stock count
         displayTodaySales();
         displayTodayIncome();
-        displayTotalStock();
+        displayChStock();
+        displayBrStock();
         displayIncomeChart();
         displaySalesChart();
 
@@ -460,15 +463,48 @@ public class dashboardController implements Initializable {
         return totalIncome;
     }
 
-    private void displayTotalStock() {
-        int totalStock = countTotalStock();
-        home_stock.setText(String.valueOf(totalStock));
+    private void displayChStock() {
+        int totalStock = countChainStock();
+        ch_stock.setText(String.valueOf(totalStock));
     }
 
-    private int countTotalStock() {
+    private int countChainStock() {
         int totalStock = 0;
 
         String query = "SELECT COUNT(*) AS total_stock FROM chain_details";
+
+        connect = connectDb();
+        try (PreparedStatement pstmt = connect.prepareStatement(query)) {
+            // Execute the query and get the result
+            result = pstmt.executeQuery();
+            if (result.next()) {
+                totalStock = result.getInt("total_stock");
+            }
+
+        } catch (SQLException e) {
+            e.printStackTrace();
+        } finally {
+            try {
+                if (result != null) result.close();
+                if (prepare != null) prepare.close();
+                if (connect != null) connect.close();
+            } catch (SQLException e) {
+                e.printStackTrace();
+            }
+        }
+
+        return totalStock;
+    }
+
+    private void displayBrStock() {
+        int totalStock = countBrStock();
+        br_stock.setText(String.valueOf(totalStock));
+    }
+
+    private int countBrStock() {
+        int totalStock = 0;
+
+        String query = "SELECT COUNT(*) AS total_stock FROM bracelet_details";
 
         connect = connectDb();
         try (PreparedStatement pstmt = connect.prepareStatement(query)) {
@@ -586,6 +622,7 @@ public class dashboardController implements Initializable {
                         result.getString("length"),
                         result.getString("karat"),
                         result.getDouble("gold_rate"),
+                        result.getString("status"),
                         result.getDouble("price"),
                         result.getDouble("return_value"),
                         result.getDate("date")
@@ -753,7 +790,7 @@ public class dashboardController implements Initializable {
         }
 
         connect = connectDb();
-        String sql = "INSERT INTO sales (customer_id, product_id, category, weight, net_weight, length, karat, gold_rate, price, return_value, date) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)";
+        String sql = "INSERT INTO sales (customer_id, product_id, category, weight, net_weight, length, karat, gold_rate, status, price, return_value, date) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)";
 
         try {
             prepare = connect.prepareStatement(sql);
@@ -767,9 +804,10 @@ public class dashboardController implements Initializable {
                 prepare.setString(6, sale.getLength());
                 prepare.setString(7, sale.getKarat());
                 prepare.setDouble(8, sale.getGold_rate());
-                prepare.setDouble(9, sale.getPrice());
-                prepare.setDouble(10, sale.getReturn_value());
-                prepare.setDate(11, sale.getDate());
+                prepare.setString(9, sale.getStatus());
+                prepare.setDouble(10, sale.getPrice());
+                prepare.setDouble(11, sale.getReturn_value());
+                prepare.setDate(12, sale.getDate());
                 prepare.addBatch();
             }
 
@@ -1710,6 +1748,7 @@ public class dashboardController implements Initializable {
                 chainDetails.getLength(),
                 chainDetails.getKarat(),
                 chainDetails.getGold_rate(),
+                chainDetails.getStatus(),
                 price,
                 returnValue,
                 new java.sql.Date(new Date().getTime())
@@ -2307,6 +2346,7 @@ public class dashboardController implements Initializable {
                 braceletDetails.getLength(),
                 braceletDetails.getKarat(),
                 braceletDetails.getGold_rate(),
+                braceletDetails.getStatus(),
                 price,
                 returnValue,
                 new java.sql.Date(new Date().getTime())
@@ -2873,6 +2913,7 @@ public class dashboardController implements Initializable {
                 ringDetails.getLength(),
                 ringDetails.getKarat(),
                 ringDetails.getGold_rate(),
+                ringDetails.getStatus(),
                 price,
                 returnValue,
                 new java.sql.Date(new Date().getTime())
@@ -3436,6 +3477,7 @@ public class dashboardController implements Initializable {
                 earringDetails.getLength(),
                 earringDetails.getKarat(),
                 earringDetails.getGold_rate(),
+                earringDetails.getStatus(),
                 price,
                 returnValue,
                 new java.sql.Date(new Date().getTime())
@@ -4000,6 +4042,7 @@ public class dashboardController implements Initializable {
                 pendantDetails.getLength(),
                 pendantDetails.getKarat(),
                 pendantDetails.getGold_rate(),
+                pendantDetails.getStatus(),
                 price,
                 returnValue,
                 new java.sql.Date(new Date().getTime())
@@ -4564,6 +4607,7 @@ public class dashboardController implements Initializable {
                 suraDetails.getLength(),
                 suraDetails.getKarat(),
                 suraDetails.getGold_rate(),
+                suraDetails.getStatus(),
                 price,
                 returnValue,
                 new java.sql.Date(new Date().getTime())
@@ -5128,6 +5172,7 @@ public class dashboardController implements Initializable {
                 panchaDetails.getLength(),
                 panchaDetails.getKarat(),
                 panchaDetails.getGold_rate(),
+                panchaDetails.getStatus(),
                 price,
                 returnValue,
                 new java.sql.Date(new Date().getTime())
@@ -5692,6 +5737,7 @@ public class dashboardController implements Initializable {
                 necklaceDetails.getLength(),
                 necklaceDetails.getKarat(),
                 necklaceDetails.getGold_rate(),
+                necklaceDetails.getStatus(),
                 price,
                 returnValue,
                 new java.sql.Date(new Date().getTime())
@@ -6256,6 +6302,7 @@ public class dashboardController implements Initializable {
                 bangleDetails.getLength(),
                 bangleDetails.getKarat(),
                 bangleDetails.getGold_rate(),
+                bangleDetails.getStatus(),
                 price,
                 returnValue,
                 new java.sql.Date(new Date().getTime())
@@ -6299,6 +6346,7 @@ public class dashboardController implements Initializable {
                         result.getString("length"),
                         result.getString("karat"),
                         result.getDouble("gold_rate"),
+                        result.getString("status"),
                         result.getDouble("price"),
                         result.getDouble("return_value"),
                         result.getDate("date"));
@@ -6364,7 +6412,8 @@ public class dashboardController implements Initializable {
 
             displayTodaySales();
             displayTodayIncome();
-            displayTotalStock();
+            displayChStock();
+            displayBrStock();
 
         } else if (event.getSource() == chainBtn) {
             home_form.setVisible(false);

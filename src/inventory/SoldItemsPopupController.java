@@ -20,7 +20,7 @@ public class SoldItemsPopupController implements Initializable {
     @FXML
     private TableView<salesData> soldItemsTableView;
     @FXML
-    private TableColumn<salesData, String> soldItems_col_productID, soldItems_col_category, soldItems_col_weight, soldItems_col_length, soldItems_col_karat;
+    private TableColumn<salesData, String> soldItems_col_productID, soldItems_col_category, soldItems_col_weight, soldItems_col_length, soldItems_col_status;
     @FXML
     private TableColumn<salesData, Double> soldItems_col_netWeight, soldItems_col_goldRate, soldItems_col_price, soldItems_col_returnValue;
     @FXML
@@ -46,8 +46,9 @@ public class SoldItemsPopupController implements Initializable {
         soldItems_col_weight.setCellValueFactory(new PropertyValueFactory<>("weight"));
         soldItems_col_netWeight.setCellValueFactory(new PropertyValueFactory<>("net_weight"));
         soldItems_col_length.setCellValueFactory(new PropertyValueFactory<>("length"));
-        soldItems_col_karat.setCellValueFactory(new PropertyValueFactory<>("karat"));
+        //soldItems_col_karat.setCellValueFactory(new PropertyValueFactory<>("karat"));
         soldItems_col_goldRate.setCellValueFactory(new PropertyValueFactory<>("gold_rate"));
+        soldItems_col_status.setCellValueFactory(new PropertyValueFactory<>("status"));
         soldItems_col_price.setCellValueFactory(new PropertyValueFactory<>("price"));
         soldItems_col_returnValue.setCellValueFactory(new PropertyValueFactory<>("return_value"));
         soldItems_col_customerID.setCellValueFactory(new PropertyValueFactory<>("customer_id"));
@@ -75,7 +76,7 @@ public class SoldItemsPopupController implements Initializable {
                     return true;
                 } else if (String.valueOf(salesData.getNet_weight()).contains(lowerCaseFilter)) {
                     return true;
-                } else if (salesData.getKarat().toLowerCase().contains(lowerCaseFilter)) {
+                } else if (salesData.getStatus().toLowerCase().contains(lowerCaseFilter)) {
                     return true;
                 } else if (String.valueOf(salesData.getGold_rate()).contains(lowerCaseFilter)) {
                     return true;

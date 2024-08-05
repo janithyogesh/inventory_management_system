@@ -18,8 +18,8 @@
                 <TableColumn fx:id="soldItems_col_weight" text="Weight" />
                 <TableColumn fx:id="soldItems_col_netWeight" text="Net Weight" />
                 <TableColumn fx:id="soldItems_col_length" text="Length" />
-                <TableColumn fx:id="soldItems_col_karat" text="Karat" />
                 <TableColumn fx:id="soldItems_col_goldRate" text="Gold Rate" />
+            <TableColumn fx:id="soldItems_col_status" text="Status" />
                 <TableColumn fx:id="soldItems_col_price" text="Price" />
                 <TableColumn fx:id="soldItems_col_returnValue" text="Return Value" />
                 <TableColumn fx:id="soldItems_col_date" text="Date" />

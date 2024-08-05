@@ -255,19 +255,29 @@
                                                         </BarChart>
                                                     </children>
                                                 </AnchorPane>
-                                                <AnchorPane fx:id="home_availableStock" layoutX="656.0" layoutY="14.0" prefHeight="106.0" prefWidth="253.0" styleClass="card" stylesheets="@dashboardDesign.css">
+                                                <AnchorPane fx:id="home_availableStock" layoutX="656.0" layoutY="14.0" prefHeight="382.0" prefWidth="254.0" styleClass="card" stylesheets="@dashboardDesign.css">
                                                     <children>
                                                         <FontAwesomeIcon fill="WHITE" glyphName="CUBE" layoutX="8.0" layoutY="61.0" size="4em" />
-                                                        <Label layoutX="140.0" layoutY="72.0" text="Available Stock" textFill="WHITE">
+                                                        <Label layoutX="14.0" layoutY="82.0" text="Available Stock" textFill="WHITE">
                                                             <font>
                                                                 <Font name="Tahoma" size="15.0" />
                                                             </font>
                                                         </Label>
-                                                        <Label fx:id="home_stock" alignment="CENTER" layoutX="142.0" layoutY="20.0" prefHeight="22.0" prefWidth="97.0" text="0" textFill="WHITE">
+                                                        <Label fx:id="ch_stock" alignment="CENTER" layoutX="180.0" layoutY="80.0" prefHeight="22.0" prefWidth="59.0" text="0" textFill="WHITE">
                                                             <font>
                                                                 <Font name="Berlin Sans FB" size="20.0" />
                                                             </font>
                                                         </Label>
+                                          <Label layoutX="14.0" layoutY="104.0" text="Available Stock" textFill="WHITE">
+                                             <font>
+                                                <Font name="Tahoma" size="15.0" />
+                                             </font>
+                                          </Label>
+                                          <Label fx:id="br_stock" alignment="CENTER" layoutX="180.0" layoutY="102.0" prefHeight="22.0" prefWidth="59.0" text="0" textFill="WHITE">
+                                             <font>
+                                                <Font name="Berlin Sans FB" size="20.0" />
+                                             </font>
+                                          </Label>
                                                     </children>
                                                 </AnchorPane>
                                             </children>

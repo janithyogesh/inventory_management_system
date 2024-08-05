@@ -11,11 +11,12 @@ public class salesData {
     private String length;
     private String karat;
     private Double gold_rate;
+    private String status;
     private Double price;
     private Double return_value;
     private Date date;
 
-    public salesData(Integer customer_id, String product_id, String category, String weight, Double net_weight, String length, String karat, Double gold_rate, Double price, Double return_value, Date date) {
+    public salesData(Integer customer_id, String product_id, String category, String weight, Double net_weight, String length, String karat, Double gold_rate,String status, Double price, Double return_value, Date date) {
         this.customer_id = customer_id;
         this.product_id = product_id;
         this.category = category;
@@ -24,6 +25,7 @@ public class salesData {
         this.length = length;
         this.karat = karat;
         this.gold_rate = gold_rate;
+        this.status = status;
         this.price = price;
         this.return_value = return_value;
         this.date = date;
@@ -59,6 +61,10 @@ public class salesData {
 
     public Double getGold_rate() {
         return gold_rate;
+    }
+
+    public String getStatus() {
+        return status;
     }
 
     public Double getPrice() {
