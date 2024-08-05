@@ -723,6 +723,29 @@ public class dashboardController implements Initializable {
             return;
         }
 
+        // Display customer info dialog
+        Optional<CustomerInfo> customerInfoOpt = CustomerInfoDialog.showAndWait();
+        if (!customerInfoOpt.isPresent()) {
+            showAlert(Alert.AlertType.ERROR, "Error Message", "Customer information is required.");
+            return;
+        }
+        CustomerInfo customerInfo = customerInfoOpt.get();
+
+        // Validate customer information fields are not null
+        if (customerInfo.getName() == null || customerInfo.getName().isEmpty() ||
+                customerInfo.getTelephone() == null || customerInfo.getTelephone().isEmpty() ||
+                customerInfo.getAddress() == null || customerInfo.getAddress().isEmpty() ||
+                customerInfo.getPaymentMethod() == null || customerInfo.getPaymentMethod().isEmpty()) {
+            showAlert(Alert.AlertType.ERROR, "Error Message", "Customer information fields cannot be empty.");
+            return;
+        }
+
+        // Validate customer telephone number
+        if (!customerInfo.getTelephone().matches("\\d{10}")) {
+            showAlert(Alert.AlertType.ERROR, "Error Message", "Invalid telephone number.");
+            return;
+        }
+
         // Verify passcode before proceeding
         if (!verifyPaymentPasscode()) {
             showAlert(Alert.AlertType.ERROR, "Error Message", "Invalid passcode. Payment canceled.");
@@ -758,7 +781,7 @@ public class dashboardController implements Initializable {
             }
 
             // Insert into sales_receipt table
-            String insertReceiptSQL = "INSERT INTO sales_receipt (customer_id, total, exchange, payable, amount, balance, date, time) VALUES (?, ?, ?, ?, ?, ?, ?, ?)";
+            String insertReceiptSQL = "INSERT INTO sales_receipt (customer_id, total, exchange, payable, amount, balance, date, time, customer_name, customer_tel, customer_address, payment_method) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)";
             prepare = connect.prepareStatement(insertReceiptSQL);
 
             double balance = amount - payable;
@@ -772,6 +795,10 @@ public class dashboardController implements Initializable {
             prepare.setDouble(6, balance);
             prepare.setDate(7, new java.sql.Date(new Date().getTime()));
             prepare.setTimestamp(8, currentTimestamp);
+            prepare.setString(9, customerInfo.getName());
+            prepare.setString(10, customerInfo.getTelephone());
+            prepare.setString(11, customerInfo.getAddress());
+            prepare.setString(12, customerInfo.getPaymentMethod());
             prepare.executeUpdate();
 
             sales_tableView.getItems().clear();
@@ -787,6 +814,7 @@ public class dashboardController implements Initializable {
             e.printStackTrace();
         }
     }
+
 
     //*******************************REMOVING DATA AFTER THE PAYMENT****************************************************
 

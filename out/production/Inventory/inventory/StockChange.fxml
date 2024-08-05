@@ -14,7 +14,7 @@
     <padding>
         <Insets bottom="10" left="10" right="10" top="10" />
     </padding>
-    <Label prefHeight="23.0" prefWidth="198.0" text="Change Product Status" textAlignment="CENTER">
+    <Label alignment="CENTER" prefHeight="23.0" prefWidth="281.0" text="Change Product Status" textAlignment="CENTER">
       <font>
          <Font name="Tahoma" size="18.0" />
       </font></Label>
