@@ -20,6 +20,7 @@ import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.AnchorPane;
+import javafx.scene.layout.Pane;
 import javafx.scene.layout.StackPane;
 import javafx.scene.layout.VBox;
 import javafx.stage.*;
@@ -33,6 +34,7 @@ import net.sf.jasperreports.engine.xml.JRXmlLoader;
 import net.sf.jasperreports.view.JasperViewer;
 
 import java.io.File;
+import java.io.IOException;
 import java.math.BigDecimal;
 import java.net.URL;
 import java.sql.*;
@@ -48,7 +50,7 @@ import static inventory.database.connectDb;
 public class dashboardController implements Initializable {
 
     @FXML
-    private Button addChain_addBtn, addChain_deleteBtn, addChain_importBtn, addChain_resetBtn, addChain_updateBtn, addCt_chain;
+    private Button addChain_addBtn, addChain_deleteBtn, addChain_importBtn, addChain_resetBtn, addChain_updateBtn, ch_selection, br_selection;
     @FXML
     private Button addBr_addBtn, addBr_deleteBtn, addBr_importBtn, addBr_resetBtn, addBr_updateBtn;
     @FXML
@@ -228,9 +230,52 @@ public class dashboardController implements Initializable {
 
     private int customerid;
 
+    public static ObservableList<String> listChCategory = FXCollections.observableArrayList();
+    public static ObservableList<String> listChWeight = FXCollections.observableArrayList();
+    public static ObservableList<String> listChLength = FXCollections.observableArrayList();
+
+    public static ObservableList<String> listBrCategory = FXCollections.observableArrayList();
+    public static ObservableList<String> listBrWeight = FXCollections.observableArrayList();
+    public static ObservableList<String> listBrLength = FXCollections.observableArrayList();
+
+    public static ObservableList<String> listRiCategory = FXCollections.observableArrayList();
+
+    private List<String> fetchTableData(String tableName, String columnName) {
+        List<String> list = new ArrayList<>();
+        String sql = "SELECT DISTINCT " + columnName + " FROM " + tableName;
+        try (Connection connect = connectDb(); PreparedStatement prepare = connect.prepareStatement(sql); ResultSet result = prepare.executeQuery()) {
+            while (result.next()) {
+                list.add(result.getString(columnName));
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        return list;
+    }
 
     @Override
     public void initialize(URL url, ResourceBundle resourceBundle) {
+
+        listChCategory.setAll(fetchTableData("ch_category", "category_name"));
+        listChWeight.setAll(fetchTableData("ch_weight", "weight_name"));
+        listChLength.setAll(fetchTableData("ch_length", "length_name"));
+
+        listBrCategory.setAll(fetchTableData("br_category", "category_name"));
+        listBrWeight.setAll(fetchTableData("br_weight", "weight_name"));
+        listBrLength.setAll(fetchTableData("br_length", "length_name"));
+
+        listRiCategory.setAll(fetchTableData("ri_category", "category_name"));
+
+        addChain_category.setItems(listChCategory);
+        addChain_weight.setItems(listChWeight);
+        addChain_length.setItems(listChLength);
+
+        addBr_category.setItems(listBrCategory);
+        addBr_weight.setItems(listBrWeight);
+        addBr_length.setItems(listBrLength);
+
+        addRi_category.setItems(listRiCategory);
+
         displayUsername();
         defaultNav();
         salesShowListData();
@@ -246,9 +291,6 @@ public class dashboardController implements Initializable {
         displaySalesChart();
 
         addChainShowListData();
-        addChainListCategory();
-        addChainListWeight();
-        addChainListLength();
         addChainListKarat();
         addChainListStatus();
         addChainSearch();
@@ -490,6 +532,7 @@ public class dashboardController implements Initializable {
             stage.setScene(new Scene(root));
             stage.setTitle("Sold Items");
             stage.initModality(Modality.APPLICATION_MODAL);
+            stage.setResizable(false);
             stage.showAndWait();
         } catch (Exception e) {
             e.printStackTrace();
@@ -1010,6 +1053,7 @@ public class dashboardController implements Initializable {
             stage.setScene(new Scene(root));
             stage.setTitle("Stock Changing");
             stage.initModality(Modality.APPLICATION_MODAL);
+            stage.setResizable(false);
             stage.showAndWait();
         } catch (Exception e) {
             e.printStackTrace();
@@ -1019,10 +1063,42 @@ public class dashboardController implements Initializable {
     private String[] listKarat = {"24K", "23K", "22K", "21K", "20K", "19K", "18K"};
     private String[] listStatus = {"Stock", "Showroom"};
     //*************************************************CHAIN RELATED****************************************************
+    @FXML
+    private void handleEditChCategories() {
+        if (verifyPasscode()) {
+            try {
+                FXMLLoader loader = new FXMLLoader(getClass().getResource("ChainCategoryEditor.fxml"));
+                Pane pane = loader.load();
 
-    private String[] listCategory = {"Box Chain", "Double Box", "Dragon Box", "Bismark Chain", "KDM Chain", "Double Albert", "Albert Chain", "Lotus Chain", "Lazer Chain", "Link Chain", "Rope Chain", "Sapna Chain", "Ball Chain", "Diamond Chain", "Lee Chain", "SP Chain", "18K Chain"};
-    private String[] listWeight = {"40g", "32g", "24g", "20g", "16g", "14g", "12g", "10g", "8g", "6g", "5g", "4.5g", "4g", "3.5g", "3g", "2.5g", "2g", "1.5g", "1g"};
-    private String[] listLength = {"24 in", "22 in", "20 in", "18 in", "16 in", "14 in"};
+                ChainCategoryEditorController controller = loader.getController();
+
+                Stage stage = new Stage();
+                stage.setTitle("Edit Chain Categories, Weights, and Lengths");
+                stage.initModality(Modality.APPLICATION_MODAL);
+                stage.setScene(new Scene(pane));
+                stage.setResizable(false);
+                stage.showAndWait();
+
+                // Update lists after the pop-up is closed
+                listChCategory.setAll(controller.getCategories());
+                listChWeight.setAll(controller.getWeights());
+                listChLength.setAll(controller.getLengths());
+                addChain_category.setItems(listChCategory);
+                addChain_weight.setItems(listChWeight);
+                addChain_length.setItems(listChLength);
+
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
+        } else {
+            Alert alert = new Alert(Alert.AlertType.ERROR);
+            alert.setTitle("Incorrect Passcode");
+            alert.setHeaderText(null);
+            alert.setContentText("The passcode you entered is incorrect.");
+            alert.showAndWait();
+        }
+    }
+
 
     // Method to get chain details from the database
     private chainData getChainDetails(String productId) {
@@ -1350,30 +1426,30 @@ public class dashboardController implements Initializable {
     public void addChainListCategory() {
         List<String> listC = new ArrayList<>();
 
-        for(String data:listCategory){
+        for(String data:listChCategory){
             listC.add(data);
         }
-        ObservableList<String> listData = FXCollections.observableArrayList(listCategory);
+        ObservableList<String> listData = FXCollections.observableArrayList(listChCategory);
         addChain_category.setItems(listData);
     }
 
     public void addChainListWeight() {
         List<String> listW = new ArrayList<>();
 
-        for(String data:listWeight){
+        for(String data:listChWeight){
             listW.add(data);
         }
-        ObservableList<String> listData = FXCollections.observableArrayList(listWeight);
+        ObservableList<String> listData = FXCollections.observableArrayList(listChWeight);
         addChain_weight.setItems(listData);
     }
 
     public void addChainListLength() {
         List<String> listL = new ArrayList<>();
 
-        for(String data:listLength){
+        for(String data:listChLength){
             listL.add(data);
         }
-        ObservableList<String> listData = FXCollections.observableArrayList(listLength);
+        ObservableList<String> listData = FXCollections.observableArrayList(listChLength);
         addChain_length.setItems(listData);
     }
 
@@ -1586,9 +1662,45 @@ public class dashboardController implements Initializable {
 
     // **************************************BRACELET RELATED***********************************************************
 
-    private String[] listBrCategory = {"Price","Lazer"};
-    private String[] listBrWeight = {"40g", "32g"};
-    private String[] listBrLength = {"24 in", "22 in"};
+//    private String[] listBrCategory = {"Price","Lazer"};
+//    private String[] listBrWeight = {"40g", "32g"};
+//    private String[] listBrLength = {"24 in", "22 in"};
+
+    @FXML
+    private void handleEditBrCategories() {
+        if (verifyPasscode()) {
+            try {
+                FXMLLoader loader = new FXMLLoader(getClass().getResource("BrCategoryEditor.fxml"));
+                Pane pane = loader.load();
+
+                BrCategoryEditorController controller = loader.getController();
+
+                Stage stage = new Stage();
+                stage.setTitle("Edit Bracelet Categories, Weights, and Lengths");
+                stage.initModality(Modality.APPLICATION_MODAL);
+                stage.setScene(new Scene(pane));
+                stage.setResizable(false);
+                stage.showAndWait();
+
+                // Update lists after the pop-up is closed
+                listBrCategory.setAll(controller.getCategories());
+                listBrWeight.setAll(controller.getWeights());
+                listBrLength.setAll(controller.getLengths());
+                addBr_category.setItems(listBrCategory);
+                addBr_weight.setItems(listBrWeight);
+                addBr_length.setItems(listBrLength);
+
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
+        } else {
+            Alert alert = new Alert(Alert.AlertType.ERROR);
+            alert.setTitle("Incorrect Passcode");
+            alert.setHeaderText(null);
+            alert.setContentText("The passcode you entered is incorrect.");
+            alert.showAndWait();
+        }
+    }
 
     // Method to get chain details from the database
     private braceletData getBraceletDetails(String productId) {
@@ -2151,8 +2263,38 @@ public class dashboardController implements Initializable {
     }
 
     // **************************************RING RELATED***********************************************************
+    @FXML
+    private void handleEditRiCategories() {
+        if (verifyPasscode()) {
+            try {
+                FXMLLoader loader = new FXMLLoader(getClass().getResource("RingCategoryEditor.fxml"));
+                Pane pane = loader.load();
 
-    private String[] listRiCategory = {"Stone Ring","Wedding Ring"};
+                RingCategoryEditorController controller = loader.getController();
+
+                Stage stage = new Stage();
+                stage.setTitle("Edit Chain Categories, Weights, and Lengths");
+                stage.initModality(Modality.APPLICATION_MODAL);
+                stage.setScene(new Scene(pane));
+                stage.setResizable(false);
+                stage.showAndWait();
+
+                // Update lists after the pop-up is closed
+                listRiCategory.setAll(controller.getCategories());
+                addRi_category.setItems(listRiCategory);
+
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
+        } else {
+            Alert alert = new Alert(Alert.AlertType.ERROR);
+            alert.setTitle("Incorrect Passcode");
+            alert.setHeaderText(null);
+            alert.setContentText("The passcode you entered is incorrect.");
+            alert.showAndWait();
+        }
+    }
+
 
     // Method to get ring details from the database
     private ringData getRingDetails(String productId) {
@@ -6447,7 +6589,7 @@ public class dashboardController implements Initializable {
         });
 
         Optional<String> result = dialog.showAndWait();
-        return result.isPresent() && "1212".equals(result.get()); // You can change this passcode as needed
+        return result.isPresent() && "1212".equals(result.get());
     }
     private boolean isValidDecimal(String value) {
         try {

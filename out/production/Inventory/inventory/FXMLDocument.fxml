@@ -15,17 +15,17 @@
             <children>
                 <AnchorPane prefHeight="406.0" prefWidth="300.0" styleClass="left-form" stylesheets="@loginDesign.css">
                     <children>
-                        <Label layoutX="113.0" layoutY="219.0" styleClass="my-label" stylesheets="@loginDesign.css" text="Jewellery" textFill="WHITE">
+                        <Label layoutX="112.0" layoutY="218.0" styleClass="my-label" stylesheets="@loginDesign.css" text="Jewellery" textAlignment="CENTER" textFill="WHITE">
                             <font>
                                 <Font name="Tahoma" size="18.0" />
                             </font>
                         </Label>
-                        <FontAwesomeIcon fill="WHITE" glyphName="DATABASE" layoutX="104.0" layoutY="180.0" size="8em" />
-                  <Label layoutX="25.0" layoutY="253.0" styleClass="my-label" stylesheets="@loginDesign.css" text="Inventory Management System" textFill="WHITE">
+                  <Label layoutX="24.0" layoutY="256.0" styleClass="my-label" stylesheets="@loginDesign.css" text="Inventory Management System" textAlignment="CENTER" textFill="WHITE">
                      <font>
                         <Font name="Tahoma" size="18.0" />
                      </font>
                   </Label>
+                  <FontAwesomeIcon fill="WHITE" glyphName="DATABASE" layoutX="112.0" layoutY="168.0" size="8em" />
                     </children>
                 </AnchorPane>
                 <AnchorPane layoutX="300.0" prefHeight="406.0" prefWidth="300.0" styleClass="right-form" stylesheets="@loginDesign.css">

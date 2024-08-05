@@ -153,7 +153,7 @@
                     <center>
                         <AnchorPane prefHeight="200.0" prefWidth="200.0" BorderPane.alignment="CENTER">
                             <children>
-                                <AnchorPane fx:id="home_form" layoutX="56.0" layoutY="76.0" prefHeight="604.8" prefWidth="684.8" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
+                                <AnchorPane fx:id="home_form" layoutX="56.0" layoutY="76.0" prefHeight="604.8" prefWidth="684.8" visible="false" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
                                     <children>
                                         <AnchorPane layoutX="14.0" layoutY="14.0" prefHeight="132.0" prefWidth="959.0" stylesheets="@dashboardDesign.css">
                                             <styleClass>
@@ -437,6 +437,7 @@
                                                 </TableView>
                                                 <TextField fx:id="addChain_search" layoutX="14.0" layoutY="28.0" onAction="#addChainSearch" prefHeight="35.0" prefWidth="232.0" promptText="Search" styleClass="search" stylesheets="@dashboardDesign.css" />
                                                 <FontAwesomeIcon fill="#818181" glyphName="SEARCH" layoutX="216.0" layoutY="52.0" size="1.5em" />
+                                    <Button fx:id="ch_selection" layoutX="570.0" layoutY="33.0" mnemonicParsing="false" onAction="#handleEditChCategories" prefHeight="26.0" prefWidth="144.0" styleClass="pay-btn" stylesheets="@dashboardDesign.css" text="Change Selections" />
                                             </children>
                                         </AnchorPane>
                                     </children>
@@ -540,11 +541,12 @@
                                     </TableView>
                                     <TextField fx:id="addBr_search" layoutX="14.0" layoutY="28.0" onAction="#addBraceletSearch" prefHeight="35.0" prefWidth="232.0" promptText="Search" styleClass="search" stylesheets="@dashboardDesign.css" />
                                     <FontAwesomeIcon fill="#818181" glyphName="SEARCH" layoutX="216.0" layoutY="52.0" size="1.5em" />
+                                    <Button fx:id="br_selection" layoutX="570.0" layoutY="33.0" mnemonicParsing="false" onAction="#handleEditBrCategories" prefHeight="26.0" prefWidth="144.0" styleClass="pay-btn" stylesheets="@dashboardDesign.css" text="Change Selections" />
                                  </children>
                               </AnchorPane>
                            </children>
                         </AnchorPane>
-                        <AnchorPane fx:id="ri_form" layoutX="20.0" layoutY="20.0" prefHeight="604.8" prefWidth="684.8" visible="false" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
+                        <AnchorPane fx:id="ri_form" layoutX="20.0" layoutY="20.0" prefHeight="604.8" prefWidth="684.8" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
                            <children>
                               <AnchorPane layoutX="8.0" layoutY="7.0" prefHeight="591.0" prefWidth="214.0" stylesheets="@dashboardDesign.css">
                                  <styleClass>
@@ -631,6 +633,7 @@
                                     </TableView>
                                     <TextField fx:id="addRi_search" layoutX="14.0" layoutY="28.0" onAction="#addRingSearch" prefHeight="35.0" prefWidth="232.0" promptText="Search" styleClass="search" stylesheets="@dashboardDesign.css" />
                                     <FontAwesomeIcon fill="#818181" glyphName="SEARCH" layoutX="216.0" layoutY="52.0" size="1.5em" />
+                                    <Button fx:id="ri_selection" layoutX="570.0" layoutY="33.0" mnemonicParsing="false" onAction="#handleEditRiCategories" prefHeight="26.0" prefWidth="144.0" styleClass="pay-btn" stylesheets="@dashboardDesign.css" text="Change Selections" />
                                  </children>
                               </AnchorPane>
                            </children>
