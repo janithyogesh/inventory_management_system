@@ -7,13 +7,14 @@
 <?import javafx.scene.control.TextField?>
 <?import javafx.scene.layout.HBox?>
 <?import javafx.scene.layout.VBox?>
+<?import javafx.scene.shape.Line?>
 <?import javafx.scene.text.Font?>
 
 <VBox prefHeight="390.0" prefWidth="301.0" spacing="10" xmlns="http://javafx.com/javafx/22" xmlns:fx="http://javafx.com/fxml/1" fx:controller="inventory.StockChangeController">
     <padding>
         <Insets bottom="10" left="10" right="10" top="10" />
     </padding>
-    <Label prefHeight="23.0" prefWidth="198.0" text="Change Product Status" textAlignment="CENTER">
+    <Label alignment="CENTER" prefHeight="23.0" prefWidth="281.0" text="Change Product Status" textAlignment="CENTER">
       <font>
          <Font name="Tahoma" size="18.0" />
       </font></Label>
@@ -26,6 +27,7 @@
         <Button onAction="#handleRemoveSelectedProductId" prefHeight="26.0" prefWidth="134.0" styleClass="reset-btn" stylesheets="@dashboardDesign.css" text="Remove Selected" />
         <Button onAction="#handleClearAllProductIds" prefHeight="26.0" prefWidth="134.0" styleClass="delete-btn" stylesheets="@dashboardDesign.css" text="Clear All" />
     </HBox>
+   <Line endX="175.2929229736328" endY="0.5928871035575867" startX="-100.0" />
     <Button onAction="#handleUpdateStatus" prefHeight="26.0" prefWidth="278.0" styleClass="update-btn" stylesheets="@dashboardDesign.css" text="Update Status to Showroom" />
     <Label fx:id="statusLabel" text="" />
 </VBox>

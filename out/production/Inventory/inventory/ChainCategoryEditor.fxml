@@ -6,6 +6,7 @@
 <?import javafx.scene.control.TextField?>
 <?import javafx.scene.layout.HBox?>
 <?import javafx.scene.layout.VBox?>
+<?import javafx.scene.shape.Line?>
 
 <VBox alignment="CENTER" spacing="20" xmlns="http://javafx.com/javafx/22" xmlns:fx="http://javafx.com/fxml/1" fx:controller="inventory.ChainCategoryEditorController">
     <padding>
@@ -34,6 +35,7 @@
             <Button onAction="#handleRemoveLength" styleClass="delete-btn" stylesheets="@dashboardDesign.css" text="Remove Selected Length" />
         </VBox>
     </HBox>
+    <Line endX="100.0" startX="-526.4097900390625" startY="-1.421247124671936" />
     <!-- Apply Changes Button -->
     <Button onAction="#handleApplyChanges" styleClass="update-btn" stylesheets="@dashboardDesign.css" text="Apply Changes" />
 </VBox>

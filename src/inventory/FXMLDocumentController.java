@@ -1,7 +1,3 @@
-/*
- * Click nbfs://nbhost/SystemFileSystem/Templates/Licenses/license-default.txt to change this license
- * Click nbfs://nbhost/SystemFileSystem/Templates/javafx/FXML2.java to edit this template
- */
 package inventory;
 
 import java.net.URL;
@@ -11,7 +7,6 @@ import java.sql.ResultSet;
 import java.util.ResourceBundle;
 
 import de.jensd.fx.glyphs.fontawesome.FontAwesomeIcon;
-import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.fxml.Initializable;
@@ -24,7 +19,7 @@ import javafx.stage.Stage;
 import javafx.stage.StageStyle;
 
 /**
- * @author ASUS
+ * Author: ASUS
  */
 public class FXMLDocumentController implements Initializable {
 
@@ -42,7 +37,6 @@ public class FXMLDocumentController implements Initializable {
 
     @FXML
     private TextField username;
-
 
     //DATABASE TOOLS
     private Connection connect;
@@ -77,35 +71,18 @@ public class FXMLDocumentController implements Initializable {
                     alert.setTitle("Information Message");
                     alert.setHeaderText(null);
                     alert.setContentText("Successfully Login!");
-                    alert.showAndWait();
 
-                    // DESIGN DASHBOARD FORM
+                    // Add "Update Gold Rate" button
+                    ButtonType updateGoldRateButton = new ButtonType("Update Gold Rate", ButtonBar.ButtonData.OK_DONE);
+                    alert.getButtonTypes().add(updateGoldRateButton);
 
-                    // Set the username
-                    getData.username = username.getText();
-
-                    // HIDE THE LOGIN FORM
-                    loginBtn.getScene().getWindow().hide();
-
-                    // LINK TO THE NEW TAB
-                    Parent root = FXMLLoader.load(getClass().getResource("/inventory/dashbord.fxml"));
-                    Stage stage = new Stage();
-                    Scene scene = new Scene(root);
-
-                    root.setOnMousePressed((MouseEvent event) -> {
-                        x = event.getSceneX();
-                        y = event.getSceneY();
+                    alert.showAndWait().ifPresent(response -> {
+                        if (response == updateGoldRateButton) {
+                            showGoldRateDialog();
+                        } else {
+                            proceedToDashboard();
+                        }
                     });
-
-                    root.setOnMouseDragged((MouseEvent event) -> {
-                        stage.setX(event.getScreenX() - x);
-                        stage.setY(event.getScreenY() - y);
-                    });
-
-                    stage.initStyle(StageStyle.TRANSPARENT);
-
-                    stage.setScene(scene);
-                    stage.show();
 
                 } else {
                     // IF WRONG THEN ERROR MESSAGE
@@ -121,13 +98,103 @@ public class FXMLDocumentController implements Initializable {
         }
     }
 
+    private void proceedToDashboard() {
+        try {
+            // Set the username
+            getData.username = username.getText();
+
+            // HIDE THE LOGIN FORM
+            loginBtn.getScene().getWindow().hide();
+
+            // LINK TO THE NEW TAB
+            FXMLLoader loader = new FXMLLoader(getClass().getResource("/inventory/dashbord.fxml"));
+            Parent root = loader.load();
+
+            dashboardController dashboardController = loader.getController();
+            dashboardController.updateGoldRateLabel(); // Update the gold rate label
+
+            Stage stage = new Stage();
+            Scene scene = new Scene(root);
+
+            root.setOnMousePressed((MouseEvent event) -> {
+                x = event.getSceneX();
+                y = event.getSceneY();
+            });
+
+            root.setOnMouseDragged((MouseEvent event) -> {
+                stage.setX(event.getScreenX() - x);
+                stage.setY(event.getScreenY() - y);
+            });
+
+            stage.initStyle(StageStyle.TRANSPARENT);
+            stage.setScene(scene);
+            stage.show();
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+    }
+
+    private void showGoldRateDialog() {
+        TextInputDialog dialog = new TextInputDialog();
+        dialog.setTitle("Update Gold Rate");
+        dialog.setHeaderText("Enter Today's Gold Rate");
+        dialog.setContentText("Gold Rate:");
+
+        dialog.showAndWait().ifPresent(rate -> {
+            try {
+                int goldRate = Integer.parseInt(rate);
+                updateGoldRateInDatabase(goldRate);
+                proceedToDashboard();
+            } catch (NumberFormatException e) {
+                Alert alert = new Alert(Alert.AlertType.ERROR);
+                alert.setTitle("Error Message");
+                alert.setHeaderText(null);
+                alert.setContentText("Invalid gold rate value. Please enter an integer.");
+                alert.showAndWait();
+            }
+        });
+    }
+
+    private void updateGoldRateInDatabase(int goldRate) {
+        String sql = "INSERT INTO gold_rate (rate, date, timestamp) VALUES (?, CURRENT_DATE, CURRENT_TIMESTAMP)";
+        connect = database.connectDb();
+        try {
+            prepare = connect.prepareStatement(sql);
+            prepare.setInt(1, goldRate);
+            prepare.executeUpdate();
+
+            Alert alert = new Alert(Alert.AlertType.INFORMATION);
+            alert.setTitle("Information Message");
+            alert.setHeaderText(null);
+            alert.setContentText("Gold rate updated successfully!");
+            alert.showAndWait();
+
+            // Ensure the gold rate label is updated
+            // Call updateGoldRateLabel() on the DashboardController
+            FXMLLoader loader = new FXMLLoader(getClass().getResource("/inventory/dashbord.fxml"));
+            Parent root = loader.load();
+
+            dashboardController dashboardController = loader.getController();
+            dashboardController.updateGoldRateLabel();
+
+        } catch (Exception e) {
+            e.printStackTrace();
+        } finally {
+            try {
+                if (prepare != null) prepare.close();
+                if (connect != null) connect.close();
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
+        }
+    }
+
     public void close() {
         System.exit(0);
     }
 
     @Override
     public void initialize(URL url, ResourceBundle rb) {
-        // TODo
+        // No need to update the gold rate label here since it's in DashboardController
     }
-
 }

@@ -213,7 +213,7 @@ public class dashboardController implements Initializable {
     @FXML
     private Button sales_payBtn, sales_receiptBtn, sales_soldBtn, sales_addBtn, sales_removeBtn, sales_stockBtn;
     @FXML
-    private Label home_sales,home_income,home_stock;
+    private Label home_sales,home_income,home_stock,gold_rate;
 
     @FXML
     private Label dateTimeLabel;
@@ -272,6 +272,7 @@ public class dashboardController implements Initializable {
     @Override
     public void initialize(URL url, ResourceBundle resourceBundle) {
         updateDateTimeLabel();
+        updateGoldRateLabel();
 
         listChCategory.setAll(fetchTableData("ch_category", "category_name"));
         listChWeight.setAll(fetchTableData("ch_weight", "weight_name"));
@@ -6833,4 +6834,36 @@ public class dashboardController implements Initializable {
     public void stop() {
         scheduler.shutdown();
     }
+
+    public int fetchLatestGoldRate() {
+        String sql = "SELECT rate FROM gold_rate ORDER BY id DESC LIMIT 1"; // Fetch the latest row by auto-increment ID
+        connect = database.connectDb();
+        int latestRate = 0;
+        try {
+            prepare = connect.prepareStatement(sql);
+            result = prepare.executeQuery();
+            if (result.next()) {
+                latestRate = result.getInt("rate");
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
+        } finally {
+            try {
+                if (result != null) result.close();
+                if (prepare != null) prepare.close();
+                if (connect != null) connect.close();
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
+        }
+        return latestRate;
+    }
+
+    public void updateGoldRateLabel() {
+        Platform.runLater(() -> {
+            int latestRate = fetchLatestGoldRate();
+            gold_rate.setText("Rs " + latestRate);
+        });
+    }
+
 }

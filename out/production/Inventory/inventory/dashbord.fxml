@@ -178,9 +178,24 @@
                                                 </AnchorPane>
                                     <AnchorPane fx:id="home_availableStock1" layoutX="14.0" layoutY="13.0" prefHeight="106.0" prefWidth="253.0" styleClass="card" stylesheets="@dashboardDesign.css">
                                        <children>
-                                          <Label fx:id="dateTimeLabel" alignment="CENTER" layoutX="14.0" layoutY="14.0" prefHeight="56.0" prefWidth="145.0" text="0" textFill="WHITE">
+                                          <Label fx:id="dateTimeLabel" alignment="BASELINE_LEFT" layoutX="117.0" layoutY="14.0" prefHeight="48.0" prefWidth="129.0" text="0" textFill="WHITE">
                                              <font>
                                                 <Font name="Berlin Sans FB" size="20.0" />
+                                             </font>
+                                          </Label>
+                                          <Label fx:id="gold_rate" layoutX="117.0" layoutY="72.0" prefHeight="22.0" prefWidth="129.0" text="Gold rate" textFill="WHITE">
+                                             <font>
+                                                <Font name="Berlin Sans FB" size="20.0" />
+                                             </font>
+                                          </Label>
+                                          <Label layoutX="14.0" layoutY="73.0" text="Gold Rate" textFill="WHITE">
+                                             <font>
+                                                <Font name="Tahoma" size="15.0" />
+                                             </font>
+                                          </Label>
+                                          <Label layoutX="14.0" layoutY="28.0" text="Date &amp; Time" textFill="WHITE">
+                                             <font>
+                                                <Font name="Tahoma" size="15.0" />
                                              </font>
                                           </Label>
                                        </children>
