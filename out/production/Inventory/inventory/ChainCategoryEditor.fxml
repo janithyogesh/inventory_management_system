@@ -7,7 +7,7 @@
 <?import javafx.scene.layout.HBox?>
 <?import javafx.scene.layout.VBox?>
 
-<VBox alignment="CENTER" spacing="20" xmlns:fx="http://javafx.com/fxml/1" xmlns="http://javafx.com/javafx/22" fx:controller="inventory.ChainCategoryEditorController">
+<VBox alignment="CENTER" spacing="20" xmlns="http://javafx.com/javafx/22" xmlns:fx="http://javafx.com/fxml/1" fx:controller="inventory.ChainCategoryEditorController">
     <padding>
         <Insets bottom="10" left="10" right="10" top="10" />
     </padding>
@@ -35,5 +35,5 @@
         </VBox>
     </HBox>
     <!-- Apply Changes Button -->
-    <Button onAction="#handleApplyChanges" styleClass="reset-btn" stylesheets="@dashboardDesign.css" text="Apply Changes" />
+    <Button onAction="#handleApplyChanges" styleClass="update-btn" stylesheets="@dashboardDesign.css" text="Apply Changes" />
 </VBox>

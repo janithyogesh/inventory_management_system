@@ -153,7 +153,7 @@
                     <center>
                         <AnchorPane prefHeight="200.0" prefWidth="200.0" BorderPane.alignment="CENTER">
                             <children>
-                                <AnchorPane fx:id="home_form" layoutX="56.0" layoutY="76.0" prefHeight="604.8" prefWidth="684.8" visible="false" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
+                                <AnchorPane fx:id="home_form" layoutX="56.0" layoutY="76.0" prefHeight="604.8" prefWidth="684.8" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
                                     <children>
                                         <AnchorPane layoutX="14.0" layoutY="14.0" prefHeight="132.0" prefWidth="959.0" stylesheets="@dashboardDesign.css">
                                             <styleClass>
@@ -161,21 +161,6 @@
                                                 <String fx:value="shadow" />
                                             </styleClass>
                                             <children>
-                                                <AnchorPane fx:id="home_numberSales" layoutX="14.0" layoutY="13.0" prefHeight="106.0" prefWidth="253.0" styleClass="card" stylesheets="@dashboardDesign.css">
-                                                    <children>
-                                                        <FontAwesomeIcon fill="WHITE" glyphName="USERS" layoutX="14.0" layoutY="61.0" size="4em" />
-                                                        <Label layoutX="127.0" layoutY="72.0" text="Number of Sales" textFill="WHITE">
-                                                            <font>
-                                                                <Font name="Tahoma" size="15.0" />
-                                                            </font>
-                                                        </Label>
-                                                        <Label fx:id="home_sales" alignment="CENTER" layoutX="142.0" layoutY="20.0" prefHeight="22.0" prefWidth="97.0" text="0" textFill="WHITE">
-                                                            <font>
-                                                                <Font name="Berlin Sans FB" size="20.0" />
-                                                            </font>
-                                                        </Label>
-                                                    </children>
-                                                </AnchorPane>
                                                 <AnchorPane fx:id="home_totalIncome" layoutX="279.0" layoutY="13.0" prefHeight="106.0" prefWidth="253.0" styleClass="card" stylesheets="@dashboardDesign.css">
                                                     <children>
                                                         <FontAwesomeIcon fill="WHITE" glyphName="MONEY" layoutX="15.0" layoutY="61.0" size="4em" />
@@ -191,15 +176,24 @@
                                                         </Label>
                                                     </children>
                                                 </AnchorPane>
-                                                <AnchorPane fx:id="home_availableStock" layoutX="544.0" layoutY="13.0" prefHeight="106.0" prefWidth="253.0" styleClass="card" stylesheets="@dashboardDesign.css">
+                                    <AnchorPane fx:id="home_availableStock1" layoutX="14.0" layoutY="13.0" prefHeight="106.0" prefWidth="253.0" styleClass="card" stylesheets="@dashboardDesign.css">
+                                       <children>
+                                          <Label fx:id="dateTimeLabel" alignment="CENTER" layoutX="14.0" layoutY="14.0" prefHeight="56.0" prefWidth="145.0" text="0" textFill="WHITE">
+                                             <font>
+                                                <Font name="Berlin Sans FB" size="20.0" />
+                                             </font>
+                                          </Label>
+                                       </children>
+                                    </AnchorPane>
+                                                <AnchorPane fx:id="home_numberSales" layoutX="541.0" layoutY="13.0" prefHeight="106.0" prefWidth="253.0" styleClass="card" stylesheets="@dashboardDesign.css">
                                                     <children>
-                                                        <FontAwesomeIcon fill="WHITE" glyphName="CUBE" layoutX="8.0" layoutY="61.0" size="4em" />
-                                                        <Label layoutX="140.0" layoutY="72.0" text="Available Stock" textFill="WHITE">
+                                                        <FontAwesomeIcon fill="WHITE" glyphName="USERS" layoutX="14.0" layoutY="61.0" size="4em" />
+                                                        <Label layoutX="127.0" layoutY="72.0" text="Number of Sales" textFill="WHITE">
                                                             <font>
                                                                 <Font name="Tahoma" size="15.0" />
                                                             </font>
                                                         </Label>
-                                                        <Label fx:id="home_stock" alignment="CENTER" layoutX="142.0" layoutY="20.0" prefHeight="22.0" prefWidth="97.0" text="0" textFill="WHITE">
+                                                        <Label fx:id="home_sales" alignment="CENTER" layoutX="142.0" layoutY="20.0" prefHeight="22.0" prefWidth="97.0" text="0" textFill="WHITE">
                                                             <font>
                                                                 <Font name="Berlin Sans FB" size="20.0" />
                                                             </font>
@@ -244,6 +238,21 @@
                                                                 <NumberAxis side="LEFT" />
                                                             </yAxis>
                                                         </BarChart>
+                                                    </children>
+                                                </AnchorPane>
+                                                <AnchorPane fx:id="home_availableStock" layoutX="656.0" layoutY="14.0" prefHeight="106.0" prefWidth="253.0" styleClass="card" stylesheets="@dashboardDesign.css">
+                                                    <children>
+                                                        <FontAwesomeIcon fill="WHITE" glyphName="CUBE" layoutX="8.0" layoutY="61.0" size="4em" />
+                                                        <Label layoutX="140.0" layoutY="72.0" text="Available Stock" textFill="WHITE">
+                                                            <font>
+                                                                <Font name="Tahoma" size="15.0" />
+                                                            </font>
+                                                        </Label>
+                                                        <Label fx:id="home_stock" alignment="CENTER" layoutX="142.0" layoutY="20.0" prefHeight="22.0" prefWidth="97.0" text="0" textFill="WHITE">
+                                                            <font>
+                                                                <Font name="Berlin Sans FB" size="20.0" />
+                                                            </font>
+                                                        </Label>
                                                     </children>
                                                 </AnchorPane>
                                             </children>
@@ -546,7 +555,7 @@
                               </AnchorPane>
                            </children>
                         </AnchorPane>
-                        <AnchorPane fx:id="ri_form" layoutX="20.0" layoutY="20.0" prefHeight="604.8" prefWidth="684.8" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
+                        <AnchorPane fx:id="ri_form" layoutX="20.0" layoutY="20.0" prefHeight="604.8" prefWidth="684.8" visible="false" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
                            <children>
                               <AnchorPane layoutX="8.0" layoutY="7.0" prefHeight="591.0" prefWidth="214.0" stylesheets="@dashboardDesign.css">
                                  <styleClass>
@@ -725,6 +734,7 @@
                                     </TableView>
                                     <TextField fx:id="addEr_search" layoutX="14.0" layoutY="28.0" onAction="#addEarringSearch" prefHeight="35.0" prefWidth="232.0" promptText="Search" styleClass="search" stylesheets="@dashboardDesign.css" />
                                     <FontAwesomeIcon fill="#818181" glyphName="SEARCH" layoutX="216.0" layoutY="52.0" size="1.5em" />
+                                    <Button fx:id="er_selection" layoutX="570.0" layoutY="33.0" mnemonicParsing="false" onAction="#handleEditErCategories" prefHeight="26.0" prefWidth="144.0" styleClass="pay-btn" stylesheets="@dashboardDesign.css" text="Change Selections" />
                                  </children>
                               </AnchorPane>
                            </children>
@@ -816,6 +826,7 @@
                                     </TableView>
                                     <TextField fx:id="addPe_search" layoutX="14.0" layoutY="28.0" onAction="#addPendantSearch" prefHeight="35.0" prefWidth="232.0" promptText="Search" styleClass="search" stylesheets="@dashboardDesign.css" />
                                     <FontAwesomeIcon fill="#818181" glyphName="SEARCH" layoutX="216.0" layoutY="52.0" size="1.5em" />
+                                    <Button fx:id="pe_selection" layoutX="570.0" layoutY="33.0" mnemonicParsing="false" onAction="#handleEditPeCategories" prefHeight="26.0" prefWidth="144.0" styleClass="pay-btn" stylesheets="@dashboardDesign.css" text="Change Selections" />
                                  </children>
                               </AnchorPane>
                            </children>
@@ -907,6 +918,7 @@
                                     </TableView>
                                     <TextField fx:id="addSu_search" layoutX="14.0" layoutY="28.0" onAction="#addSuraSearch" prefHeight="35.0" prefWidth="232.0" promptText="Search" styleClass="search" stylesheets="@dashboardDesign.css" />
                                     <FontAwesomeIcon fill="#818181" glyphName="SEARCH" layoutX="216.0" layoutY="52.0" size="1.5em" />
+                                    <Button fx:id="su_selection" layoutX="570.0" layoutY="33.0" mnemonicParsing="false" onAction="#handleEditSuCategories" prefHeight="26.0" prefWidth="144.0" styleClass="pay-btn" stylesheets="@dashboardDesign.css" text="Change Selections" />
                                  </children>
                               </AnchorPane>
                            </children>
@@ -998,6 +1010,7 @@
                                     </TableView>
                                     <TextField fx:id="addPa_search" layoutX="14.0" layoutY="28.0" onAction="#addPanchaSearch" prefHeight="35.0" prefWidth="232.0" promptText="Search" styleClass="search" stylesheets="@dashboardDesign.css" />
                                     <FontAwesomeIcon fill="#818181" glyphName="SEARCH" layoutX="216.0" layoutY="52.0" size="1.5em" />
+                                    <Button fx:id="pa_selection" layoutX="570.0" layoutY="33.0" mnemonicParsing="false" onAction="#handleEditPaCategories" prefHeight="26.0" prefWidth="144.0" styleClass="pay-btn" stylesheets="@dashboardDesign.css" text="Change Selections" />
                                  </children>
                               </AnchorPane>
                            </children>
@@ -1089,6 +1102,7 @@
                                     </TableView>
                                     <TextField fx:id="addNe_search" layoutX="14.0" layoutY="28.0" onAction="#addNecklaceSearch" prefHeight="35.0" prefWidth="232.0" promptText="Search" styleClass="search" stylesheets="@dashboardDesign.css" />
                                     <FontAwesomeIcon fill="#818181" glyphName="SEARCH" layoutX="216.0" layoutY="52.0" size="1.5em" />
+                                    <Button fx:id="ne_selection" layoutX="570.0" layoutY="33.0" mnemonicParsing="false" onAction="#handleEditNeCategories" prefHeight="26.0" prefWidth="144.0" styleClass="pay-btn" stylesheets="@dashboardDesign.css" text="Change Selections" />
                                  </children>
                               </AnchorPane>
                            </children>
@@ -1180,6 +1194,7 @@
                                     </TableView>
                                     <TextField fx:id="addBa_search" layoutX="14.0" layoutY="28.0" onAction="#addBangleSearch" prefHeight="35.0" prefWidth="232.0" promptText="Search" styleClass="search" stylesheets="@dashboardDesign.css" />
                                     <FontAwesomeIcon fill="#818181" glyphName="SEARCH" layoutX="216.0" layoutY="52.0" size="1.5em" />
+                                    <Button fx:id="ba_selection" layoutX="570.0" layoutY="33.0" mnemonicParsing="false" onAction="#handleEditBaCategories" prefHeight="26.0" prefWidth="144.0" styleClass="pay-btn" stylesheets="@dashboardDesign.css" text="Change Selections" />
                                  </children>
                               </AnchorPane>
                            </children>

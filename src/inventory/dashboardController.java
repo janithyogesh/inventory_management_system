@@ -43,6 +43,9 @@ import java.util.*;
 import java.util.Date;
 import java.text.SimpleDateFormat;
 import java.sql.SQLException;
+import java.util.concurrent.Executors;
+import java.util.concurrent.ScheduledExecutorService;
+import java.util.concurrent.TimeUnit;
 
 
 import static inventory.database.connectDb;
@@ -50,7 +53,9 @@ import static inventory.database.connectDb;
 public class dashboardController implements Initializable {
 
     @FXML
-    private Button addChain_addBtn, addChain_deleteBtn, addChain_importBtn, addChain_resetBtn, addChain_updateBtn, ch_selection, br_selection;
+    private Button addChain_addBtn, addChain_deleteBtn, addChain_importBtn, addChain_resetBtn, addChain_updateBtn;
+    @FXML
+    private Button ch_selection, br_selection, er_selection, pe_selection, su_selection, pa_selection, ne_selection, ba_selection;
     @FXML
     private Button addBr_addBtn, addBr_deleteBtn, addBr_importBtn, addBr_resetBtn, addBr_updateBtn;
     @FXML
@@ -210,6 +215,11 @@ public class dashboardController implements Initializable {
     @FXML
     private Label home_sales,home_income,home_stock;
 
+    @FXML
+    private Label dateTimeLabel;
+
+    private final ScheduledExecutorService scheduler = Executors.newScheduledThreadPool(1);
+
 
     private Connection connect;
     private PreparedStatement prepare;
@@ -239,6 +249,12 @@ public class dashboardController implements Initializable {
     public static ObservableList<String> listBrLength = FXCollections.observableArrayList();
 
     public static ObservableList<String> listRiCategory = FXCollections.observableArrayList();
+    public static ObservableList<String> listErCategory = FXCollections.observableArrayList();
+    public static ObservableList<String> listPeCategory = FXCollections.observableArrayList();
+    public static ObservableList<String> listSuCategory = FXCollections.observableArrayList();
+    public static ObservableList<String> listPaCategory = FXCollections.observableArrayList();
+    public static ObservableList<String> listNeCategory = FXCollections.observableArrayList();
+    public static ObservableList<String> listBaCategory = FXCollections.observableArrayList();
 
     private List<String> fetchTableData(String tableName, String columnName) {
         List<String> list = new ArrayList<>();
@@ -255,6 +271,7 @@ public class dashboardController implements Initializable {
 
     @Override
     public void initialize(URL url, ResourceBundle resourceBundle) {
+        updateDateTimeLabel();
 
         listChCategory.setAll(fetchTableData("ch_category", "category_name"));
         listChWeight.setAll(fetchTableData("ch_weight", "weight_name"));
@@ -265,6 +282,12 @@ public class dashboardController implements Initializable {
         listBrLength.setAll(fetchTableData("br_length", "length_name"));
 
         listRiCategory.setAll(fetchTableData("ri_category", "category_name"));
+        listErCategory.setAll(fetchTableData("er_category", "category_name"));
+        listPeCategory.setAll(fetchTableData("pe_category", "category_name"));
+        listSuCategory.setAll(fetchTableData("su_category", "category_name"));
+        listPaCategory.setAll(fetchTableData("pa_category", "category_name"));
+        listNeCategory.setAll(fetchTableData("ne_category", "category_name"));
+        listBaCategory.setAll(fetchTableData("ba_category", "category_name"));
 
         addChain_category.setItems(listChCategory);
         addChain_weight.setItems(listChWeight);
@@ -275,6 +298,12 @@ public class dashboardController implements Initializable {
         addBr_length.setItems(listBrLength);
 
         addRi_category.setItems(listRiCategory);
+        addEr_category.setItems(listErCategory);
+        addPe_category.setItems(listPeCategory);
+        addSu_category.setItems(listSuCategory);
+        addPa_category.setItems(listPaCategory);
+        addNe_category.setItems(listNeCategory);
+        addBa_category.setItems(listBaCategory);
 
         displayUsername();
         defaultNav();
@@ -1062,6 +1091,8 @@ public class dashboardController implements Initializable {
 
     private String[] listKarat = {"24K", "23K", "22K", "21K", "20K", "19K", "18K"};
     private String[] listStatus = {"Stock", "Showroom"};
+
+
     //*************************************************CHAIN RELATED****************************************************
     @FXML
     private void handleEditChCategories() {
@@ -1661,11 +1692,6 @@ public class dashboardController implements Initializable {
     }
 
     // **************************************BRACELET RELATED***********************************************************
-
-//    private String[] listBrCategory = {"Price","Lazer"};
-//    private String[] listBrWeight = {"40g", "32g"};
-//    private String[] listBrLength = {"24 in", "22 in"};
-
     @FXML
     private void handleEditBrCategories() {
         if (verifyPasscode()) {
@@ -2273,7 +2299,7 @@ public class dashboardController implements Initializable {
                 RingCategoryEditorController controller = loader.getController();
 
                 Stage stage = new Stage();
-                stage.setTitle("Edit Chain Categories, Weights, and Lengths");
+                stage.setTitle("Edit Ring Categories");
                 stage.initModality(Modality.APPLICATION_MODAL);
                 stage.setScene(new Scene(pane));
                 stage.setResizable(false);
@@ -2829,8 +2855,37 @@ public class dashboardController implements Initializable {
     }
 
     // **************************************EARRING RELATED***********************************************************
+    @FXML
+    private void handleEditErCategories() {
+        if (verifyPasscode()) {
+            try {
+                FXMLLoader loader = new FXMLLoader(getClass().getResource("EarringCategoryEditor.fxml"));
+                Pane pane = loader.load();
 
-    private String[] listErCategory = {"Baby Earring","Ladies Earring"};
+                EarringCategoryEditorController controller = loader.getController();
+
+                Stage stage = new Stage();
+                stage.setTitle("Edit Earring Categories");
+                stage.initModality(Modality.APPLICATION_MODAL);
+                stage.setScene(new Scene(pane));
+                stage.setResizable(false);
+                stage.showAndWait();
+
+                // Update lists after the pop-up is closed
+                listErCategory.setAll(controller.getCategories());
+                addEr_category.setItems(listErCategory);
+
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
+        } else {
+            Alert alert = new Alert(Alert.AlertType.ERROR);
+            alert.setTitle("Incorrect Passcode");
+            alert.setHeaderText(null);
+            alert.setContentText("The passcode you entered is incorrect.");
+            alert.showAndWait();
+        }
+    }
 
     // Method to get ring details from the database
     private earringData getEarringDetails(String productId) {
@@ -3364,7 +3419,37 @@ public class dashboardController implements Initializable {
 
     // **************************************PENDANT RELATED***********************************************************
 
-    private String[] listPeCategory = {"Ladies Pendant","Gents Pendant"};
+    @FXML
+    private void handleEditPeCategories() {
+        if (verifyPasscode()) {
+            try {
+                FXMLLoader loader = new FXMLLoader(getClass().getResource("PeCategoryEditor.fxml"));
+                Pane pane = loader.load();
+
+                PeCategoryEditorController controller = loader.getController();
+
+                Stage stage = new Stage();
+                stage.setTitle("Edit Pendant Categories");
+                stage.initModality(Modality.APPLICATION_MODAL);
+                stage.setScene(new Scene(pane));
+                stage.setResizable(false);
+                stage.showAndWait();
+
+                // Update lists after the pop-up is closed
+                listPeCategory.setAll(controller.getCategories());
+                addPe_category.setItems(listPeCategory);
+
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
+        } else {
+            Alert alert = new Alert(Alert.AlertType.ERROR);
+            alert.setTitle("Incorrect Passcode");
+            alert.setHeaderText(null);
+            alert.setContentText("The passcode you entered is incorrect.");
+            alert.showAndWait();
+        }
+    }
 
     // Method to get pendant details from the database
     private pendantData getPendantDetails(String productId) {
@@ -3897,8 +3982,38 @@ public class dashboardController implements Initializable {
     }
 
     // **************************************SURA RELATED***********************************************************
+    @FXML
+    private void handleEditSuCategories() {
+        if (verifyPasscode()) {
+            try {
+                FXMLLoader loader = new FXMLLoader(getClass().getResource("SuraCategoryEditor.fxml"));
+                Pane pane = loader.load();
 
-    private String[] listSuCategory = {"Lock Sura","Thread Sura"};
+                SuraCategoryEditorController controller = loader.getController();
+
+                Stage stage = new Stage();
+                stage.setTitle("Edit Sura Categories");
+                stage.initModality(Modality.APPLICATION_MODAL);
+                stage.setScene(new Scene(pane));
+                stage.setResizable(false);
+                stage.showAndWait();
+
+                // Update lists after the pop-up is closed
+                listSuCategory.setAll(controller.getCategories());
+                addSu_category.setItems(listSuCategory);
+
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
+        } else {
+            Alert alert = new Alert(Alert.AlertType.ERROR);
+            alert.setTitle("Incorrect Passcode");
+            alert.setHeaderText(null);
+            alert.setContentText("The passcode you entered is incorrect.");
+            alert.showAndWait();
+        }
+    }
+
 
     // Method to get pendant details from the database
     private suraData getSuraDetails(String productId) {
@@ -4432,7 +4547,37 @@ public class dashboardController implements Initializable {
 
     // **************************************PANCHAYUDA RELATED***********************************************************
 
-    private String[] listPaCategory = {"Dharmachakra","Heart"};
+    @FXML
+    private void handleEditPaCategories() {
+        if (verifyPasscode()) {
+            try {
+                FXMLLoader loader = new FXMLLoader(getClass().getResource("PanchaCategoryEditor.fxml"));
+                Pane pane = loader.load();
+
+                PanchaCategoryEditorController controller = loader.getController();
+
+                Stage stage = new Stage();
+                stage.setTitle("Edit Panchayuda Categories");
+                stage.initModality(Modality.APPLICATION_MODAL);
+                stage.setScene(new Scene(pane));
+                stage.setResizable(false);
+                stage.showAndWait();
+
+                // Update lists after the pop-up is closed
+                listPaCategory.setAll(controller.getCategories());
+                addPa_category.setItems(listPaCategory);
+
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
+        } else {
+            Alert alert = new Alert(Alert.AlertType.ERROR);
+            alert.setTitle("Incorrect Passcode");
+            alert.setHeaderText(null);
+            alert.setContentText("The passcode you entered is incorrect.");
+            alert.showAndWait();
+        }
+    }
 
     // Method to get pendant details from the database
     private panchaData getPanchaDetails(String productId) {
@@ -4966,7 +5111,37 @@ public class dashboardController implements Initializable {
 
     // **************************************NECKLACE RELATED***********************************************************
 
-    private String[] listNeCategory = {"White Stone","Design"};
+    @FXML
+    private void handleEditNeCategories() {
+        if (verifyPasscode()) {
+            try {
+                FXMLLoader loader = new FXMLLoader(getClass().getResource("NeCategoryEditor.fxml"));
+                Pane pane = loader.load();
+
+                NeCategoryEditorController controller = loader.getController();
+
+                Stage stage = new Stage();
+                stage.setTitle("Edit Necklace Categories");
+                stage.initModality(Modality.APPLICATION_MODAL);
+                stage.setScene(new Scene(pane));
+                stage.setResizable(false);
+                stage.showAndWait();
+
+                // Update lists after the pop-up is closed
+                listNeCategory.setAll(controller.getCategories());
+                addNe_category.setItems(listNeCategory);
+
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
+        } else {
+            Alert alert = new Alert(Alert.AlertType.ERROR);
+            alert.setTitle("Incorrect Passcode");
+            alert.setHeaderText(null);
+            alert.setContentText("The passcode you entered is incorrect.");
+            alert.showAndWait();
+        }
+    }
 
     // Method to get pendant details from the database
     private necklaceData getNecklaceDetails(String productId) {
@@ -5500,7 +5675,37 @@ public class dashboardController implements Initializable {
 
     // **************************************BANGLE RELATED***********************************************************
 
-    private String[] listBaCategory = {"Machine Cut","Hand Made"};
+    @FXML
+    private void handleEditBaCategories() {
+        if (verifyPasscode()) {
+            try {
+                FXMLLoader loader = new FXMLLoader(getClass().getResource("BaCategoryEditor.fxml"));
+                Pane pane = loader.load();
+
+                BaCategoryEditorController controller = loader.getController();
+
+                Stage stage = new Stage();
+                stage.setTitle("Edit Bangle Categories");
+                stage.initModality(Modality.APPLICATION_MODAL);
+                stage.setScene(new Scene(pane));
+                stage.setResizable(false);
+                stage.showAndWait();
+
+                // Update lists after the pop-up is closed
+                listBaCategory.setAll(controller.getCategories());
+                addBa_category.setItems(listBaCategory);
+
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
+        } else {
+            Alert alert = new Alert(Alert.AlertType.ERROR);
+            alert.setTitle("Incorrect Passcode");
+            alert.setHeaderText(null);
+            alert.setContentText("The passcode you entered is incorrect.");
+            alert.showAndWait();
+        }
+    }
 
     // Method to get pendant details from the database
     private bangleData getBangleDetails(String productId) {
@@ -6607,5 +6812,25 @@ public class dashboardController implements Initializable {
         } catch (NumberFormatException e) {
             return false;
         }
+    }
+
+    private void updateDateTimeLabel() {
+        Runnable dateTimeTask = new Runnable() {
+            @Override
+            public void run() {
+                Platform.runLater(() -> {
+                    Date now = new Date();
+                    SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd \nHH:mm:ss");
+                    dateTimeLabel.setText(dateFormat.format(now));
+                });
+            }
+        };
+
+        scheduler.scheduleAtFixedRate(dateTimeTask, 0, 1, TimeUnit.SECONDS);
+    }
+
+    // Don't forget to shut down the scheduler when the application stops
+    public void stop() {
+        scheduler.shutdown();
     }
 }

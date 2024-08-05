@@ -30,6 +30,7 @@ public class BrCategoryEditorController {
     @FXML
     private TextField lengthTextField;
 
+
     private ObservableList<String> categories;
     private ObservableList<String> weights;
     private ObservableList<String> lengths;
