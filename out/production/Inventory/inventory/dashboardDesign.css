@@ -29,7 +29,7 @@
 }
 
 .nav-form{
-    -fx-background-color:linear-gradient(to bottom , #011b4a, #004cc5);
+    -fx-background-color:linear-gradient(to bottom , #022053, #012f63);
 }
 
 .nav-btn{
@@ -42,9 +42,15 @@
 }
 
 .logout{
-    -fx-background-color:#139662;
+    -fx-background-color:#059f58;
     -fx-background-radius:10px;
     -fx-cursor:hand;
+}
+
+.nametag{
+    -fx-background-color:#8d8ded;
+    -fx-background-radius:8px;
+
 }
 
 .logout:hover{
@@ -62,7 +68,7 @@
 
 .card{
     -fx-background-color:linear-gradient(to right,#011b4a,#023170);
-    -fx-background-radius:5px;
+    -fx-background-radius:8px;
 }
 
 .textfield{
@@ -199,4 +205,9 @@
 
 .receipt-btn:hover{
     -fx-background-color:#a17434;
+}
+
+.label-spacing {
+    -fx-font-smoothing-type: lcd;
+    -fx-spacing: 20px;
 }

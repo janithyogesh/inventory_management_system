@@ -30,7 +30,7 @@
                                 <AnchorPane layoutX="96.0" layoutY="-77.0" prefHeight="35.0" prefWidth="1200.0" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
                                     <children>
                                         <FontAwesomeIcon glyphName="DATABASE" layoutX="14.0" layoutY="27.0" size="1.5em" />
-                                        <Label layoutX="43.0" layoutY="13.0" text="Inventory Management System">
+                                        <Label layoutX="43.0" layoutY="13.0" text="Jewellery Inventory Management System">
                                             <font>
                                                 <Font name="Tahoma" size="15.0" />
                                             </font>
@@ -82,7 +82,7 @@
                                                 <FontAwesomeIcon fill="WHITE" glyphName="MONEY" />
                                             </graphic>
                                         </Button>
-                                        <Button fx:id="logout" layoutX="11.0" layoutY="567.0" mnemonicParsing="false" onAction="#logout" stylesheets="@dashboardDesign.css" text="Sign Out">
+                                        <Button fx:id="logout" layoutX="11.0" layoutY="567.0" mnemonicParsing="false" onAction="#logout" prefHeight="23.0" prefWidth="191.0" stylesheets="@dashboardDesign.css" text="Sign Out">
                                             <graphic>
                                                 <FontAwesomeIcon glyphName="SIGN_OUT" />
                                             </graphic>
@@ -137,7 +137,7 @@
                                             </graphic>
                                         </Button>
                                         <Line endX="95.60000610351562" endY="-1.52587890625E-5" layoutX="112.0" layoutY="520.0" startX="-100.0" stroke="WHITE" />
-                                        <Label layoutX="64.0" layoutY="185.0" text="Products" textFill="WHITE">
+                                        <Label layoutX="50.0" layoutY="186.0" text="Add Products" textFill="WHITE">
                                             <font>
                                                 <Font name="Tahoma" size="17.0" />
                                             </font>
@@ -155,91 +155,260 @@
                             <children>
                                 <AnchorPane fx:id="home_form" layoutX="56.0" layoutY="76.0" prefHeight="604.8" prefWidth="684.8" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
                                     <children>
-                                        <AnchorPane layoutX="14.0" layoutY="14.0" prefHeight="132.0" prefWidth="959.0" stylesheets="@dashboardDesign.css">
+                              <AnchorPane fx:id="home_availableStock1" layoutX="17.0" layoutY="40.0" prefHeight="190.0" prefWidth="279.0" styleClass="card" stylesheets="@dashboardDesign.css">
+                                 <children>
+                                    <Label layoutX="98.0" layoutY="14.0" text="Date &amp; Time" textFill="WHITE">
+                                       <font>
+                                          <Font name="Tahoma" size="15.0" />
+                                       </font>
+                                    </Label>
+                                    <Label layoutX="89.0" layoutY="81.0" text="Today's Gold Rate" textFill="WHITE">
+                                       <font>
+                                          <Font name="Tahoma" size="15.0" />
+                                       </font>
+                                    </Label>
+                                    <Line endX="118.5999755859375" endY="-9.1552734375E-5" layoutX="131.0" layoutY="69.0" startX="-103.79997253417969" startY="-1.220703125E-4" stroke="WHITE" />
+                                    <Label fx:id="dateTimeLabel" alignment="CENTER" contentDisplay="CENTER" layoutX="18.0" layoutY="34.0" prefHeight="27.0" prefWidth="242.0" text="0" textAlignment="CENTER" textFill="#b7b257">
+                                       <font>
+                                          <Font name="Berlin Sans FB" size="20.0" />
+                                       </font>
+                                    </Label>
+                                    <Label fx:id="gold_rate" alignment="CENTER" layoutX="77.0" layoutY="109.0" prefHeight="22.0" prefWidth="129.0" text="Gold rate" textFill="#b7b257">
+                                       <font>
+                                          <Font name="Berlin Sans FB" size="20.0" />
+                                       </font>
+                                    </Label>
+                                    <Line endX="118.5999755859375" endY="-9.1552734375E-5" layoutX="131.0" layoutY="138.0" startX="-103.79997253417969" startY="-1.220703125E-4" stroke="WHITE" />
+                                 </children>
+                              </AnchorPane>
+                                        <AnchorPane layoutX="309.0" layoutY="40.0" prefHeight="114.0" prefWidth="666.0" stylesheets="@dashboardDesign.css">
                                             <styleClass>
                                                 <String fx:value="white-gb" />
                                                 <String fx:value="shadow" />
                                             </styleClass>
                                             <children>
-                                                <AnchorPane fx:id="home_totalIncome" layoutX="279.0" layoutY="13.0" prefHeight="106.0" prefWidth="253.0" styleClass="card" stylesheets="@dashboardDesign.css">
+                                                <AnchorPane fx:id="home_totalIncome" layoutX="14.0" layoutY="14.0" prefHeight="85.0" prefWidth="318.0" styleClass="card" stylesheets="@dashboardDesign.css">
                                                     <children>
                                                         <FontAwesomeIcon fill="WHITE" glyphName="MONEY" layoutX="15.0" layoutY="61.0" size="4em" />
-                                                        <Label layoutX="150.0" layoutY="72.0" text="Total Income" textFill="WHITE">
+                                                        <Label layoutX="101.0" layoutY="20.0" text="Total Income" textFill="WHITE">
                                                             <font>
                                                                 <Font name="Tahoma" size="15.0" />
                                                             </font>
                                                         </Label>
-                                                        <Label fx:id="home_income" alignment="CENTER" layoutX="100.0" layoutY="20.0" prefHeight="22.0" prefWidth="138.0" text="Rs.0.00" textFill="WHITE">
+                                                        <Label fx:id="home_income" alignment="CENTER" layoutX="138.0" layoutY="42.0" prefHeight="22.0" prefWidth="138.0" text="Rs.0.00" textFill="WHITE">
                                                             <font>
                                                                 <Font name="Berlin Sans FB" size="20.0" />
                                                             </font>
                                                         </Label>
                                                     </children>
                                                 </AnchorPane>
-                                    <AnchorPane fx:id="home_availableStock1" layoutX="14.0" layoutY="13.0" prefHeight="106.0" prefWidth="253.0" styleClass="card" stylesheets="@dashboardDesign.css">
-                                       <children>
-                                          <Label fx:id="dateTimeLabel" alignment="BASELINE_LEFT" layoutX="117.0" layoutY="14.0" prefHeight="48.0" prefWidth="129.0" text="0" textFill="WHITE">
-                                             <font>
-                                                <Font name="Berlin Sans FB" size="20.0" />
-                                             </font>
-                                          </Label>
-                                          <Label fx:id="gold_rate" layoutX="117.0" layoutY="72.0" prefHeight="22.0" prefWidth="129.0" text="Gold rate" textFill="WHITE">
-                                             <font>
-                                                <Font name="Berlin Sans FB" size="20.0" />
-                                             </font>
-                                          </Label>
-                                          <Label layoutX="14.0" layoutY="73.0" text="Gold Rate" textFill="WHITE">
-                                             <font>
-                                                <Font name="Tahoma" size="15.0" />
-                                             </font>
-                                          </Label>
-                                          <Label layoutX="14.0" layoutY="28.0" text="Date &amp; Time" textFill="WHITE">
-                                             <font>
-                                                <Font name="Tahoma" size="15.0" />
-                                             </font>
-                                          </Label>
-                                       </children>
-                                    </AnchorPane>
-                                                <AnchorPane fx:id="home_numberSales" layoutX="541.0" layoutY="13.0" prefHeight="106.0" prefWidth="253.0" styleClass="card" stylesheets="@dashboardDesign.css">
+                                                <AnchorPane fx:id="home_numberSales" layoutX="345.0" layoutY="13.0" prefHeight="86.0" prefWidth="306.0" styleClass="card" stylesheets="@dashboardDesign.css">
                                                     <children>
                                                         <FontAwesomeIcon fill="WHITE" glyphName="USERS" layoutX="14.0" layoutY="61.0" size="4em" />
-                                                        <Label layoutX="127.0" layoutY="72.0" text="Number of Sales" textFill="WHITE">
+                                                        <Label layoutX="109.0" layoutY="21.0" text="Number of Sales" textFill="WHITE">
                                                             <font>
                                                                 <Font name="Tahoma" size="15.0" />
                                                             </font>
                                                         </Label>
-                                                        <Label fx:id="home_sales" alignment="CENTER" layoutX="142.0" layoutY="20.0" prefHeight="22.0" prefWidth="97.0" text="0" textFill="WHITE">
+                                                        <Label fx:id="home_sales" alignment="CENTER" layoutX="225.0" layoutY="20.0" prefHeight="22.0" prefWidth="66.0" text="0" textFill="WHITE">
                                                             <font>
                                                                 <Font name="Berlin Sans FB" size="20.0" />
                                                             </font>
                                                         </Label>
+                                          <Label layoutX="109.0" layoutY="43.0" text="Bill Count" textFill="WHITE">
+                                             <font>
+                                                <Font name="Tahoma" size="15.0" />
+                                             </font>
+                                          </Label>
+                                          <Label fx:id="home_bill" alignment="CENTER" layoutX="225.0" layoutY="42.0" prefHeight="22.0" prefWidth="66.0" text="0" textFill="WHITE">
+                                             <font>
+                                                <Font name="Berlin Sans FB" size="20.0" />
+                                             </font>
+                                          </Label>
                                                     </children>
                                                 </AnchorPane>
                                             </children>
                                         </AnchorPane>
-                                        <AnchorPane layoutX="12.0" layoutY="182.0" prefHeight="411.0" prefWidth="960.0" stylesheets="@dashboardDesign.css">
+                                          <AnchorPane fx:id="home_availableStock" layoutX="17.0" layoutY="192.0" prefHeight="398.0" prefWidth="279.0" styleClass="card" stylesheets="@dashboardDesign.css">
+                                              <children>
+                                                  <FontAwesomeIcon fill="#aaff4a" glyphName="CUBE" layoutX="48.0" layoutY="54.0" selectionFill="#aadc70" size="2em" />
+                                                  <Label layoutX="25.0" layoutY="119.0" text="Chains" textFill="WHITE">
+                                                      <font>
+                                                          <Font name="Tahoma" size="15.0" />
+                                                      </font>
+                                                  </Label>
+                                                  <Label fx:id="chSt" alignment="CENTER" layoutX="196.0" layoutY="115.0" prefHeight="22.0" prefWidth="49.0" text="0" textFill="#e4d4d5">
+                                                      <font>
+                                                          <Font name="Berlin Sans FB" size="20.0" />
+                                                      </font>
+                                                  </Label>
+                                    <Label layoutX="25.0" layoutY="141.0" text="Bracelets" textFill="WHITE">
+                                       <font>
+                                          <Font name="Tahoma" size="15.0" />
+                                       </font>
+                                    </Label>
+                                    <Label fx:id="brSt" alignment="CENTER" layoutX="196.0" layoutY="137.0" prefHeight="22.0" prefWidth="49.0" text="0" textFill="#e4d4d5">
+                                       <font>
+                                          <Font name="Berlin Sans FB" size="20.0" />
+                                       </font>
+                                    </Label>
+                                    <Label fx:id="chSh" alignment="CENTER" layoutX="130.0" layoutY="116.0" prefHeight="22.0" prefWidth="49.0" text="0" textFill="#7cc7f2">
+                                       <font>
+                                          <Font name="Berlin Sans FB" size="20.0" />
+                                       </font>
+                                    </Label>
+                                    <Label fx:id="brSh" alignment="CENTER" layoutX="130.0" layoutY="138.0" prefHeight="22.0" prefWidth="49.0" text="0" textFill="#7cc7f2">
+                                       <font>
+                                          <Font name="Berlin Sans FB" size="20.0" />
+                                       </font>
+                                    </Label>
+                                    <Label layoutX="25.0" layoutY="163.0" text="Rings" textFill="WHITE">
+                                       <font>
+                                          <Font name="Tahoma" size="15.0" />
+                                       </font>
+                                    </Label>
+                                    <Label fx:id="riSt" alignment="CENTER" layoutX="196.0" layoutY="159.0" prefHeight="22.0" prefWidth="49.0" text="0" textFill="#e4d4d5">
+                                       <font>
+                                          <Font name="Berlin Sans FB" size="20.0" />
+                                       </font>
+                                    </Label>
+                                    <Label fx:id="riSh" alignment="CENTER" layoutX="130.0" layoutY="160.0" prefHeight="22.0" prefWidth="49.0" text="0" textFill="#7cc7f2">
+                                       <font>
+                                          <Font name="Berlin Sans FB" size="20.0" />
+                                       </font>
+                                    </Label>
+                                    <Label layoutX="25.0" layoutY="185.0" text="Earrings" textFill="WHITE">
+                                       <font>
+                                          <Font name="Tahoma" size="15.0" />
+                                       </font>
+                                    </Label>
+                                    <Label fx:id="erSt" alignment="CENTER" layoutX="196.0" layoutY="181.0" prefHeight="22.0" prefWidth="49.0" text="0" textFill="#e4d4d5">
+                                       <font>
+                                          <Font name="Berlin Sans FB" size="20.0" />
+                                       </font>
+                                    </Label>
+                                    <Label fx:id="erSh" alignment="CENTER" layoutX="130.0" layoutY="182.0" prefHeight="22.0" prefWidth="49.0" text="0" textFill="#7cc7f2">
+                                       <font>
+                                          <Font name="Berlin Sans FB" size="20.0" />
+                                       </font>
+                                    </Label>
+                                    <Label layoutX="25.0" layoutY="207.0" text="Pendants" textFill="WHITE">
+                                       <font>
+                                          <Font name="Tahoma" size="15.0" />
+                                       </font>
+                                    </Label>
+                                    <Label fx:id="peSt" alignment="CENTER" layoutX="196.0" layoutY="203.0" prefHeight="22.0" prefWidth="49.0" text="0" textFill="#e4d4d5">
+                                       <font>
+                                          <Font name="Berlin Sans FB" size="20.0" />
+                                       </font>
+                                    </Label>
+                                    <Label fx:id="peSh" alignment="CENTER" layoutX="130.0" layoutY="204.0" prefHeight="22.0" prefWidth="49.0" text="0" textFill="#7cc7f2">
+                                       <font>
+                                          <Font name="Berlin Sans FB" size="20.0" />
+                                       </font>
+                                    </Label>
+                                    <Label layoutX="25.0" layoutY="228.0" text="Sura" textFill="WHITE">
+                                       <font>
+                                          <Font name="Tahoma" size="15.0" />
+                                       </font>
+                                    </Label>
+                                    <Label fx:id="suSt" alignment="CENTER" layoutX="196.0" layoutY="224.0" prefHeight="22.0" prefWidth="49.0" text="0" textFill="#e4d4d5">
+                                       <font>
+                                          <Font name="Berlin Sans FB" size="20.0" />
+                                       </font>
+                                    </Label>
+                                    <Label fx:id="suSh" alignment="CENTER" layoutX="130.0" layoutY="225.0" prefHeight="22.0" prefWidth="49.0" text="0" textFill="#7cc7f2">
+                                       <font>
+                                          <Font name="Berlin Sans FB" size="20.0" />
+                                       </font>
+                                    </Label>
+                                    <Label layoutX="25.0" layoutY="249.0" text="Panchayuda" textFill="WHITE">
+                                       <font>
+                                          <Font name="Tahoma" size="15.0" />
+                                       </font>
+                                    </Label>
+                                    <Label fx:id="paSt" alignment="CENTER" layoutX="196.0" layoutY="245.0" prefHeight="22.0" prefWidth="49.0" text="0" textFill="#e4d4d5">
+                                       <font>
+                                          <Font name="Berlin Sans FB" size="20.0" />
+                                       </font>
+                                    </Label>
+                                    <Label fx:id="paSh" alignment="CENTER" layoutX="130.0" layoutY="246.0" prefHeight="22.0" prefWidth="49.0" text="0" textFill="#7cc7f2">
+                                       <font>
+                                          <Font name="Berlin Sans FB" size="20.0" />
+                                       </font>
+                                    </Label>
+                                    <Label layoutX="25.0" layoutY="270.0" text="Necklace" textFill="WHITE">
+                                       <font>
+                                          <Font name="Tahoma" size="15.0" />
+                                       </font>
+                                    </Label>
+                                    <Label fx:id="neSt" alignment="CENTER" layoutX="196.0" layoutY="266.0" prefHeight="22.0" prefWidth="49.0" text="0" textFill="#e4d4d5">
+                                       <font>
+                                          <Font name="Berlin Sans FB" size="20.0" />
+                                       </font>
+                                    </Label>
+                                    <Label fx:id="neSh" alignment="CENTER" layoutX="130.0" layoutY="267.0" prefHeight="22.0" prefWidth="49.0" text="0" textFill="#7cc7f2">
+                                       <font>
+                                          <Font name="Berlin Sans FB" size="20.0" />
+                                       </font>
+                                    </Label>
+                                    <Label layoutX="25.0" layoutY="292.0" text="Bangles" textFill="WHITE">
+                                       <font>
+                                          <Font name="Tahoma" size="15.0" />
+                                       </font>
+                                    </Label>
+                                    <Label fx:id="baSt" alignment="CENTER" layoutX="196.0" layoutY="288.0" prefHeight="22.0" prefWidth="49.0" text="0" textFill="#e4d4d5">
+                                       <font>
+                                          <Font name="Berlin Sans FB" size="20.0" />
+                                       </font>
+                                    </Label>
+                                    <Label fx:id="baSh" alignment="CENTER" layoutX="130.0" layoutY="289.0" prefHeight="22.0" prefWidth="49.0" text="0" textFill="#7cc7f2">
+                                       <font>
+                                          <Font name="Berlin Sans FB" size="20.0" />
+                                       </font>
+                                    </Label>
+                                    <Label layoutX="25.0" layoutY="339.0" text="Total Count" textFill="WHITE">
+                                       <font>
+                                          <Font name="Tahoma" size="15.0" />
+                                       </font>
+                                    </Label>
+                                    <Label fx:id="toSt" alignment="CENTER" layoutX="195.0" layoutY="337.0" prefHeight="22.0" prefWidth="49.0" text="0" textFill="#e4d4d5">
+                                       <font>
+                                          <Font name="Berlin Sans FB" size="20.0" />
+                                       </font>
+                                    </Label>
+                                    <Label fx:id="toSh" alignment="CENTER" layoutX="130.0" layoutY="336.0" prefHeight="22.0" prefWidth="49.0" text="0" textFill="#7cc7f2">
+                                       <font>
+                                          <Font name="Berlin Sans FB" size="20.0" />
+                                       </font>
+                                    </Label>
+                                    <Line endX="127.5999755859375" layoutX="129.0" layoutY="328.0" startX="-103.79997253417969" stroke="WHITE" />
+                                    <Label layoutX="77.0" layoutY="34.0" text="Product Availability" textFill="#aadc70">
+                                       <font>
+                                          <Font name="Tahoma" size="18.0" />
+                                       </font>
+                                    </Label>
+                                    <Line endX="127.5999755859375" endY="-1.52587890625E-4" layoutX="125.0" layoutY="105.0" startX="-103.79997253417969" startY="-1.220703125E-4" stroke="WHITE" />
+                                    <Label layoutX="117.0" layoutY="74.0" text="Showroom " textFill="#7cc7f2">
+                                       <font>
+                                          <Font name="Tahoma" size="14.0" />
+                                       </font>
+                                    </Label>
+                                    <Line endX="125.79998779296875" endY="-1.52587890625E-4" layoutX="126.0" layoutY="68.0" startX="-103.79997253417969" startY="-1.220703125E-4" stroke="WHITE" />
+                                    <Label layoutX="203.0" layoutY="73.0" text="Stock" textFill="#e4d4d5">
+                                       <font>
+                                          <Font name="Tahoma" size="14.0" />
+                                       </font>
+                                    </Label>
+                                              </children>
+                                          </AnchorPane>
+                                        <AnchorPane layoutX="311.0" layoutY="179.0" prefHeight="411.0" prefWidth="662.0" stylesheets="@dashboardDesign.css">
                                             <styleClass>
                                                 <String fx:value="white-gb" />
                                                 <String fx:value="shadow" />
                                             </styleClass>
                                             <children>
-                                                <AnchorPane layoutX="14.0" layoutY="14.0" prefHeight="386.0" prefWidth="306.0" stylesheets="@dashboardDesign.css">
-                                                    <styleClass>
-                                                        <String fx:value="white-gb" />
-                                                        <String fx:value="shadow" />
-                                                    </styleClass>
-                                                    <children>
-                                                        <AreaChart fx:id="home_incomeChart" layoutX="-155.0" layoutY="-78.0" prefHeight="386.4" prefWidth="345.6" title="Income Data Chart" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
-                                                            <xAxis>
-                                                                <CategoryAxis side="BOTTOM" />
-                                                            </xAxis>
-                                                            <yAxis>
-                                                                <NumberAxis side="LEFT" />
-                                                            </yAxis>
-                                                        </AreaChart>
-                                                    </children>
-                                                </AnchorPane>
-                                                <AnchorPane layoutX="332.0" layoutY="14.0" prefHeight="386.0" prefWidth="312.0" stylesheets="@dashboardDesign.css">
+                                                <AnchorPane layoutX="14.0" layoutY="12.0" prefHeight="386.0" prefWidth="312.0" stylesheets="@dashboardDesign.css">
                                                     <styleClass>
                                                         <String fx:value="white-gb" />
                                                         <String fx:value="shadow" />
@@ -255,34 +424,38 @@
                                                         </BarChart>
                                                     </children>
                                                 </AnchorPane>
-                                                <AnchorPane fx:id="home_availableStock" layoutX="656.0" layoutY="14.0" prefHeight="382.0" prefWidth="254.0" styleClass="card" stylesheets="@dashboardDesign.css">
+                                                <AnchorPane layoutX="340.0" layoutY="12.0" prefHeight="386.0" prefWidth="306.0" stylesheets="@dashboardDesign.css">
+                                                    <styleClass>
+                                                        <String fx:value="white-gb" />
+                                                        <String fx:value="shadow" />
+                                                    </styleClass>
                                                     <children>
-                                                        <FontAwesomeIcon fill="WHITE" glyphName="CUBE" layoutX="8.0" layoutY="61.0" size="4em" />
-                                                        <Label layoutX="14.0" layoutY="82.0" text="Available Stock" textFill="WHITE">
-                                                            <font>
-                                                                <Font name="Tahoma" size="15.0" />
-                                                            </font>
-                                                        </Label>
-                                                        <Label fx:id="ch_stock" alignment="CENTER" layoutX="180.0" layoutY="80.0" prefHeight="22.0" prefWidth="59.0" text="0" textFill="WHITE">
-                                                            <font>
-                                                                <Font name="Berlin Sans FB" size="20.0" />
-                                                            </font>
-                                                        </Label>
-                                          <Label layoutX="14.0" layoutY="104.0" text="Available Stock" textFill="WHITE">
-                                             <font>
-                                                <Font name="Tahoma" size="15.0" />
-                                             </font>
-                                          </Label>
-                                          <Label fx:id="br_stock" alignment="CENTER" layoutX="180.0" layoutY="102.0" prefHeight="22.0" prefWidth="59.0" text="0" textFill="WHITE">
-                                             <font>
-                                                <Font name="Berlin Sans FB" size="20.0" />
-                                             </font>
-                                          </Label>
+                                                        <AreaChart fx:id="home_incomeChart" prefHeight="386.4" prefWidth="345.6" title="Income Data Chart" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
+                                                            <xAxis>
+                                                                <CategoryAxis side="BOTTOM" />
+                                                            </xAxis>
+                                                            <yAxis>
+                                                                <NumberAxis side="LEFT" />
+                                                            </yAxis>
+                                                        </AreaChart>
                                                     </children>
                                                 </AnchorPane>
                                             </children>
                                         </AnchorPane>
-                                        <Line endX="846.0000610351562" endY="-1.52587890625E-5" layoutX="122.0" layoutY="164.0" startX="-104.39997863769531" startY="-1.52587890625E-5" stroke="#000b7e" />
+                                        <Line endX="846.0000610351562" endY="-1.52587890625E-5" layoutX="122.0" layoutY="164.0" startX="189.20001220703125" startY="-1.52587890625E-5" stroke="#000b7e" />
+                              <AnchorPane fx:id="home_totalIncome1" layoutX="17.0" layoutY="4.0" prefHeight="30.0" prefWidth="960.0" stylesheets="@dashboardDesign.css">
+                                 <children>
+                                    <Label fx:id="company_name" alignment="CENTER" graphicTextGap="8.0" layoutX="320.0" layoutY="2.0" prefHeight="27.0" prefWidth="314.0" styleClass="label-spacing" stylesheets="@dashboardDesign.css" text="L U X U R Y    J E W E L L E R S" textAlignment="CENTER" textFill="WHITE">
+                                       <font>
+                                          <Font name="AdobeSongStd-Light" size="24.0" />
+                                       </font>
+                                    </Label>
+                                 </children>
+                                 <styleClass>
+                                    <String fx:value="nametag" />
+                                    <String fx:value="label-spacing" />
+                                 </styleClass>
+                              </AnchorPane>
                                     </children>
                                 </AnchorPane>
                                 <AnchorPane fx:id="sales_form" layoutX="14.0" layoutY="14.0" prefHeight="604.8" prefWidth="984.8" visible="false" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">

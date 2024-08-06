@@ -1,5 +1,8 @@
 package inventory;
 
+import javafx.animation.KeyFrame;
+import javafx.animation.KeyValue;
+import javafx.animation.Timeline;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.collections.transformation.FilteredList;
@@ -25,6 +28,7 @@ import javafx.scene.layout.StackPane;
 import javafx.scene.layout.VBox;
 import javafx.stage.*;
 import javafx.util.Callback;
+import javafx.util.Duration;
 import net.sf.jasperreports.engine.JasperCompileManager;
 import net.sf.jasperreports.engine.JasperFillManager;
 import net.sf.jasperreports.engine.JasperPrint;
@@ -213,9 +217,11 @@ public class dashboardController implements Initializable {
     @FXML
     private Button sales_payBtn, sales_receiptBtn, sales_soldBtn, sales_addBtn, sales_removeBtn, sales_stockBtn;
     @FXML
-    private Label home_sales,home_income,gold_rate;
+    private Label home_sales, home_income, home_bill, gold_rate;
     @FXML
-    private Label ch_stock,br_stock;
+    private Label chSh, brSh, riSh, erSh, peSh, suSh, paSh, neSh, baSh, toSh;
+    @FXML
+    private Label chSt, brSt, riSt, erSt, peSt, suSt, paSt, neSt, baSt, toSt;
 
     @FXML
     private Label dateTimeLabel;
@@ -318,8 +324,26 @@ public class dashboardController implements Initializable {
         // Display today's total sales count, total payable amount, and total stock count
         displayTodaySales();
         displayTodayIncome();
-        displayChStock();
-        displayBrStock();
+        displayTodayBill();
+        displayChSt();
+        displayChSh();
+        displayBrSt();
+        displayBrSh();
+        displayRiSt();
+        displayRiSh();
+        displayErSt();
+        displayErSh();
+        displayPeSt();
+        displayPeSh();
+        displaySuSt();
+        displaySuSh();
+        displayPaSt();
+        displayPaSh();
+        displayNeSt();
+        displayNeSh();
+        displayBaSt();
+        displayBaSh();
+        updateTotals();
         displayIncomeChart();
         displaySalesChart();
 
@@ -382,6 +406,46 @@ public class dashboardController implements Initializable {
     //********************************HOME PAGE REALTED*****************************************************************
 
     private void displayTodaySales() {
+        int totalBillToday = countTodayBill();
+        home_bill.setText(String.valueOf(totalBillToday));
+    }
+
+    private int countTodayBill() {
+        int totalBill = 0;
+
+        // Get current date
+        SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd");
+        String currentDate = sdf.format(new Date());
+
+        String query = "SELECT COUNT(*) AS total_bills FROM sales_receipt WHERE DATE(date) = ?";
+
+        connect = connectDb();
+        try (PreparedStatement pstmt = connect.prepareStatement(query)) {
+            // Set the current date parameter
+            pstmt.setString(1, currentDate);
+
+            // Execute the query and get the result
+            result = pstmt.executeQuery();
+            if (result.next()) {
+                totalBill = result.getInt("total_bills");
+            }
+
+        } catch (SQLException e) {
+            e.printStackTrace();
+        } finally {
+            try {
+                if (result != null) result.close();
+                if (prepare != null) prepare.close();
+                if (connect != null) connect.close();
+            } catch (SQLException e) {
+                e.printStackTrace();
+            }
+        }
+
+        return totalBill;
+    }
+
+    private void displayTodayBill() {
         int totalSalesToday = countTodaySales();
         home_sales.setText(String.valueOf(totalSalesToday));
     }
@@ -463,24 +527,106 @@ public class dashboardController implements Initializable {
         return totalIncome;
     }
 
-    private void displayChStock() {
-        int totalStock = countChainStock();
-        ch_stock.setText(String.valueOf(totalStock));
+    private void displayChSt() {
+        int totalStock = countByStatus("chain_details", "Stock");
+        chSt.setText(String.valueOf(totalStock));
     }
 
-    private int countChainStock() {
-        int totalStock = 0;
+    private void displayChSh() {
+        int totalShowroom = countByStatus("chain_details", "Showroom");
+        chSh.setText(String.valueOf(totalShowroom));
+    }
 
-        String query = "SELECT COUNT(*) AS total_stock FROM chain_details";
+    private void displayBrSt() {
+        int totalStock = countByStatus("bracelet_details", "Stock");
+        brSt.setText(String.valueOf(totalStock));
+    }
 
+    private void displayBrSh() {
+        int totalStock = countByStatus("bracelet_details", "Showroom");
+        brSh.setText(String.valueOf(totalStock));
+    }
+
+    private void displayRiSt() {
+        int totalStock = countByStatus("ring_details", "Stock");
+        riSt.setText(String.valueOf(totalStock));
+    }
+
+    private void displayRiSh() {
+        int totalStock = countByStatus("ring_details", "Showroom");
+        riSh.setText(String.valueOf(totalStock));
+    }
+
+    private void displayErSt() {
+        int totalStock = countByStatus("earring_details", "Stock");
+        erSt.setText(String.valueOf(totalStock));
+    }
+
+    private void displayErSh() {
+        int totalStock = countByStatus("earring_details", "Showroom");
+        erSh.setText(String.valueOf(totalStock));
+    }
+
+    private void displayPeSt() {
+        int totalStock = countByStatus("pendant_details", "Stock");
+        peSt.setText(String.valueOf(totalStock));
+    }
+
+    private void displayPeSh() {
+        int totalStock = countByStatus("pendant_details", "Showroom");
+        peSh.setText(String.valueOf(totalStock));
+    }
+
+    private void displaySuSt() {
+        int totalStock = countByStatus("sura_details", "Stock");
+        suSt.setText(String.valueOf(totalStock));
+    }
+
+    private void displaySuSh() {
+        int totalStock = countByStatus("sura_details", "Showroom");
+        suSh.setText(String.valueOf(totalStock));
+    }
+
+    private void displayPaSt() {
+        int totalStock = countByStatus("pancha_details", "Stock");
+        paSt.setText(String.valueOf(totalStock));
+    }
+
+    private void displayPaSh() {
+        int totalStock = countByStatus("pancha_details", "Showroom");
+        paSh.setText(String.valueOf(totalStock));
+    }
+
+    private void displayNeSt() {
+        int totalStock = countByStatus("necklace_details", "Stock");
+        neSt.setText(String.valueOf(totalStock));
+    }
+
+    private void displayNeSh() {
+        int totalStock = countByStatus("necklace_details", "Showroom");
+        neSh.setText(String.valueOf(totalStock));
+    }
+
+    private void displayBaSt() {
+        int totalStock = countByStatus("bangle_details", "Stock");
+        baSt.setText(String.valueOf(totalStock));
+    }
+
+    private void displayBaSh() {
+        int totalStock = countByStatus("bangle_details", "Showroom");
+        baSh.setText(String.valueOf(totalStock));
+    }
+
+    private int countByStatus(String tableName, String status) {
+        int total = 0;
+        String query = "SELECT COUNT(*) AS total FROM " + tableName + " WHERE status = ?";
         connect = connectDb();
         try (PreparedStatement pstmt = connect.prepareStatement(query)) {
-            // Execute the query and get the result
+            pstmt.setString(1, status);
             result = pstmt.executeQuery();
             if (result.next()) {
-                totalStock = result.getInt("total_stock");
+                total = result.getInt("total");
             }
-
         } catch (SQLException e) {
             e.printStackTrace();
         } finally {
@@ -492,42 +638,35 @@ public class dashboardController implements Initializable {
                 e.printStackTrace();
             }
         }
-
-        return totalStock;
+        return total;
     }
 
-    private void displayBrStock() {
-        int totalStock = countBrStock();
-        br_stock.setText(String.valueOf(totalStock));
+    private void updateTotals() {
+        int totalShowroom = countTotalByStatus("showroom");
+        int totalStock = countTotalByStatus("stock");
+        toSh.setText(String.valueOf(totalShowroom));
+        toSt.setText(String.valueOf(totalStock));
     }
 
-    private int countBrStock() {
-        int totalStock = 0;
-
-        String query = "SELECT COUNT(*) AS total_stock FROM bracelet_details";
-
-        connect = connectDb();
-        try (PreparedStatement pstmt = connect.prepareStatement(query)) {
-            // Execute the query and get the result
-            result = pstmt.executeQuery();
-            if (result.next()) {
-                totalStock = result.getInt("total_stock");
-            }
-
-        } catch (SQLException e) {
-            e.printStackTrace();
-        } finally {
-            try {
-                if (result != null) result.close();
-                if (prepare != null) prepare.close();
-                if (connect != null) connect.close();
+    private int countTotalByStatus(String status) {
+        int total = 0;
+        String[] tables = {"chain_details", "bracelet_details", "ring_details", "earring_details", "pendant_details", "sura_details", "pancha_details", "necklace_details", "bangle_details"};
+        for (String table : tables) {
+            String query = "SELECT COUNT(*) AS total FROM " + table + " WHERE status = ?";
+            connect = connectDb();
+            try (PreparedStatement pstmt = connect.prepareStatement(query)) {
+                pstmt.setString(1, status);
+                ResultSet result = pstmt.executeQuery();
+                if (result.next()) {
+                    total += result.getInt("total");
+                }
             } catch (SQLException e) {
                 e.printStackTrace();
             }
         }
-
-        return totalStock;
+        return total;
     }
+
 
     private void displayIncomeChart() {
         XYChart.Series<String, Number> series = new XYChart.Series<>();
@@ -637,7 +776,6 @@ public class dashboardController implements Initializable {
 
     //************************************NEW SALES*********************************************************************
 
-    // Method to add products to the sales table
     @FXML
     private void handleAddButtonClick() {
         String productId = sales_id.getText();
@@ -655,7 +793,7 @@ public class dashboardController implements Initializable {
         bangleData bangleDetails = getBangleDetails(productId);
 
         if (chainDetails == null && braceletDetails == null && ringDetails == null && earringDetails == null && pendantDetails == null
-         && suraDetails == null  && panchaDetails == null && necklaceDetails == null && bangleDetails == null) {
+                && suraDetails == null && panchaDetails == null && necklaceDetails == null && bangleDetails == null) {
             showAlert(Alert.AlertType.ERROR, "Error Message", "Product ID not found");
             return;
         }
@@ -670,8 +808,16 @@ public class dashboardController implements Initializable {
             return;
         }
 
-        double price = Double.parseDouble(priceStr);
-        double returnValue = Double.parseDouble(returnValueStr);
+        double price;
+        double returnValue;
+
+        try {
+            price = Double.parseDouble(priceStr);
+            returnValue = Double.parseDouble(returnValueStr);
+        } catch (NumberFormatException e) {
+            showAlert(Alert.AlertType.ERROR, "Error Message", "Invalid amount. Please enter valid amounts for price and return value.");
+            return;
+        }
 
         //****************************************Change this also******************************************************
         if (chainDetails != null) {
@@ -6412,8 +6558,26 @@ public class dashboardController implements Initializable {
 
             displayTodaySales();
             displayTodayIncome();
-            displayChStock();
-            displayBrStock();
+            displayTodayBill();
+            displayChSt();
+            displayChSh();
+            displayBrSt();
+            displayBrSh();
+            displayRiSt();
+            displayRiSh();
+            displayErSt();
+            displayErSh();
+            displayPeSt();
+            displayPeSh();
+            displaySuSt();
+            displaySuSh();
+            displayPaSt();
+            displayPaSh();
+            displayNeSt();
+            displayNeSh();
+            displayBaSt();
+            displayBaSh();
+            updateTotals();
 
         } else if (event.getSource() == chainBtn) {
             home_form.setVisible(false);
@@ -6898,7 +7062,7 @@ public class dashboardController implements Initializable {
             public void run() {
                 Platform.runLater(() -> {
                     Date now = new Date();
-                    SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd \nHH:mm:ss");
+                    SimpleDateFormat dateFormat = new SimpleDateFormat("yy-MMMM-dd   |   HH:mm");
                     dateTimeLabel.setText(dateFormat.format(now));
                 });
             }
@@ -6907,7 +7071,6 @@ public class dashboardController implements Initializable {
         scheduler.scheduleAtFixedRate(dateTimeTask, 0, 1, TimeUnit.SECONDS);
     }
 
-    // Don't forget to shut down the scheduler when the application stops
     public void stop() {
         scheduler.shutdown();
     }
@@ -6942,5 +7105,6 @@ public class dashboardController implements Initializable {
             gold_rate.setText("Rs " + latestRate);
         });
     }
+
 
 }

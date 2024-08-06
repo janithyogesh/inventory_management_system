@@ -7,7 +7,7 @@
 <?import javafx.scene.control.TextField?>
 <?import javafx.scene.layout.VBox?>
 
-<VBox prefHeight="574.0" prefWidth="900.0" xmlns="http://javafx.com/javafx/22" xmlns:fx="http://javafx.com/fxml/1" fx:controller="inventory.SoldItemsPopupController">
+<VBox prefHeight="524.0" prefWidth="900.0" xmlns="http://javafx.com/javafx/22" xmlns:fx="http://javafx.com/fxml/1" fx:controller="inventory.SoldItemsPopupController">
     <children>
         <TextField fx:id="searchField" prefHeight="37.0" prefWidth="879.0" promptText="Search..." styleClass="search" stylesheets="@dashboardDesign.css" />
         <TableView fx:id="soldItemsTableView" prefHeight="444.0" prefWidth="879.0">
@@ -17,17 +17,16 @@
                 <TableColumn fx:id="soldItems_col_category" text="Category" />
                 <TableColumn fx:id="soldItems_col_weight" text="Weight" />
                 <TableColumn fx:id="soldItems_col_netWeight" text="Net Weight" />
-                <TableColumn fx:id="soldItems_col_length" text="Length" />
-                <TableColumn fx:id="soldItems_col_goldRate" text="Gold Rate" />
-            <TableColumn fx:id="soldItems_col_status" text="Status" />
+                <TableColumn fx:id="soldItems_col_length" prefWidth="52.79998779296875" text="Length" />
+                <TableColumn fx:id="soldItems_col_goldRate" prefWidth="97.60003662109375" text="Gold Rate" />
+                <TableColumn fx:id="soldItems_col_status" prefWidth="90.39996337890625" text="Status" />
                 <TableColumn fx:id="soldItems_col_price" text="Price" />
                 <TableColumn fx:id="soldItems_col_returnValue" text="Return Value" />
                 <TableColumn fx:id="soldItems_col_date" text="Date" />
             </columns>
         </TableView>
-        <Label fx:id="totalSoldItemsLabel" text="Total Sold Items: 0" />
-        <Label fx:id="totalChainsLabel" text="Total Chains: 0" />
-        <Label fx:id="totalBraceletsLabel" text="Total Bracelets: 0" />
+        <Label fx:id="totalSoldItemsLabel" alignment="CENTER" prefHeight="18.0" prefWidth="879.0" text="Total Sold Items: 0" textAlignment="CENTER" />
+        <Label fx:id="relatedItemsLabel" alignment="CENTER" prefHeight="18.0" prefWidth="879.0" text="Related Items: 0" textAlignment="CENTER" />
     </children>
     <padding>
         <Insets bottom="10" left="10" right="10" top="10" />

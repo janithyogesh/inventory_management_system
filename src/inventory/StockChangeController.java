@@ -11,6 +11,7 @@ import javafx.scene.control.TextField;
 import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
+import java.sql.SQLException;
 
 public class StockChangeController {
 
@@ -60,24 +61,32 @@ public class StockChangeController {
         }
 
         try {
+            connect.setAutoCommit(false);  // Start transaction
+
             ObservableList<String> notFoundIds = FXCollections.observableArrayList();
             ObservableList<String> alreadyShowroomIds = FXCollections.observableArrayList();
-            boolean allUpdated = true;
+            boolean canUpdate = true;
+
             for (String productId : productIds) {
-                int updateStatus = updateProductStatus(productId);
-                if (updateStatus == 0) {
+                int checkStatus = checkProductStatus(productId);
+                if (checkStatus == 0) {
                     notFoundIds.add(productId);
-                    allUpdated = false;
-                } else if (updateStatus == -1) {
+                    canUpdate = false;
+                } else if (checkStatus == -1) {
                     alreadyShowroomIds.add(productId);
-                    allUpdated = false;
+                    canUpdate = false;
                 }
             }
 
-            if (allUpdated) {
+            if (canUpdate) {
+                for (String productId : productIds) {
+                    updateProductStatus(productId);
+                }
+                connect.commit();
                 showAlert(Alert.AlertType.INFORMATION, "Success", "All product statuses updated to showroom");
                 productIds.clear();
             } else {
+                connect.rollback();
                 StringBuilder alertMessage = new StringBuilder();
                 if (!notFoundIds.isEmpty()) {
                     alertMessage.append("The following product IDs were not found: ").append(notFoundIds.toString()).append("\n");
@@ -86,150 +95,51 @@ public class StockChangeController {
                     alertMessage.append("The following product IDs are already in the showroom: ").append(alreadyShowroomIds.toString());
                 }
                 showAlert(Alert.AlertType.WARNING, "Warning", alertMessage.toString());
-                productIds.removeAll(notFoundIds);
-                productIds.removeAll(alreadyShowroomIds);
             }
+
         } catch (Exception e) {
             e.printStackTrace();
+            try {
+                connect.rollback();
+            } catch (SQLException rollbackException) {
+                rollbackException.printStackTrace();
+            }
             showAlert(Alert.AlertType.ERROR, "Error", "Error updating product statuses");
+        } finally {
+            try {
+                connect.setAutoCommit(true);  // Restore auto-commit mode
+            } catch (SQLException e) {
+                e.printStackTrace();
+            }
         }
     }
 
-    private int updateProductStatus(String productId) throws Exception {
-        String checkChainSql = "SELECT status FROM chain_details WHERE product_id = ?";
-        String checkBraceletSql = "SELECT status FROM bracelet_details WHERE product_id = ?";
-        String checkRingSql = "SELECT status FROM ring_details WHERE product_id = ?";
-        String checkEarringSql = "SELECT status FROM earring_details WHERE product_id = ?";
-        String checkPendantSql = "SELECT status FROM pendant_details WHERE product_id = ?";
-        String checkSuraSql = "SELECT status FROM sura_details WHERE product_id = ?";
-        String checkPanchaSql = "SELECT status FROM pancha_details WHERE product_id = ?";
-        String checkNecklaceSql = "SELECT status FROM necklace_details WHERE product_id = ?";
-        String checkBangleSql = "SELECT status FROM bangle_details WHERE product_id = ?";
+    private int checkProductStatus(String productId) throws SQLException {
+        String[] tables = {"chain_details", "bracelet_details", "ring_details", "earring_details", "pendant_details", "sura_details", "pancha_details", "necklace_details", "bangle_details"};
+        for (String table : tables) {
+            String query = "SELECT status FROM " + table + " WHERE product_id = ?";
+            try (PreparedStatement pstmt = connect.prepareStatement(query)) {
+                pstmt.setString(1, productId);
+                ResultSet result = pstmt.executeQuery();
+                if (result.next()) {
+                    String status = result.getString("status");
+                    if ("showroom".equalsIgnoreCase(status)) {
+                        return -1;  // Already in showroom
+                    }
+                    return 1;  // Found in stock
+                }
+            }
+        }
+        return 0;  // Not found
+    }
 
-        String updateChainSql = "UPDATE chain_details SET status = 'showroom' WHERE product_id = ? AND status = 'stock'";
-        String updateBraceletSql = "UPDATE bracelet_details SET status = 'showroom' WHERE product_id = ? AND status = 'stock'";
-        String updateRingSql = "UPDATE ring_details SET status = 'showroom' WHERE product_id = ? AND status = 'stock'";
-        String updateEarringSql = "UPDATE earring_details SET status = 'showroom' WHERE product_id = ? AND status = 'stock'";
-        String updatePendantSql = "UPDATE pendant_details SET status = 'showroom' WHERE product_id = ? AND status = 'stock'";
-        String updateSuraSql = "UPDATE sura_details SET status = 'showroom' WHERE product_id = ? AND status = 'stock'";
-        String updatePanchaSql = "UPDATE pancha_details SET status = 'showroom' WHERE product_id = ? AND status = 'stock'";
-        String updateNecklaceSql = "UPDATE necklace_details SET status = 'showroom' WHERE product_id = ? AND status = 'stock'";
-        String updateBangleSql = "UPDATE bangle_details SET status = 'showroom' WHERE product_id = ? AND status = 'stock'";
-
-        try (PreparedStatement checkChainStmt = connect.prepareStatement(checkChainSql);
-             PreparedStatement updateChainStmt = connect.prepareStatement(updateChainSql);
-             PreparedStatement checkRingStmt = connect.prepareStatement(checkRingSql);
-             PreparedStatement updateRingStmt = connect.prepareStatement(updateRingSql);
-             PreparedStatement checkEarringStmt = connect.prepareStatement(checkEarringSql);
-             PreparedStatement updateEarringStmt = connect.prepareStatement(updateEarringSql);
-             PreparedStatement checkPendantStmt = connect.prepareStatement(checkPendantSql);
-             PreparedStatement updatePendantStmt = connect.prepareStatement(updatePendantSql);
-             PreparedStatement checkSuraStmt = connect.prepareStatement(checkSuraSql);
-             PreparedStatement updateSuraStmt = connect.prepareStatement(updateSuraSql);
-             PreparedStatement checkPanchaStmt = connect.prepareStatement(checkPanchaSql);
-             PreparedStatement updatePanchaStmt = connect.prepareStatement(updatePanchaSql);
-             PreparedStatement checkNecklaceStmt = connect.prepareStatement(checkNecklaceSql);
-             PreparedStatement updateNecklaceStmt = connect.prepareStatement(updateNecklaceSql);
-             PreparedStatement checkBangleStmt = connect.prepareStatement(checkBangleSql);
-             PreparedStatement updateBangleStmt = connect.prepareStatement(updateBangleSql);
-             PreparedStatement checkBraceletStmt = connect.prepareStatement(checkBraceletSql);
-             PreparedStatement updateBraceletStmt = connect.prepareStatement(updateBraceletSql)) {
-
-            checkChainStmt.setString(1, productId);
-            checkBraceletStmt.setString(1, productId);
-            checkRingStmt.setString(1, productId);
-            checkEarringStmt.setString(1, productId);
-            checkPendantStmt.setString(1, productId);
-            checkSuraStmt.setString(1, productId);
-            checkPanchaStmt.setString(1, productId);
-            checkNecklaceStmt.setString(1, productId);
-            checkBangleStmt.setString(1, productId);
-
-            ResultSet chainResult = checkChainStmt.executeQuery();
-            ResultSet braceletResult = checkBraceletStmt.executeQuery();
-            ResultSet ringResult = checkRingStmt.executeQuery();
-            ResultSet earringResult = checkEarringStmt.executeQuery();
-            ResultSet pendantResult = checkPendantStmt.executeQuery();
-            ResultSet suraResult = checkSuraStmt.executeQuery();
-            ResultSet panchaResult = checkPanchaStmt.executeQuery();
-            ResultSet necklaceResult = checkNecklaceStmt.executeQuery();
-            ResultSet bangleResult = checkBangleStmt.executeQuery();
-
-
-            if (chainResult.next()) {
-                String status = chainResult.getString("status");
-                if ("showroom".equalsIgnoreCase(status)) {
-                    return -1;  // Already in showroom
-                }
-                updateChainStmt.setString(1, productId);
-                updateChainStmt.executeUpdate();
-                return 1;  // Successfully updated
-            } else if (braceletResult.next()) {
-                String status = braceletResult.getString("status");
-                if ("showroom".equalsIgnoreCase(status)) {
-                    return -1;  // Already in showroom
-                }
-                updateBraceletStmt.setString(1, productId);
-                updateBraceletStmt.executeUpdate();
-                return 1;  // Successfully updated
-            } else if (ringResult.next()) {
-                String status = ringResult.getString("status");
-                if ("showroom".equalsIgnoreCase(status)) {
-                    return -1;  // Already in showroom
-                }
-                updateRingStmt.setString(1, productId);
-                updateRingStmt.executeUpdate();
-                return 1;  // Successfully updated
-            }else if (earringResult.next()) {
-                String status = earringResult.getString("status");
-                if ("showroom".equalsIgnoreCase(status)) {
-                    return -1;  // Already in showroom
-                }
-                updateEarringStmt.setString(1, productId);
-                updateEarringStmt.executeUpdate();
-                return 1;  // Successfully updated
-            }else if (pendantResult.next()) {
-                String status = pendantResult.getString("status");
-                if ("showroom".equalsIgnoreCase(status)) {
-                    return -1;  // Already in showroom
-                }
-                updatePendantStmt.setString(1, productId);
-                updatePendantStmt.executeUpdate();
-                return 1;  // Successfully updated
-            }else if (suraResult.next()) {
-                String status = suraResult.getString("status");
-                if ("showroom".equalsIgnoreCase(status)) {
-                    return -1;  // Already in showroom
-                }
-                updateSuraStmt.setString(1, productId);
-                updateSuraStmt.executeUpdate();
-                return 1;  // Successfully updated
-            }else if (panchaResult.next()) {
-                String status = panchaResult.getString("status");
-                if ("showroom".equalsIgnoreCase(status)) {
-                    return -1;  // Already in showroom
-                }
-                updatePanchaStmt.setString(1, productId);
-                updatePanchaStmt.executeUpdate();
-                return 1;  // Successfully updated
-            }else if (necklaceResult.next()) {
-                String status = necklaceResult.getString("status");
-                if ("showroom".equalsIgnoreCase(status)) {
-                    return -1;  // Already in showroom
-                }
-                updateNecklaceStmt.setString(1, productId);
-                updateNecklaceStmt.executeUpdate();
-                return 1;  // Successfully updated
-            }else if (bangleResult.next()) {
-                String status = bangleResult.getString("status");
-                if ("showroom".equalsIgnoreCase(status)) {
-                    return -1;  // Already in showroom
-                }
-                updateBangleStmt.setString(1, productId);
-                updateBangleStmt.executeUpdate();
-                return 1;  // Successfully updated
-            }else {
-                return 0;  // Not found
+    private void updateProductStatus(String productId) throws SQLException {
+        String[] tables = {"chain_details", "bracelet_details", "ring_details", "earring_details", "pendant_details", "sura_details", "pancha_details", "necklace_details", "bangle_details"};
+        for (String table : tables) {
+            String query = "UPDATE " + table + " SET status = 'showroom' WHERE product_id = ? AND status = 'stock'";
+            try (PreparedStatement pstmt = connect.prepareStatement(query)) {
+                pstmt.setString(1, productId);
+                pstmt.executeUpdate();
             }
         }
     }

@@ -32,9 +32,7 @@ public class SoldItemsPopupController implements Initializable {
     @FXML
     private Label totalSoldItemsLabel;
     @FXML
-    private Label totalChainsLabel;
-    @FXML
-    private Label totalBraceletsLabel;
+    private Label relatedItemsLabel;
 
     private FilteredList<salesData> filteredData;
 
@@ -46,7 +44,6 @@ public class SoldItemsPopupController implements Initializable {
         soldItems_col_weight.setCellValueFactory(new PropertyValueFactory<>("weight"));
         soldItems_col_netWeight.setCellValueFactory(new PropertyValueFactory<>("net_weight"));
         soldItems_col_length.setCellValueFactory(new PropertyValueFactory<>("length"));
-        //soldItems_col_karat.setCellValueFactory(new PropertyValueFactory<>("karat"));
         soldItems_col_goldRate.setCellValueFactory(new PropertyValueFactory<>("gold_rate"));
         soldItems_col_status.setCellValueFactory(new PropertyValueFactory<>("status"));
         soldItems_col_price.setCellValueFactory(new PropertyValueFactory<>("price"));
@@ -69,25 +66,7 @@ public class SoldItemsPopupController implements Initializable {
                 }
 
                 // Compare data with filter text
-                String lowerCaseFilter = newValue.toLowerCase();
-                if (salesData.getProduct_id().toLowerCase().contains(lowerCaseFilter)) {
-                    return true;
-                } else if (salesData.getCategory().toLowerCase().contains(lowerCaseFilter)) {
-                    return true;
-                } else if (String.valueOf(salesData.getNet_weight()).contains(lowerCaseFilter)) {
-                    return true;
-                } else if (salesData.getStatus().toLowerCase().contains(lowerCaseFilter)) {
-                    return true;
-                } else if (String.valueOf(salesData.getGold_rate()).contains(lowerCaseFilter)) {
-                    return true;
-                } else if (String.valueOf(salesData.getPrice()).contains(lowerCaseFilter)) {
-                    return true;
-                } else if (String.valueOf(salesData.getReturn_value()).contains(lowerCaseFilter)) {
-                    return true;
-                } else if (salesData.getDate().toString().contains(lowerCaseFilter)) {
-                    return true;
-                }
-                return false;
+                return itemMatchesFilter(salesData, newValue.toLowerCase());
             });
             updateTotals(filteredData);
         });
@@ -115,11 +94,49 @@ public class SoldItemsPopupController implements Initializable {
 
     private void updateTotals(FilteredList<salesData> salesData) {
         long totalItems = salesData.size();
-        long totalChains = salesData.stream().filter(data -> data.getProduct_id().startsWith("C")).count();
-        long totalBracelets = salesData.stream().filter(data -> data.getProduct_id().startsWith("B")).count();
-
         totalSoldItemsLabel.setText("Total Sold Items: " + totalItems);
-        totalChainsLabel.setText("Total Chains: " + totalChains);
-        totalBraceletsLabel.setText("Total Bracelets: " + totalBracelets);
+
+        // Update the count of related items
+        long relatedItems = salesData.stream().filter(this::itemMatchesFilter).count();
+        relatedItemsLabel.setText("Related Items: " + relatedItems);
+    }
+
+    private boolean itemMatchesFilter(salesData item, String filter) {
+        if (filter == null || filter.isEmpty()) {
+            return true;
+        }
+        if (item.getProduct_id() != null && item.getProduct_id().toLowerCase().contains(filter)) {
+            return true;
+        }
+        if (item.getCategory() != null && item.getCategory().toLowerCase().contains(filter)) {
+            return true;
+        }
+        if (item.getWeight() != null && String.valueOf(item.getWeight()).toLowerCase().contains(filter)) {
+            return true;
+        }
+        if (item.getNet_weight() != null && String.valueOf(item.getNet_weight()).contains(filter)) {
+            return true;
+        }
+        if (item.getStatus() != null && item.getStatus().toLowerCase().contains(filter)) {
+            return true;
+        }
+        if (item.getGold_rate() != null && String.valueOf(item.getGold_rate()).contains(filter)) {
+            return true;
+        }
+        if (item.getPrice() != null && String.valueOf(item.getPrice()).contains(filter)) {
+            return true;
+        }
+        if (item.getReturn_value() != null && String.valueOf(item.getReturn_value()).contains(filter)) {
+            return true;
+        }
+        if (item.getDate() != null && item.getDate().toString().contains(filter)) {
+            return true;
+        }
+        return false;
+    }
+
+    private boolean itemMatchesFilter(salesData item) {
+        String filter = searchField.getText();
+        return itemMatchesFilter(item, filter != null ? filter.toLowerCase() : "");
     }
 }

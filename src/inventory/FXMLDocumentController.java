@@ -1,5 +1,6 @@
 package inventory;
 
+import java.io.IOException;
 import java.net.URL;
 import java.sql.Connection;
 import java.sql.PreparedStatement;
@@ -193,8 +194,30 @@ public class FXMLDocumentController implements Initializable {
         System.exit(0);
     }
 
+
+//    private void startXAMPPAndMySQL() {
+//        String xamppPath = "C:\\xamp\\xampp_start.exe"; // Adjust path as necessary
+//        String mysqlPath = "C:\\xamp\\mysql_start.bat"; // Adjust path as necessary
+//
+//        try {
+//            // Start XAMPP
+//            System.out.println("Starting XAMPP...");
+//            Process xamppProcess = Runtime.getRuntime().exec(xamppPath);
+//            xamppProcess.waitFor();
+//            System.out.println("XAMPP started successfully.");
+//
+//            // Start MySQL
+//            System.out.println("Starting MySQL...");
+//            Process mysqlProcess = Runtime.getRuntime().exec(mysqlPath);
+//            mysqlProcess.waitFor();
+//            System.out.println("MySQL started successfully.");
+//        } catch (IOException | InterruptedException e) {
+//            e.printStackTrace();
+//        }
+//    }
+
     @Override
     public void initialize(URL url, ResourceBundle rb) {
-        // No need to update the gold rate label here since it's in DashboardController
+        //startXAMPPAndMySQL();
     }
 }
