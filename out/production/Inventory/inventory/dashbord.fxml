@@ -5,6 +5,7 @@
 <?import javafx.scene.chart.AreaChart?>
 <?import javafx.scene.chart.BarChart?>
 <?import javafx.scene.chart.CategoryAxis?>
+<?import javafx.scene.chart.LineChart?>
 <?import javafx.scene.chart.NumberAxis?>
 <?import javafx.scene.control.Button?>
 <?import javafx.scene.control.ComboBox?>
@@ -61,7 +62,7 @@
                                                 <Font name="Tahoma" size="17.0" />
                                             </font>
                                         </Label>
-                                        <Label fx:id="username" alignment="CENTER" layoutX="14.0" layoutY="108.0" prefHeight="23.0" prefWidth="189.0" text="ADMIN" textFill="WHITE">
+                                        <Label fx:id="username" alignment="CENTER" layoutX="14.0" layoutY="108.0" prefHeight="23.0" prefWidth="189.0" text="ADMIN" textFill="#9f9621">
                                             <font>
                                                 <Font name="Arial Bold" size="20.0" />
                                             </font>
@@ -116,12 +117,12 @@
                                                 <FontAwesomeIcon fill="WHITE" glyphName="PLUS" />
                                             </graphic>
                                         </Button>
-                                        <Button fx:id="suBtn" layoutX="20.0" layoutY="388.0" mnemonicParsing="false" onAction="#switchForm" prefHeight="30.0" prefWidth="180.0" styleClass="nav-btn" stylesheets="@dashboardDesign.css" text="Sura">
+                                        <Button fx:id="suBtn" layoutX="20.0" layoutY="388.0" mnemonicParsing="false" onAction="#switchForm" prefHeight="30.0" prefWidth="180.0" styleClass="nav-btn" stylesheets="@dashboardDesign.css" text="Yanthra Sura">
                                             <graphic>
                                                 <FontAwesomeIcon fill="WHITE" glyphName="PLUS" />
                                             </graphic>
                                         </Button>
-                                        <Button fx:id="paBtn" layoutX="20.0" layoutY="421.0" mnemonicParsing="false" onAction="#switchForm" prefHeight="30.0" prefWidth="180.0" styleClass="nav-btn" stylesheets="@dashboardDesign.css" text="Panchayudha">
+                                        <Button fx:id="paBtn" layoutX="20.0" layoutY="421.0" mnemonicParsing="false" onAction="#switchForm" prefHeight="30.0" prefWidth="180.0" styleClass="nav-btn" stylesheets="@dashboardDesign.css" text="Amulet Pendant">
                                             <graphic>
                                                 <FontAwesomeIcon fill="WHITE" glyphName="PLUS" />
                                             </graphic>
@@ -231,7 +232,7 @@
                                         </AnchorPane>
                                           <AnchorPane fx:id="home_availableStock" layoutX="17.0" layoutY="192.0" prefHeight="398.0" prefWidth="279.0" styleClass="card" stylesheets="@dashboardDesign.css">
                                               <children>
-                                                  <FontAwesomeIcon fill="#aaff4a" glyphName="CUBE" layoutX="48.0" layoutY="54.0" selectionFill="#aadc70" size="2em" />
+                                                  <FontAwesomeIcon fill="#8cb15f" glyphName="CUBE" layoutX="48.0" layoutY="54.0" selectionFill="#8cb15f" size="2em" />
                                                   <Label layoutX="25.0" layoutY="119.0" text="Chains" textFill="WHITE">
                                                       <font>
                                                           <Font name="Tahoma" size="15.0" />
@@ -307,7 +308,7 @@
                                           <Font name="Berlin Sans FB" size="20.0" />
                                        </font>
                                     </Label>
-                                    <Label layoutX="25.0" layoutY="228.0" text="Sura" textFill="WHITE">
+                                    <Label layoutX="25.0" layoutY="228.0" text="Yanthra Sura" textFill="WHITE">
                                        <font>
                                           <Font name="Tahoma" size="15.0" />
                                        </font>
@@ -322,7 +323,7 @@
                                           <Font name="Berlin Sans FB" size="20.0" />
                                        </font>
                                     </Label>
-                                    <Label layoutX="25.0" layoutY="249.0" text="Panchayuda" textFill="WHITE">
+                                    <Label layoutX="25.0" layoutY="249.0" text="Amulet Pendants" textFill="WHITE">
                                        <font>
                                           <Font name="Tahoma" size="15.0" />
                                        </font>
@@ -337,7 +338,7 @@
                                           <Font name="Berlin Sans FB" size="20.0" />
                                        </font>
                                     </Label>
-                                    <Label layoutX="25.0" layoutY="270.0" text="Necklace" textFill="WHITE">
+                                    <Label layoutX="25.0" layoutY="270.0" text="Necklaces" textFill="WHITE">
                                        <font>
                                           <Font name="Tahoma" size="15.0" />
                                        </font>
@@ -383,7 +384,7 @@
                                        </font>
                                     </Label>
                                     <Line endX="127.5999755859375" layoutX="129.0" layoutY="328.0" startX="-103.79997253417969" stroke="WHITE" />
-                                    <Label layoutX="77.0" layoutY="34.0" text="Product Availability" textFill="#aadc70">
+                                    <Label layoutX="77.0" layoutY="34.0" text="Product Availability" textFill="#8cb15f">
                                        <font>
                                           <Font name="Tahoma" size="18.0" />
                                        </font>
@@ -414,7 +415,7 @@
                                                         <String fx:value="shadow" />
                                                     </styleClass>
                                                     <children>
-                                                        <BarChart fx:id="home_salesChart" layoutX="-120.0" layoutY="-85.0" prefHeight="386.4" prefWidth="380.0" title="Sales data Chart" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
+                                                        <BarChart fx:id="home_salesChart" layoutX="-120.0" layoutY="-85.0" prefHeight="386.4" prefWidth="380.0" stylesheets="@dashboardDesign.css" title="Sales Data Chart" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
                                                             <xAxis>
                                                                 <CategoryAxis side="BOTTOM" />
                                                             </xAxis>
@@ -430,7 +431,15 @@
                                                         <String fx:value="shadow" />
                                                     </styleClass>
                                                     <children>
-                                                        <AreaChart fx:id="home_incomeChart" prefHeight="386.4" prefWidth="345.6" title="Income Data Chart" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
+                                                        <LineChart fx:id="home_rateChart" prefHeight="386.4" prefWidth="306.0" title="Gold Rate">
+                                                            <xAxis>
+                                                                <CategoryAxis disable="true" side="BOTTOM" fx:id="xAxis" />
+                                                            </xAxis>
+                                                            <yAxis>
+                                                                <NumberAxis fx:id="yAxis" disable="true" side="LEFT" />
+                                                            </yAxis>
+                                                        </LineChart>
+                                                        <AreaChart fx:id="home_incomeChart" prefHeight="400.0" prefWidth="383.0" stylesheets="@dashboardDesign.css" title="Income Data Chart" visible="false" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
                                                             <xAxis>
                                                                 <CategoryAxis side="BOTTOM" />
                                                             </xAxis>
@@ -1139,7 +1148,7 @@
                                           <Button fx:id="addPa_importBtn" layoutX="1.0" layoutY="97.0" mnemonicParsing="false" onAction="#addPaImportImage" prefHeight="20.0" prefWidth="90.0" styleClass="import-btn" stylesheets="@dashboardDesign.css" text="Import" />
                                        </children>
                                     </AnchorPane>
-                                    <Label layoutX="11.0" layoutY="167.0" text="Panch ID:">
+                                    <Label layoutX="11.0" layoutY="167.0" text="Amulet ID:">
                                        <font>
                                           <Font name="Tahoma" size="14.0" />
                                        </font>

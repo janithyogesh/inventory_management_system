@@ -48,7 +48,7 @@
 }
 
 .nametag{
-    -fx-background-color:#8d8ded;
+    -fx-background-color:#9f9621;
     -fx-background-radius:8px;
 
 }
@@ -210,4 +210,50 @@
 .label-spacing {
     -fx-font-smoothing-type: lcd;
     -fx-spacing: 20px;
+}
+
+.chart-bar {
+    -fx-bar-fill: rgba(124, 199, 242, 1);
+}
+
+.chart-plot-background {
+    -fx-background-color: transparent;
+}
+
+.chart-vertical-grid-lines, .chart-horizontal-grid-lines {
+    -fx-stroke: transparent;
+}
+
+#home_incomeChart .chart-series-area-line {
+    -fx-stroke: #7cc7f2;
+}
+
+#home_incomeChart .chart-series-area-fill {
+    -fx-fill: rgba(253, 197, 104, 0.05);
+}
+
+.default-color0.chart-series-area-fill {
+    -fx-fill: rgba(124, 199, 242, 1);
+}
+
+#home_incomeChart .default-color0.chart-line-symbol {
+    -fx-background-color: #7cc7f2, white;
+    -fx-background-insets: 0, 2;
+    -fx-background-radius: 5px;
+    -fx-padding: 5px;
+}
+
+.chart-title {
+    -fx-text-fill: #011b4a;
+}
+
+#home_rateChart .chart-series-line {
+    -fx-stroke: #7cc7f2 !important;
+}
+
+#home_rateChart .default-color0.chart-line-symbol {
+    -fx-background-color: #7cc7f2, white !important;
+    -fx-background-insets: 0, 2 !important;
+    -fx-background-radius: 5px !important;
+    -fx-padding: 5px !important;
 }

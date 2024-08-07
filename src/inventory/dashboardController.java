@@ -14,9 +14,7 @@ import javafx.fxml.Initializable;
 import javafx.application.Platform;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
-import javafx.scene.chart.AreaChart;
-import javafx.scene.chart.BarChart;
-import javafx.scene.chart.XYChart;
+import javafx.scene.chart.*;
 import javafx.scene.control.*;
 import javafx.scene.control.cell.PropertyValueFactory;
 import javafx.scene.image.Image;
@@ -29,6 +27,7 @@ import javafx.scene.layout.VBox;
 import javafx.stage.*;
 import javafx.util.Callback;
 import javafx.util.Duration;
+import javafx.util.StringConverter;
 import net.sf.jasperreports.engine.JasperCompileManager;
 import net.sf.jasperreports.engine.JasperFillManager;
 import net.sf.jasperreports.engine.JasperPrint;
@@ -50,6 +49,7 @@ import java.sql.SQLException;
 import java.util.concurrent.Executors;
 import java.util.concurrent.ScheduledExecutorService;
 import java.util.concurrent.TimeUnit;
+import java.util.stream.Collectors;
 
 
 import static inventory.database.connectDb;
@@ -205,6 +205,8 @@ public class dashboardController implements Initializable {
     @FXML
     private BarChart<String, Number> home_salesChart;
     @FXML
+    private LineChart<String, Number> home_rateChart;
+    @FXML
     private TextField sales_amount, sales_id, sales_price, sales_return;
     @FXML
     private Label sales_balance, sales_total, username;
@@ -222,6 +224,10 @@ public class dashboardController implements Initializable {
     private Label chSh, brSh, riSh, erSh, peSh, suSh, paSh, neSh, baSh, toSh;
     @FXML
     private Label chSt, brSt, riSt, erSt, peSt, suSt, paSt, neSt, baSt, toSt;
+    @FXML
+    private CategoryAxis xAxis;
+    @FXML
+    private NumberAxis yAxis;
 
     @FXML
     private Label dateTimeLabel;
@@ -344,8 +350,9 @@ public class dashboardController implements Initializable {
         displayBaSt();
         displayBaSh();
         updateTotals();
-        displayIncomeChart();
+        //displayIncomeChart();
         displaySalesChart();
+        displayGoldRateChart();
 
         addChainShowListData();
         addChainListKarat();
@@ -668,26 +675,129 @@ public class dashboardController implements Initializable {
     }
 
 
-    private void displayIncomeChart() {
-        XYChart.Series<String, Number> series = new XYChart.Series<>();
-        series.setName("Income");
+//    private void displayIncomeChart() {
+//        XYChart.Series<String, Number> series = new XYChart.Series<>();
+//        series.setName("Income");
+//
+//        String query = "SELECT DATE(date) as date, SUM(payable) as total_income " +
+//                "FROM sales_receipt " +
+//                "WHERE date >= DATE_SUB(CURDATE(), INTERVAL 1 WEEK) " +
+//                "GROUP BY DATE(date)";
+//
+//        connect = connectDb();
+//        try (PreparedStatement pstmt = connect.prepareStatement(query)) {
+//            result = pstmt.executeQuery();
+//            while (result.next()) {
+//                String date = result.getString("date");
+//                double income = result.getDouble("total_income");
+//                series.getData().add(new XYChart.Data<>(date, income));
+//            }
+//            home_incomeChart.getData().add(series);
+//            home_salesChart.getStylesheets().add(getClass().getResource("dashboardDesign.css").toExternalForm());
+//        } catch (SQLException e) {
+//            e.printStackTrace();
+//        } finally {
+//            try {
+//                if (result != null) result.close();
+//                if (prepare != null) prepare.close();
+//                if (connect != null) connect.close();
+//            } catch (SQLException e) {
+//                e.printStackTrace();
+//            }
+//        }
+//    }
 
-        String query = "SELECT DATE(date) as date, SUM(payable) as total_income FROM sales_receipt GROUP BY DATE(date)";
+    private PreparedStatement preparedStatement = null;
+    private ResultSet resultSet = null;
+
+    private void displayGoldRateChart() {
+        XYChart.Series<String, Number> series = new XYChart.Series<>();
+        series.setName("Gold Rate");
+
+        String query = "SELECT DATE_FORMAT(date, '%Y-%m-%d %H:%i:%s') as date, rate " +
+                "FROM gold_rate " +
+                "ORDER BY date DESC " +
+                "LIMIT 30";
+
         connect = connectDb();
-        try (PreparedStatement pstmt = connect.prepareStatement(query)) {
-            result = pstmt.executeQuery();
-            while (result.next()) {
-                String date = result.getString("date");
-                double income = result.getDouble("total_income");
-                series.getData().add(new XYChart.Data<>(date, income));
+        PreparedStatement preparedStatement = null;
+        ResultSet resultSet = null;
+
+        Map<String, String> uniqueLabelToDate = new HashMap<>();
+        ObservableList<XYChart.Data<String, Number>> dataPoints = FXCollections.observableArrayList();
+        ObservableList<String> categories = FXCollections.observableArrayList();
+
+        try {
+            preparedStatement = connect.prepareStatement(query);
+            resultSet = preparedStatement.executeQuery();
+            SimpleDateFormat dateFormatter = new SimpleDateFormat("yyyy-MM-dd");
+            int counter = 1;
+
+            while (resultSet.next()) {
+                String dateTime = resultSet.getString("date");
+                double rate = resultSet.getDouble("rate");
+
+                String date = dateFormatter.format(resultSet.getTimestamp("date"));
+                String uniqueDateLabel = date + " (" + counter + ")";
+
+                XYChart.Data<String, Number> dataPoint = new XYChart.Data<>(uniqueDateLabel, rate);
+                dataPoints.add(dataPoint);
+                uniqueLabelToDate.put(uniqueDateLabel, date);
+                categories.add(uniqueDateLabel);
+
+                // Add tooltip to each data point
+                Tooltip tooltip = new Tooltip(uniqueDateLabel + "\nRate: " + rate);
+                dataPoint.nodeProperty().addListener((obs, oldNode, newNode) -> {
+                    if (newNode != null) {
+                        Tooltip.install(newNode, tooltip);
+                    }
+                });
+
+                counter++;
             }
-            home_incomeChart.getData().add(series);
+
+            // Reverse the order of data points and categories to have the most recent date on the right
+            FXCollections.reverse(dataPoints);
+            FXCollections.reverse(categories);
+
+            series.setData(dataPoints);
+
+            home_rateChart.getData().add(series);
+            xAxis.setCategories(categories);
+            xAxis.setTickLabelsVisible(false); // Hide the axis labels
+            xAxis.setTickMarkVisible(false); // Hide the tick marks
+
+            // Adjust Y-axis lower bound
+            yAxis.setLowerBound(dataPoints.stream().mapToDouble(data -> data.getYValue().doubleValue()).min().orElse(0) - 10);
+
+            // Add stylesheet
+            home_rateChart.getStylesheets().add(getClass().getResource("dashboardDesign.css").toExternalForm());
+
+            Platform.runLater(() -> {
+                home_rateChart.lookup(".chart-series-line").setStyle("-fx-stroke: #9a6b15;");
+
+                series.getNode().lookupAll(".chart-line-symbol").forEach(node -> {
+                    node.setStyle("-fx-background-color: #9a6b15, white; -fx-background-insets: 0, 2; -fx-background-radius: 5px; -fx-padding: 5px;");
+                });
+
+                // Manually format the tick labels
+                home_rateChart.lookupAll(".axis-label").forEach(label -> {
+                    if (label instanceof javafx.scene.text.Text) {
+                        javafx.scene.text.Text textLabel = (javafx.scene.text.Text) label;
+                        String originalText = textLabel.getText();
+                        if (uniqueLabelToDate.containsKey(originalText)) {
+                            textLabel.setText(uniqueLabelToDate.get(originalText));
+                        }
+                    }
+                });
+            });
+
         } catch (SQLException e) {
             e.printStackTrace();
         } finally {
             try {
-                if (result != null) result.close();
-                if (prepare != null) prepare.close();
+                if (resultSet != null) resultSet.close();
+                if (preparedStatement != null) preparedStatement.close();
                 if (connect != null) connect.close();
             } catch (SQLException e) {
                 e.printStackTrace();
@@ -695,11 +805,16 @@ public class dashboardController implements Initializable {
         }
     }
 
+
+
     private void displaySalesChart() {
         XYChart.Series<String, Number> series = new XYChart.Series<>();
         series.setName("Sales");
 
-        String query = "SELECT DATE(date) as date, COUNT(*) as total_sales FROM sales GROUP BY DATE(date)";
+        String query = "SELECT DATE(date) as date, COUNT(*) as total_sales " +
+                "FROM sales " +
+                "WHERE date >= DATE_SUB(CURDATE(), INTERVAL 1 WEEK) " +
+                "GROUP BY DATE(date)";
         connect = connectDb();
         try (PreparedStatement pstmt = connect.prepareStatement(query)) {
             result = pstmt.executeQuery();
@@ -709,6 +824,24 @@ public class dashboardController implements Initializable {
                 series.getData().add(new XYChart.Data<>(date, sales));
             }
             home_salesChart.getData().add(series);
+
+            // Customize the y-axis to show only integer values
+            NumberAxis yAxis = (NumberAxis) home_salesChart.getYAxis();
+            yAxis.setTickUnit(1);
+            yAxis.setTickLabelFormatter(new StringConverter<Number>() {
+                @Override
+                public String toString(Number object) {
+                    return String.format("%d", object.intValue());
+                }
+
+                @Override
+                public Number fromString(String string) {
+                    return Integer.parseInt(string);
+                }
+            });
+
+            home_salesChart.getStylesheets().add(getClass().getResource("dashboardDesign.css").toExternalForm());
+
         } catch (SQLException e) {
             e.printStackTrace();
         } finally {
@@ -993,6 +1126,7 @@ public class dashboardController implements Initializable {
             // Clear the total and balance labels
             sales_total.setText("0.00");
             sales_balance.setText("0.00");
+            sales_amount.setText("");
 
         } catch (Exception e) {
             e.printStackTrace();
@@ -6966,8 +7100,19 @@ public class dashboardController implements Initializable {
         stage.setIconified(true);
     }
 
-    public void close() {
-        System.exit(0);
+    @FXML
+    private void close(ActionEvent event) {
+        Alert alert = new Alert(Alert.AlertType.CONFIRMATION);
+        alert.setTitle("Confirmation Dialog");
+        alert.setHeaderText("Close Application");
+        alert.setContentText("Are you sure you want to close?");
+
+        Optional<ButtonType> result = alert.showAndWait();
+        if (result.isPresent() && result.get() == ButtonType.OK) {
+            System.exit(0);
+        } else {
+            event.consume();
+        }
     }
 
     private <T> Callback<TableColumn<T, Double>, TableCell<T, Double>> getDoubleCellFactory() {
