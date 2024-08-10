@@ -36,7 +36,7 @@
 }
 
 .login-btn{
-    -fx-background-color:linear-gradient(to bottom , #032e71, #004cc5);
+    -fx-background-color:linear-gradient(to bottom , #011b4a, #004cc5);
     -fx-background-radius:4px;
     -fx-text-fill:#fff;
     -fx-font-fill:14px;
@@ -45,7 +45,7 @@
 }
 
 .login-btn:hover{
-    -fx-background-color:linear-gradient(to bottom , #004cc5, #032e71);
+    -fx-background-color:linear-gradient(to bottom , #004cc5, #011b4a);
 }
 
 .my-label {

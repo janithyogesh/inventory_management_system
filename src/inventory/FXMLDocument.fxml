@@ -17,7 +17,7 @@
             <children>
                 <AnchorPane prefHeight="406.0" prefWidth="300.0" styleClass="left-form" stylesheets="@loginDesign.css">
                     <children>
-                  <Label layoutX="55.0" layoutY="380.0" styleClass="my-label" stylesheets="@loginDesign.css" text="© Copyright JewelPro. All Rights Reserved" textAlignment="CENTER" textFill="WHITE">
+                  <Label layoutX="55.0" layoutY="380.0" styleClass="my-label" stylesheets="@loginDesign.css" text="© Copyright JewelPro. All Rights Reserved." textAlignment="CENTER" textFill="WHITE">
                      <font>
                         <Font name="Arial" size="10.0" />
                      </font>

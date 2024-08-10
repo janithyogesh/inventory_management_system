@@ -216,9 +216,9 @@
     -fx-bar-fill: rgba(159, 150, 33, 1);
 }
 
-.chart-plot-background {
-    -fx-background-color: transparent;
-}
+/*.chart-plot-background {*/
+/*    -fx-background-color: transparent;*/
+/*}*/
 
 .chart-vertical-grid-lines, .chart-horizontal-grid-lines {
     -fx-stroke: transparent;

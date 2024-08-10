@@ -1019,10 +1019,12 @@ public class dashboardController implements Initializable {
             }
         }
 
-        // Calculate total, amount, and payable
+        // Calculate total, amount, payable, total net weight, and total count
         double total = salesDataList.stream().mapToDouble(sale -> sale.getPrice()).sum();
         double exchange = salesDataList.stream().mapToDouble(sale -> sale.getReturn_value()).sum();
         double payable = total - exchange;
+        double totalNetWeight = salesDataList.stream().mapToDouble(sale -> sale.getNet_weight()).sum(); // Calculate total net weight
+        int totalCount = salesDataList.size(); // Calculate total count (number of items added to sales table)
 
         double amount = 0.0;
         if (!sales_amount.getText().isEmpty()) {
@@ -1098,7 +1100,7 @@ public class dashboardController implements Initializable {
             }
 
             // Insert into sales_receipt table
-            String insertReceiptSQL = "INSERT INTO sales_receipt (customer_id, total, exchange, payable, amount, balance, date, time, customer_name, customer_tel, customer_address, payment_method) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)";
+            String insertReceiptSQL = "INSERT INTO sales_receipt (customer_id, total, exchange, payable, amount, balance, date, time, customer_name, customer_tel, customer_address, payment_method, total_weight, total_count) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)";
             prepare = connect.prepareStatement(insertReceiptSQL);
 
             double balance = amount - payable;
@@ -1116,6 +1118,8 @@ public class dashboardController implements Initializable {
             prepare.setString(10, customerInfo.getTelephone());
             prepare.setString(11, customerInfo.getAddress());
             prepare.setString(12, customerInfo.getPaymentMethod());
+            prepare.setDouble(13, totalNetWeight); // Save the total net weight
+            prepare.setInt(14, totalCount); // Save the total count (number of items added to sales table)
             prepare.executeUpdate();
 
             sales_tableView.getItems().clear();
@@ -1132,6 +1136,7 @@ public class dashboardController implements Initializable {
             e.printStackTrace();
         }
     }
+
 
 
     //*******************************REMOVING DATA AFTER THE PAYMENT****************************************************
