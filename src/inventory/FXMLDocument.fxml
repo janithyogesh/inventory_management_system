@@ -5,6 +5,8 @@
 <?import javafx.scene.control.Label?>
 <?import javafx.scene.control.PasswordField?>
 <?import javafx.scene.control.TextField?>
+<?import javafx.scene.image.Image?>
+<?import javafx.scene.image.ImageView?>
 <?import javafx.scene.layout.AnchorPane?>
 <?import javafx.scene.layout.StackPane?>
 <?import javafx.scene.text.Font?>
@@ -15,17 +17,21 @@
             <children>
                 <AnchorPane prefHeight="406.0" prefWidth="300.0" styleClass="left-form" stylesheets="@loginDesign.css">
                     <children>
-                        <Label layoutX="112.0" layoutY="218.0" styleClass="my-label" stylesheets="@loginDesign.css" text="Jewellery" textAlignment="CENTER" textFill="WHITE">
-                            <font>
-                                <Font name="Tahoma" size="18.0" />
-                            </font>
-                        </Label>
-                  <Label layoutX="24.0" layoutY="256.0" styleClass="my-label" stylesheets="@loginDesign.css" text="Inventory Management System" textAlignment="CENTER" textFill="WHITE">
+                  <Label layoutX="55.0" layoutY="380.0" styleClass="my-label" stylesheets="@loginDesign.css" text="© Copyright JewelPro. All Rights Reserved" textAlignment="CENTER" textFill="WHITE">
+                     <font>
+                        <Font name="Arial" size="10.0" />
+                     </font>
+                  </Label>
+                  <ImageView blendMode="LIGHTEN" fitHeight="110.0" fitWidth="258.0" layoutX="21.0" layoutY="121.0" pickOnBounds="true" preserveRatio="true">
+                     <image>
+                        <Image url="@../Jewel%20pro%20(2).png" />
+                     </image>
+                  </ImageView>
+                  <Label layoutX="26.0" layoutY="259.0" styleClass="my-label" stylesheets="@loginDesign.css" text="Inventory Management System" textAlignment="CENTER" textFill="WHITE" visible="false">
                      <font>
                         <Font name="Tahoma" size="18.0" />
                      </font>
                   </Label>
-                  <FontAwesomeIcon fill="WHITE" glyphName="DATABASE" layoutX="112.0" layoutY="168.0" size="8em" />
                     </children>
                 </AnchorPane>
                 <AnchorPane layoutX="300.0" prefHeight="406.0" prefWidth="300.0" styleClass="right-form" stylesheets="@loginDesign.css">

@@ -29,7 +29,7 @@
 }
 
 .nav-form{
-    -fx-background-color:linear-gradient(to bottom , #022053, #012f63);
+    -fx-background-color:linear-gradient(to bottom , #022053, #003377);
 }
 
 .nav-btn{
@@ -213,7 +213,7 @@
 }
 
 .chart-bar {
-    -fx-bar-fill: rgba(124, 199, 242, 1);
+    -fx-bar-fill: rgba(159, 150, 33, 1);
 }
 
 .chart-plot-background {
@@ -225,7 +225,7 @@
 }
 
 #home_incomeChart .chart-series-area-line {
-    -fx-stroke: #7cc7f2;
+    -fx-stroke: #9f9621;
 }
 
 #home_incomeChart .chart-series-area-fill {
@@ -233,11 +233,11 @@
 }
 
 .default-color0.chart-series-area-fill {
-    -fx-fill: rgba(124, 199, 242, 1);
+    -fx-fill: rgba(159, 150, 33, 1);
 }
 
 #home_incomeChart .default-color0.chart-line-symbol {
-    -fx-background-color: #7cc7f2, white;
+    -fx-background-color: #9f9621, white;
     -fx-background-insets: 0, 2;
     -fx-background-radius: 5px;
     -fx-padding: 5px;
@@ -248,11 +248,11 @@
 }
 
 #home_rateChart .chart-series-line {
-    -fx-stroke: #7cc7f2 !important;
+    -fx-stroke: #9f9621 !important;
 }
 
 #home_rateChart .default-color0.chart-line-symbol {
-    -fx-background-color: #7cc7f2, white !important;
+    -fx-background-color: #9f9621, white !important;
     -fx-background-insets: 0, 2 !important;
     -fx-background-radius: 5px !important;
     -fx-padding: 5px !important;
