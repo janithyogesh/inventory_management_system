@@ -228,8 +228,8 @@ WHERE
             <text><![CDATA[NET WEIGHT (g)]]></text>
             <property name="com.jaspersoft.studio.spreadsheet.connectionID" value="f1e3d21a-9565-4b6e-be58-03d8d4cf36fa"/>
         </element>
-        <element kind="staticText" uuid="e27d32ad-6444-4dbd-a8a8-0df068230557" x="478" y="10" width="75" height="30" bold="true" hTextAlign="Center" vTextAlign="Middle">
-            <text><![CDATA[PRICE]]></text>
+        <element kind="staticText" uuid="e27d32ad-6444-4dbd-a8a8-0df068230557" x="471" y="10" width="75" height="30" bold="true" hTextAlign="Center" vTextAlign="Middle">
+            <text><![CDATA[PRICE(LKR)]]></text>
             <property name="com.jaspersoft.studio.spreadsheet.connectionID" value="f1e3d21a-9565-4b6e-be58-03d8d4cf36fa"/>
         </element>
         <element kind="line" uuid="dd325777-cff3-40a9-b1db-dcac369fb1de" x="0" y="8" width="555" height="1">
