@@ -1,0 +1,40 @@
+<component name="libraryTable">
+  <library name="javafx-swt1">
+    <CLASSES>
+      <root url="jar://$PROJECT_DIR$/../../Basic/openjfx-21.0.4_windows-x64_bin-sdk/javafx-sdk-21.0.4/lib/javafx-swt.jar!/" />
+      <root url="jar://$PROJECT_DIR$/../../Basic/openjfx-21.0.4_windows-x64_bin-sdk/javafx-sdk-21.0.4/lib/javafx.base.jar!/" />
+      <root url="jar://$PROJECT_DIR$/../../Basic/openjfx-21.0.4_windows-x64_bin-sdk/javafx-sdk-21.0.4/lib/javafx.controls.jar!/" />
+      <root url="jar://$PROJECT_DIR$/../../Basic/openjfx-21.0.4_windows-x64_bin-sdk/javafx-sdk-21.0.4/lib/javafx.graphics.jar!/" />
+      <root url="jar://$PROJECT_DIR$/../../Basic/openjfx-21.0.4_windows-x64_bin-sdk/javafx-sdk-21.0.4/lib/javafx.fxml.jar!/" />
+      <root url="jar://$PROJECT_DIR$/../../Basic/openjfx-21.0.4_windows-x64_bin-sdk/javafx-sdk-21.0.4/lib/javafx.media.jar!/" />
+      <root url="jar://$PROJECT_DIR$/../../Basic/openjfx-21.0.4_windows-x64_bin-sdk/javafx-sdk-21.0.4/lib/javafx.swing.jar!/" />
+      <root url="jar://$PROJECT_DIR$/../../Basic/openjfx-21.0.4_windows-x64_bin-sdk/javafx-sdk-21.0.4/lib/javafx.web.jar!/" />
+      <root url="file://$PROJECT_DIR$/../../Basic" />
+    </CLASSES>
+    <JAVADOC>
+      <root url="file://$PROJECT_DIR$/../../Basic/Matlab/help/javabuilder/MWArrayAPI" />
+      <root url="file://$PROJECT_DIR$/../../Basic/Matlab/toolbox/compiler_sdk/mps_clients/java/doc" />
+    </JAVADOC>
+    <SOURCES>
+      <root url="file://$PROJECT_DIR$/../../Basic/Matlab/extern/examples/engines/java" />
+      <root url="file://$PROJECT_DIR$/../../Basic/Matlab/toolbox/compiler_sdk/mps_clients/java/examples/BondPricingTool/Java" />
+      <root url="file://$PROJECT_DIR$/../../Basic/Matlab/toolbox/compiler_sdk/mps_clients/java/examples/ImageExample/Java" />
+      <root url="file://$PROJECT_DIR$/../../Basic/Matlab/toolbox/compiler_sdk/mps_clients/java/examples/MagicSquare/Java" />
+      <root url="file://$PROJECT_DIR$/../../Basic/Matlab/toolbox/compiler_sdk/mps_clients/java/examples/SortStudents/Java" />
+      <root url="file://$PROJECT_DIR$/../../Basic/Matlab/toolbox/javabuilder/Examples/DataTypesExample/DataTypesDemoJavaApp" />
+      <root url="file://$PROJECT_DIR$/../../Basic/Matlab/toolbox/javabuilder/Examples/MagicSquareExample/MagicDemoJavaApp" />
+      <root url="file://$PROJECT_DIR$/../../Basic/Matlab/toolbox/javabuilder/Examples/MatrixMathExample/MatrixMathDemoJavaApp" />
+      <root url="file://$PROJECT_DIR$/../../Basic/Matlab/toolbox/javabuilder/Examples/ObjectRefExample/ObjectRefDemoJavaApp" />
+      <root url="file://$PROJECT_DIR$/../../Basic/Matlab/toolbox/javabuilder/Examples/PhoneExample/PhoneDemoJavaApp" />
+      <root url="file://$PROJECT_DIR$/../../Basic/Matlab/toolbox/javabuilder/Examples/PlotExample/PlotDemoJavaApp" />
+      <root url="file://$PROJECT_DIR$/../../Basic/Matlab/toolbox/javabuilder/Examples/RMIExamples/DataTypes/DataTypesDemoJavaApp" />
+      <root url="file://$PROJECT_DIR$/../../Basic/Matlab/toolbox/javabuilder/Examples/RMIExamples/FactoryAndProxyAPI/FactoryAndProxyAPIDemoJavaApp" />
+      <root url="file://$PROJECT_DIR$/../../Basic/Matlab/toolbox/javabuilder/Examples/RMIExamples/MagicSquare/MagicSquareDemoJavaApp" />
+      <root url="file://$PROJECT_DIR$/../../Basic/Matlab/toolbox/javabuilder/Examples/RMIExamples/NativeCellStruct/NativeCellStructDemoJavaApp" />
+      <root url="file://$PROJECT_DIR$/../../Basic/Matlab/toolbox/javabuilder/Examples/SpectraExample/SpectraDemoJavaApp" />
+      <root url="file://$PROJECT_DIR$/../../Basic" />
+    </SOURCES>
+    <jarDirectory url="file://$PROJECT_DIR$/../../Basic" recursive="false" />
+    <jarDirectory url="file://$PROJECT_DIR$/../../Basic" recursive="false" type="SOURCES" />
+  </library>
+</component>
