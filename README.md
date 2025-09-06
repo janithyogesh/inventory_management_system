@@ -48,8 +48,3 @@ To set up and run the application:
 
 This repository contains the source code for the **Jewelry Inventory Management System**, a robust Java-based application designed to streamline the operations of a jewelry business. The system provides a comprehensive solution for managing inventory, tracking sales, and handling customer data. With features like user authentication, detailed reporting via JasperReports, and a secure database structure, the application is built to improve efficiency and provide valuable business insights. It serves as an excellent example of a full-featured, desktop-based business application developed using Java.
 
-
-
-## License
-
-[Add your license information here]
