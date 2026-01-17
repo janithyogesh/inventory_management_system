@@ -17,7 +17,7 @@ The application is packed with features designed to streamline business processe
 This project is built primarily with Java and is organized with a standard Java project structure.
 
 * **Java:** The core programming language for the application logic.
-* **Java Desktop Application Framework:** The system is a desktop application, likely using Swing or JavaFX for the graphical user interface.
+* **Java Desktop Application Framework:** The system is a desktop application, likely using JavaFX for the graphical user interface.
 * **Database:** A relational database is used to store all inventory, sales, and customer data, with the structure defined in the `Database Structure` folder.
 * **JasperReports:** Used for generating professional reports and analytics.
 * **IDE:** The presence of the `.idea` and `nbproject` folders suggests the use of IntelliJ IDEA and NetBeans IDE, respectively, for development.
